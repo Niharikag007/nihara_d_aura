@@ -337,7 +337,7 @@ export default function Home() {
               </h2>
 
               <p className="text-xs sm:text-sm text-amber-100/90 leading-relaxed font-light max-w-lg">
-                Pair handcrafted 22K Kundan haar sets with our signature 16-hour sweatproof HD Airbrush Makeup for your wedding functions.
+                Pair authentic 22K Kundan haar sets with our signature 16-hour sweatproof HD Airbrush Makeup for your wedding functions.
               </p>
 
               <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-4">

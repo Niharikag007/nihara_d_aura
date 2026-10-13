@@ -13,8 +13,8 @@ export default function Footer() {
           <div className="flex items-center gap-3">
             <Award className="w-6 h-6 text-[#DFBC77] flex-shrink-0" />
             <div>
-              <p className="font-semibold text-white">Artisan Perfection</p>
-              <p className="text-xs text-stone-200 font-medium">100% handcrafted & certified luxury</p>
+              <p className="font-semibold text-white">Certified Authenticity</p>
+              <p className="text-xs text-stone-200 font-medium">100% hallmarked & certified jewellery</p>
             </div>
           </div>
           <div className="flex items-center gap-3">

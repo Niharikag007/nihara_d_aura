@@ -30,7 +30,7 @@ export const initialData = {
   },
   {
     "id": "cat_jewellery",
-    "name": "Handcrafted 22K Real Gold & Diamond Jewellery",
+    "name": "22K Real Gold & Diamond Jewellery",
     "slug": "jewellery",
     "itemCount": 30,
     "image": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=85",

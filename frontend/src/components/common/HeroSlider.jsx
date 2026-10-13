@@ -19,7 +19,7 @@ const bannerSlides = [
     tag: "EXCLUSIVE BRIDAL COLLECTION",
     icon: Crown,
     title: "Royal Kundan Jewellery & HD Bridal Makeup",
-    subtitle: "Handcrafted 24K gold polki neckpieces paired with 16-hour waterproof HD bridal makeovers for your dream day.",
+    subtitle: "Authentic 24K gold polki neckpieces paired with 16-hour waterproof HD bridal makeovers for your dream day.",
     badge: "100% Certified Gold & Luxury Glam",
     primaryCtaText: "Shop Jewellery",
     primaryCtaLink: "/products?category=Jewellery",

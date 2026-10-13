@@ -23,7 +23,7 @@ export const mockData = {
     },
     {
       id: "cat_jewellery",
-      name: "Handcrafted 22K Real Gold & Diamond Jewellery",
+      name: "22K Real Gold & Diamond Jewellery",
       slug: "jewellery",
       itemCount: 30,
       image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=85",
@@ -717,8 +717,8 @@ export const mockData = {
   },
   {
     "id": "prod_nakshi_kada",
-    "name": "Handcrafted Nakshi Lakshmi Temple Kada",
-    "slug": "handcrafted-nakshi-lakshmi-temple-kada",
+    "name": "Royal Nakshi Lakshmi Temple Kada",
+    "slug": "royal-nakshi-lakshmi-temple-kada",
     "category": "Jewellery",
     "categorySlug": "jewellery",
     "subcategory": "Temple Gold Bangles",
