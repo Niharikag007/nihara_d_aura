@@ -80,6 +80,10 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-[#E8DFC8] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] transition-colors will-change-transform transform-gpu">
+      {/* Top Announcement Bar */}
+      <div className="bg-[#C59B27] text-white text-[10px] sm:text-xs py-1.5 px-2.5 sm:px-4 text-center font-medium tracking-wide flex justify-center items-center gap-1.5 leading-tight sm:leading-normal">
+        <Sparkles className="w-3.5 h-3.5 text-white animate-pulse flex-shrink-0" />
+      </div>
 
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
