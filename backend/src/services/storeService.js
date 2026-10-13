@@ -200,15 +200,18 @@ class StoreService {
   }
 
   persist() {
-    try {
-      import('fs').then(fs => {
-        import('path').then(path => {
-          const liveStorePath = path.resolve('src/data/liveStore.json');
-          fs.writeFileSync(liveStorePath, JSON.stringify(this.db, null, 2), 'utf8');
+    if (process.env.PERSIST_DISK === 'true') {
+      try {
+        import('fs').then(fs => {
+          import('path').then(path => {
+            const liveStorePath = path.resolve('data/liveStore.json');
+            fs.mkdirSync(path.dirname(liveStorePath), { recursive: true });
+            fs.writeFileSync(liveStorePath, JSON.stringify(this.db, null, 2), 'utf8');
+          });
         });
-      });
-    } catch (e) {
-      // Ignore background persist errors
+      } catch (e) {
+        // Ignore background persist errors
+      }
     }
   }
 

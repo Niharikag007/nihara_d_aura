@@ -74,23 +74,23 @@
   ],
   "products": [
     {
-      "id": "prod_1791799714858",
-      "slug": "royal-emerald-choker",
-      "name": "Royal Emerald Choker",
-      "category": "Jewellery",
-      "categorySlug": "jewellery",
-      "subcategory": "Bridal Haar & Sets",
-      "price": 48500,
-      "originalPrice": 58000,
-      "discountPercent": 16,
+      "id": "prod_1791894845939",
+      "slug": "royal-velvet-lipstick-edition",
+      "name": "Royal Velvet Lipstick Edition",
+      "category": "Makeup",
+      "categorySlug": "makeup",
+      "subcategory": "All",
+      "price": 1899,
+      "originalPrice": 1899,
+      "discountPercent": 0,
       "rating": 5,
       "reviewCount": 1,
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=85"
+        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=85"
       ],
-      "description": "Handcrafted royal emerald and 22K gold choker",
+      "description": "Velvet matte finish long stay lipstick",
       "variants": [
         "Standard"
       ],
@@ -100,8 +100,8 @@
       "features": [
         "100% Authentic Luxury"
       ],
-      "stock": 10,
-      "createdAt": "2026-10-12T10:08:34.858Z"
+      "stock": 15,
+      "createdAt": "2026-10-13T12:34:05.939Z"
     },
     {
       "id": "prod_choker",
@@ -1056,41 +1056,6 @@
         "Mirror high-polish finish"
       ],
       "stock": 11
-    },
-    {
-      "id": "prod_foundation",
-      "name": "Glow Velvet Silk Foundation",
-      "slug": "glow-velvet-silk-foundation",
-      "category": "Makeup",
-      "categorySlug": "makeup",
-      "subcategory": "Face Foundations",
-      "price": 2499,
-      "originalPrice": 3000,
-      "discountPercent": 17,
-      "rating": 4.9,
-      "reviewCount": 142,
-      "isFeatured": true,
-      "isBestseller": true,
-      "images": [
-        "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1200&q=85"
-      ],
-      "description": "A weightless, hydrating silk foundation crafted for Indian skintones. Delivers a soft-focus radiant glow with 16-hour breathable coverage.",
-      "variants": [
-        "Warm Ivory",
-        "Golden Beige",
-        "Almond Silk",
-        "Royal Honey"
-      ],
-      "sizes": [
-        "30 ml",
-        "50 ml"
-      ],
-      "features": [
-        "Infused with Hyaluronic Acid & Kashmiri Rose Water",
-        "16-Hour breathable wear with buildable medium-to-full coverage",
-        "Transfer-resistant, dermatologically tested, non-comedogenic"
-      ],
-      "stock": 45
     },
     {
       "id": "prod_primer",
@@ -3272,44 +3237,6 @@
       "discountPercent": 20,
       "minOrder": 3000,
       "description": "20% off festive beauty savings"
-    }
-  ],
-  "offers": [
-    {
-      "id": "off_1",
-      "code": "NIHARA10",
-      "name": "Royal 10% Welcome Offer",
-      "discountPercent": 10,
-      "minOrder": 1999,
-      "validTill": "2026-12-31",
-      "isActive": true
-    },
-    {
-      "id": "off_2",
-      "code": "GLOW20",
-      "name": "Festive Glow 20% Offer",
-      "discountPercent": 20,
-      "minOrder": 3999,
-      "validTill": "2026-11-30",
-      "isActive": true
-    },
-    {
-      "id": "off_3",
-      "code": "AURA30",
-      "name": "Haute Luxury VIP Offer",
-      "discountPercent": 30,
-      "minOrder": 9999,
-      "validTill": "2026-12-31",
-      "isActive": true
-    },
-    {
-      "id": "off_4",
-      "code": "BRIDAL15",
-      "name": "Bridal Suite Special Offer",
-      "discountPercent": 15,
-      "minOrder": 4999,
-      "validTill": "2026-12-31",
-      "isActive": true
     }
   ]
 }
