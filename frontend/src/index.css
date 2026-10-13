@@ -21,13 +21,17 @@
     text-size-adjust: 100%;
   }
 
-  /* GPU-composited fixed gradient background — avoids repaints on scroll */
+  /* GPU-composited fixed gradient background — Premium White & Royal Gold Aura */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(135deg, #FBF6EC 0%, #F6EAD5 20%, #EEDABE 45%, #F3E4CC 70%, #FAF4E8 100%);
+    background: 
+      radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.09) 0%, transparent 55%),
+      radial-gradient(circle at 90% 20%, rgba(223, 188, 119, 0.06) 0%, transparent 45%),
+      radial-gradient(circle at 10% 60%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+      linear-gradient(180deg, #FFFFFF 0%, #FDFCFA 35%, #F9F7F2 100%);
     will-change: transform;
     transform: translateZ(0);
     pointer-events: none;
@@ -55,7 +59,7 @@
   height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #F4ECE1;
+  background: #F8F5EE;
 }
 ::-webkit-scrollbar-thumb {
   background: #DFBC77;

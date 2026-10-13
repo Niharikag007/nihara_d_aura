@@ -67,7 +67,7 @@ export default function Home() {
       role: "Verified Bride (Mumbai)",
       rating: 5,
       comment: "The Royal Kundan Haar set for my wedding was mesmerizing! Everyone complimented the purity and finish of the gold. Absolutely world-class craftsmanship.",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
       boughtItem: "Royal 22K Gold Kundan Bridal Haar"
     },
     {
@@ -76,7 +76,7 @@ export default function Home() {
       role: "High Fashion Patron (Delhi)",
       rating: 5,
       comment: "Priya Sharma did my HD Airbrush Bridal Makeup at home. My skin looked glowing, natural, and lasted through the entire 16-hour wedding ceremony!",
-      avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
+      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80",
       boughtItem: "Royal Bridal Glow & Makeup Package"
     },
     {
@@ -85,7 +85,7 @@ export default function Home() {
       role: "Luxury Collector (Hyderabad)",
       rating: 5,
       comment: "The 24K Gold Lakshmi Locket and 22K Peacock Jhumkas are stunning! Swiss gold assay certificate was included in a gorgeous velvet chest.",
-      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80",
+      avatar: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=200&q=80",
       boughtItem: "24K Gold Lakshmi Coin Locket"
     }
   ];
@@ -95,13 +95,13 @@ export default function Home() {
       id: 1,
       title: "Royal Kundan & HD Airbrush Glam",
       tag: "#NiharaRoyalBride",
-      image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80"
+      image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80"
     },
     {
       id: 2,
       title: "22K Solid Gold Peacock Jhumkas",
       tag: "#NiharaGoldHeirlooms",
-      image: "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=80"
+      image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=800&q=80"
     },
     {
       id: 3,
@@ -113,7 +113,7 @@ export default function Home() {
       id: 4,
       title: "Red Carpet Shimmer & Gold Glow",
       tag: "#NiharaCelebrityGlam",
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80"
+      image: "https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?auto=format&fit=crop&w=800&q=80"
     }
   ];
 
@@ -202,7 +202,7 @@ export default function Home() {
             className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block"
           >
             <img 
-              src="https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=85" 
+              src="https://images.unsplash.com/photo-1611591475152-473523dd665f?auto=format&fit=crop&w=800&q=85" 
               alt="Best Sellers"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
@@ -222,7 +222,7 @@ export default function Home() {
             className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block"
           >
             <img 
-              src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=85" 
+              src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=85" 
               alt="Bridal & Salon Studio"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
@@ -252,11 +252,11 @@ export default function Home() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
           {[
-            { name: 'Necklaces & Haar', img: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery' },
+            { name: 'Necklaces & Haar', img: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery' },
             { name: 'Gold Jhumkas', img: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery' },
             { name: 'Gold Lockets', img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery' },
-            { name: 'Silk Foundation', img: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=300&q=80', cat: 'Makeup' },
-            { name: 'Press-On Nails', img: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=300&q=80', cat: 'Nails' },
+            { name: 'Silk Foundation', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&q=80', cat: 'Makeup' },
+            { name: 'Press-On Nails', img: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=300&q=80', cat: 'Nails' },
             { name: 'Mogra Candles', img: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=300&q=80', cat: 'Candles' },
           ].map((catItem, idx) => (
             <Link
