@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    color: #1C1917;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-variant-numeric: lining-nums tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: relative;
+    text-size-adjust: 100%;
+  }
+
+  /* GPU-composited fixed gradient background — avoids repaints on scroll */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(135deg, #FBF6EC 0%, #F6EAD5 20%, #EEDABE 45%, #F3E4CC 70%, #FAF4E8 100%);
+    will-change: transform;
+    transform: translateZ(0);
+    pointer-events: none;
+  }
+
+  /* Optimize image rendering for crisp hardware decoding */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    content-visibility: auto;
+  }
+
+  /* Global upright clean Roman numerals for all numbers, prices, and identifiers */
+  * {
+    font-variant-numeric: lining-nums;
+  }
+}
+
+.font-serif {
+  font-variant-numeric: lining-nums proportional-nums;
+}
+
+/* Custom Luxury Smooth Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #F4ECE1;
+}
+::-webkit-scrollbar-thumb {
+  background: #DFBC77;
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C59B27;
+}
+
+/* Luxury Card & Button Components with GPU Acceleration */
+.btn-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #B3861B 100%);
+  color: #FFFFFF;
+  font-weight: 600;
+  transition: background 0.2s ease, box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(184, 134, 11, 0.25);
+  will-change: transform;
+  transform: translateZ(0);
+}
+.btn-gold:hover {
+  background: linear-gradient(135deg, #DEBA46 0%, #C49420 100%);
+  box-shadow: 0 6px 18px rgba(184, 134, 11, 0.35);
+  transform: translateY(-1px) translateZ(0);
+}
+.btn-gold:active {
+  transform: translateY(0) translateZ(0);
+}
+
+.btn-gold-outline {
+  border: 1.5px solid #C59B27;
+  color: #855F14;
+  background-color: #FFFFFF;
+  font-weight: 600;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  transform: translateZ(0);
+}
+.btn-gold-outline:hover {
+  background-color: #FCF9F2;
+  border-color: #A87D17;
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #A87D17 0%, #C59B27 50%, #855F14 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.luxury-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(223, 188, 119, 0.3);
+  box-shadow: 0 4px 18px -2px rgba(197, 155, 39, 0.08);
+  border-radius: 1rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+.luxury-card:hover {
+  border-color: rgba(197, 155, 39, 0.6);
+  box-shadow: 0 10px 24px -3px rgba(197, 155, 39, 0.16);
+  transform: translateY(-2px) translateZ(0);
+}
+
+/* Butter Smooth Hardware Composited Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px) translateZ(0); }
+  to { opacity: 1; transform: translateY(0) translateZ(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96) translateZ(0); }
+  to { opacity: 1; transform: scale(1) translateZ(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes heroProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.animate-hero-progress {
+  animation: heroProgress 4.5s linear forwards;
+}
+

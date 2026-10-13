@@ -1,0 +1,6782 @@
+{
+  "auditResults": [
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "See All",
+          "w": 57,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 102,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "See All",
+          "w": 57,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 122,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "See All",
+          "w": 57,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 130,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "See All",
+          "w": 57,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 137,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Royal Rosewood Satin",
+          "w": 137,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "See All",
+          "w": 57,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 148,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Royal Rosewood Satin",
+          "w": 148,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "See All",
+          "w": 57,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 157,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Royal Rosewood Satin",
+          "w": 157,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "See All",
+          "w": 57,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 262,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Royal Rosewood Satin",
+          "w": 262,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "See All",
+          "w": 57,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 242,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Royal Rosewood Satin",
+          "w": 242,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "See All",
+          "w": 57,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 314,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Royal Rosewood Satin",
+          "w": 314,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Home",
+      "path": "/",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "All",
+          "w": 46,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Makeup",
+          "w": 81,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "All",
+          "w": 46,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Makeup",
+          "w": 81,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "All",
+          "w": 46,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Makeup",
+          "w": 81,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "All",
+          "w": 46,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Makeup",
+          "w": 81,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Jewellery",
+          "w": 88,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "All",
+          "w": 46,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Makeup",
+          "w": 81,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Jewellery",
+          "w": 88,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "All",
+          "w": 46,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Makeup",
+          "w": 81,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Jewellery",
+          "w": 88,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "All",
+          "w": 46,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Makeup",
+          "w": 81,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Jewellery",
+          "w": 88,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "All",
+          "w": 46,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Makeup",
+          "w": 81,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Jewellery",
+          "w": 88,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "All",
+          "w": 46,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Makeup",
+          "w": 81,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Jewellery",
+          "w": 88,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Products",
+      "path": "/products",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Back to Collection",
+          "w": 127,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Warm Ivory",
+          "w": 91,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Back to Collection",
+          "w": 127,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Warm Ivory",
+          "w": 91,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Back to Collection",
+          "w": 127,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Warm Ivory",
+          "w": 91,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Back to Collection",
+          "w": 127,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Warm Ivory",
+          "w": 91,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Golden Beige",
+          "w": 105,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Back to Collection",
+          "w": 127,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Warm Ivory",
+          "w": 91,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Golden Beige",
+          "w": 105,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Back to Collection",
+          "w": 127,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Warm Ivory",
+          "w": 91,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Golden Beige",
+          "w": 105,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Back to Collection",
+          "w": 127,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Warm Ivory",
+          "w": 91,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Golden Beige",
+          "w": 105,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Back to Collection",
+          "w": 127,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Warm Ivory",
+          "w": 91,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Golden Beige",
+          "w": 105,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Back to Collection",
+          "w": 127,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Warm Ivory",
+          "w": 91,
+          "h": 30
+        },
+        {
+          "tag": "button",
+          "text": "Golden Beige",
+          "w": 105,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Product Details",
+      "path": "/products/prod_foundation",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Face Foundations",
+          "w": 128,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Lipsticks & Gloss",
+          "w": 123,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Face Foundations",
+          "w": 128,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Lipsticks & Gloss",
+          "w": 123,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Face Foundations",
+          "w": 128,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Lipsticks & Gloss",
+          "w": 123,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Face Foundations",
+          "w": 128,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Lipsticks & Gloss",
+          "w": 123,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Eyeshadow Palettes",
+          "w": 142,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Face Foundations",
+          "w": 128,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Lipsticks & Gloss",
+          "w": 123,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Eyeshadow Palettes",
+          "w": 142,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Face Foundations",
+          "w": 128,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Lipsticks & Gloss",
+          "w": 123,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Eyeshadow Palettes",
+          "w": 142,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Face Foundations",
+          "w": 128,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Lipsticks & Gloss",
+          "w": 123,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Eyeshadow Palettes",
+          "w": 142,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Face Foundations",
+          "w": 128,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Lipsticks & Gloss",
+          "w": 123,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Eyeshadow Palettes",
+          "w": 142,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Face Foundations",
+          "w": 128,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Lipsticks & Gloss",
+          "w": 123,
+          "h": 30
+        },
+        {
+          "tag": "a",
+          "text": "Eyeshadow Palettes",
+          "w": 142,
+          "h": 30
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Categories",
+      "path": "/categories",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Services",
+      "path": "/services",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Beauty Booking Wizard",
+      "path": "/book",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "-",
+          "w": 31,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "+",
+          "w": 32,
+          "h": 28
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "-",
+          "w": 31,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "+",
+          "w": 32,
+          "h": 28
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "-",
+          "w": 31,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "+",
+          "w": 32,
+          "h": 28
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "-",
+          "w": 31,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "+",
+          "w": 32,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "",
+          "w": 24,
+          "h": 24
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "-",
+          "w": 31,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "+",
+          "w": 32,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "",
+          "w": 24,
+          "h": 24
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "-",
+          "w": 31,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "+",
+          "w": 32,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "",
+          "w": 24,
+          "h": 24
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "-",
+          "w": 31,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "+",
+          "w": 32,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "",
+          "w": 24,
+          "h": 24
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "-",
+          "w": 31,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "+",
+          "w": 32,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "",
+          "w": 24,
+          "h": 24
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "-",
+          "w": 31,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "+",
+          "w": 32,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "",
+          "w": 24,
+          "h": 24
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Shopping Bag",
+      "path": "/cart",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Edit",
+          "w": 23,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Edit",
+          "w": 23,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Edit",
+          "w": 23,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Edit",
+          "w": 23,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Edit",
+          "w": 23,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Edit",
+          "w": 23,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Edit",
+          "w": 23,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Edit",
+          "w": 23,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Edit",
+          "w": 23,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Checkout",
+      "path": "/checkout",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Orders",
+      "path": "/orders",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": true,
+      "overflowDelta": 2,
+      "status": "FAIL",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Cancel Appointment",
+          "w": 120,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "status": "ERROR",
+      "error": "Cannot read properties of undefined (reading 'join')"
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Cancel Appointment",
+          "w": 120,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Cancel Appointment",
+          "w": 120,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Cancel Appointment",
+          "w": 120,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "NEW BOOKING",
+          "w": 136,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Cancel Appointment",
+          "w": 120,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "NEW BOOKING",
+          "w": 136,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Cancel Appointment",
+          "w": 120,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "NEW BOOKING",
+          "w": 136,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Cancel Appointment",
+          "w": 120,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "NEW BOOKING",
+          "w": 136,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Cancel Appointment",
+          "w": 120,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "NEW BOOKING",
+          "w": 136,
+          "h": 28
+        },
+        {
+          "tag": "button",
+          "text": "Cancel Appointment",
+          "w": 120,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "My Bookings",
+      "path": "/bookings",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Continue Shopping",
+          "w": 130,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 102,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Continue Shopping",
+          "w": 130,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 122,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Continue Shopping",
+          "w": 130,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 130,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Continue Shopping",
+          "w": 130,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 137,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Chandbali Emerald & ",
+          "w": 137,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Continue Shopping",
+          "w": 130,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 148,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Chandbali Emerald & ",
+          "w": 148,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Continue Shopping",
+          "w": 130,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 157,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Chandbali Emerald & ",
+          "w": 157,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Continue Shopping",
+          "w": 130,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 262,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Chandbali Emerald & ",
+          "w": 262,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Continue Shopping",
+          "w": 130,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 242,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Chandbali Emerald & ",
+          "w": 242,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Continue Shopping",
+          "w": 130,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Glow Velvet Silk Fou",
+          "w": 314,
+          "h": 20
+        },
+        {
+          "tag": "a",
+          "text": "Chandbali Emerald & ",
+          "w": 314,
+          "h": 20
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Wishlist",
+      "path": "/wishlist",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Rose Quartz Press-On",
+          "w": 155,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Customer Profile",
+      "path": "/profile",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "button",
+          "text": "Set as Default",
+          "w": 79,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Saved Addresses",
+      "path": "/addresses",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Login with OTP",
+          "w": 77,
+          "h": 17
+        },
+        {
+          "tag": "a",
+          "text": "Create an Account",
+          "w": 108,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Login with OTP",
+          "w": 77,
+          "h": 17
+        },
+        {
+          "tag": "a",
+          "text": "Create an Account",
+          "w": 108,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Login with OTP",
+          "w": 77,
+          "h": 17
+        },
+        {
+          "tag": "a",
+          "text": "Create an Account",
+          "w": 108,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Login with OTP",
+          "w": 77,
+          "h": 17
+        },
+        {
+          "tag": "a",
+          "text": "Create an Account",
+          "w": 108,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Login with OTP",
+          "w": 77,
+          "h": 17
+        },
+        {
+          "tag": "a",
+          "text": "Create an Account",
+          "w": 108,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Login with OTP",
+          "w": 77,
+          "h": 17
+        },
+        {
+          "tag": "a",
+          "text": "Create an Account",
+          "w": 108,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Login with OTP",
+          "w": 77,
+          "h": 17
+        },
+        {
+          "tag": "a",
+          "text": "Create an Account",
+          "w": 108,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Login with OTP",
+          "w": 77,
+          "h": 17
+        },
+        {
+          "tag": "a",
+          "text": "Create an Account",
+          "w": 108,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Login with OTP",
+          "w": 77,
+          "h": 17
+        },
+        {
+          "tag": "a",
+          "text": "Create an Account",
+          "w": 108,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Login",
+      "path": "/login",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Sign In",
+          "w": 38,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Sign In",
+          "w": 38,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "a",
+          "text": "Sign In",
+          "w": 38,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Sign In",
+          "w": 38,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Sign In",
+          "w": 38,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Sign In",
+          "w": 38,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Sign In",
+          "w": 38,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Sign In",
+          "w": 38,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "Sign In",
+          "w": 38,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Register",
+      "path": "/register",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "iPhone SE (1st gen)",
+      "category": "Mobile",
+      "viewport": "320x568",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 16,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Resend OTP",
+          "w": 70,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "Galaxy S20",
+      "category": "Mobile",
+      "viewport": "360x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 20,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Resend OTP",
+          "w": 70,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "iPhone X / 11 Pro",
+      "category": "Mobile",
+      "viewport": "375x812",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "a",
+          "text": "",
+          "w": 27,
+          "h": 44
+        },
+        {
+          "tag": "button",
+          "text": "Resend OTP",
+          "w": 70,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "iPhone 13 / 14",
+      "category": "Mobile",
+      "viewport": "390x844",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Resend OTP",
+          "w": 70,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "Pixel 7",
+      "category": "Mobile",
+      "viewport": "412x915",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Resend OTP",
+          "w": 70,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "iPhone 14 Pro Max",
+      "category": "Mobile",
+      "viewport": "430x932",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Resend OTP",
+          "w": 70,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "Breakpoint sm-1",
+      "category": "Intermediate",
+      "viewport": "639x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Resend OTP",
+          "w": 70,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "Small Tablet",
+      "category": "Tablet",
+      "viewport": "600x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Resend OTP",
+          "w": 70,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "iPad Mini Portrait",
+      "category": "Tablet",
+      "viewport": "768x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "Breakpoint md-1",
+      "category": "Intermediate",
+      "viewport": "767x1024",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [
+        {
+          "tag": "button",
+          "text": "Resend OTP",
+          "w": 70,
+          "h": 16
+        },
+        {
+          "tag": "a",
+          "text": "Silk Foundations & L",
+          "w": 157,
+          "h": 15
+        },
+        {
+          "tag": "a",
+          "text": "Kundan & Polki Chand",
+          "w": 150,
+          "h": 15
+        }
+      ],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "iPad Air Portrait",
+      "category": "Tablet",
+      "viewport": "820x1180",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "iPad Pro 11 Portrait",
+      "category": "Tablet",
+      "viewport": "834x1194",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "iPad Mini Landscape",
+      "category": "Tablet",
+      "viewport": "1024x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "iPad Pro 12.9 Portrait",
+      "category": "Tablet",
+      "viewport": "1024x1366",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "Breakpoint lg-1",
+      "category": "Intermediate",
+      "viewport": "1023x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "HD Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1280x720",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "Breakpoint xl-1",
+      "category": "Intermediate",
+      "viewport": "1279x800",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "Standard WXGA Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1366x768",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "MacBook Pro 14",
+      "category": "Laptop/Desktop",
+      "viewport": "1440x900",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "FHD Scaled Laptop",
+      "category": "Laptop/Desktop",
+      "viewport": "1536x864",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    },
+    {
+      "page": "Verify OTP",
+      "path": "/verify-otp",
+      "device": "Full HD Desktop",
+      "category": "Laptop/Desktop",
+      "viewport": "1920x1080",
+      "hasHorizontalOverflow": false,
+      "overflowDelta": 0,
+      "status": "PASS",
+      "smallTouchTargets": [],
+      "errors": []
+    }
+  ],
+  "issues": []
+}
