@@ -63,32 +63,35 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Quick Links: Products */}
-          <div>
-            <h4 className="font-serif text-sm uppercase tracking-wider text-[#DFBC77] font-bold mb-4">
-              Luxury Collections
-            </h4>
-            <ul className="space-y-2.5 text-xs text-stone-200 font-medium">
-              <li><Link to="/products?category=Makeup" className="hover:text-[#DFBC77] transition-colors">Silk Foundations & Lipsticks</Link></li>
-              <li><Link to="/products?category=Jewellery" className="hover:text-[#DFBC77] transition-colors">Kundan & Polki Chandbalis</Link></li>
-              <li><Link to="/products?category=Nails" className="hover:text-[#DFBC77] transition-colors">Rose Quartz Press-On Nails</Link></li>
-              <li><Link to="/products?category=Candles" className="hover:text-[#DFBC77] transition-colors">Soy Wax Mogra Candles</Link></li>
-              <li><Link to="/products" className="hover:text-[#DFBC77] transition-colors">All Products Catalogue</Link></li>
-            </ul>
-          </div>
+          {/* Quick Links: Products & Salon (Side by side in 2 columns on mobile) */}
+          <div className="grid grid-cols-2 gap-6 sm:gap-8 md:contents">
+            {/* Quick Links: Products */}
+            <div>
+              <h4 className="font-serif text-xs sm:text-sm uppercase tracking-wider text-[#DFBC77] font-bold mb-3.5 sm:mb-4">
+                Luxury Collections
+              </h4>
+              <ul className="space-y-2 sm:space-y-2.5 text-xs text-stone-200 font-medium">
+                <li><Link to="/products?category=Makeup" className="hover:text-[#DFBC77] transition-colors">Silk Foundations & Lipsticks</Link></li>
+                <li><Link to="/products?category=Jewellery" className="hover:text-[#DFBC77] transition-colors">Kundan & Polki Chandbalis</Link></li>
+                <li><Link to="/products?category=Nails" className="hover:text-[#DFBC77] transition-colors">Rose Quartz Press-On Nails</Link></li>
+                <li><Link to="/products?category=Candles" className="hover:text-[#DFBC77] transition-colors">Soy Wax Mogra Candles</Link></li>
+                <li><Link to="/products" className="hover:text-[#DFBC77] transition-colors">All Products Catalogue</Link></li>
+              </ul>
+            </div>
 
-          {/* Salon & Appointments */}
-          <div>
-            <h4 className="font-serif text-sm uppercase tracking-wider text-[#DFBC77] font-bold mb-4">
-              Salon & Styling
-            </h4>
-            <ul className="space-y-2.5 text-xs text-stone-200 font-medium">
-              <li><Link to="/book" className="hover:text-white transition-colors font-bold text-[#DFBC77]">Book Bridal Appointment</Link></li>
-              <li><Link to="/services" className="hover:text-[#DFBC77] transition-colors">Celebrity Glam Party Makeup</Link></li>
-              <li><Link to="/services" className="hover:text-[#DFBC77] transition-colors">Gel Nail Extensions & Art</Link></li>
-              <li><Link to="/services" className="hover:text-[#DFBC77] transition-colors">Jewellery & Silhouette Trial</Link></li>
-              <li><Link to="/bookings" className="hover:text-[#DFBC77] transition-colors">Track My Appointments</Link></li>
-            </ul>
+            {/* Salon & Appointments */}
+            <div>
+              <h4 className="font-serif text-xs sm:text-sm uppercase tracking-wider text-[#DFBC77] font-bold mb-3.5 sm:mb-4">
+                Salon & Styling
+              </h4>
+              <ul className="space-y-2 sm:space-y-2.5 text-xs text-stone-200 font-medium">
+                <li><Link to="/book" className="hover:text-white transition-colors font-bold text-[#DFBC77]">Book Bridal Appointment</Link></li>
+                <li><Link to="/services" className="hover:text-[#DFBC77] transition-colors">Celebrity Glam Party Makeup</Link></li>
+                <li><Link to="/services" className="hover:text-[#DFBC77] transition-colors">Gel Nail Extensions & Art</Link></li>
+                <li><Link to="/services" className="hover:text-[#DFBC77] transition-colors">Jewellery & Silhouette Trial</Link></li>
+                <li><Link to="/bookings" className="hover:text-[#DFBC77] transition-colors">Track My Appointments</Link></li>
+              </ul>
+            </div>
           </div>
 
           {/* Contact Details */}
