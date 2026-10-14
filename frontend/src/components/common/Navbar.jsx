@@ -290,10 +290,6 @@ export default function Navbar() {
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="lg:hidden bg-[#FAF3E6]/98 backdrop-blur-md border-b border-[#E8DFC8] px-4 pt-3 pb-6 space-y-3 animate-fade-in shadow-xl">
-          <div className="flex items-center justify-between pb-3 border-b border-[#E8DFC8]/60">
-            <Logo className="h-10 w-auto" alt="Nihara D'Aura" />
-            <span className="text-[10px] uppercase tracking-widest text-[#8C827A] font-semibold">Haute Luxury</span>
-          </div>
           {navLinks.map((item) => (
             <Link
               key={item.path}
