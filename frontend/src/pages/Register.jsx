@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Crown, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import Logo from '../components/common/Logo';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -23,8 +24,8 @@ export default function Register() {
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
-      tier: 'Silver',
+      avatar: '/hero-slide-1.jpg',
+      tier: 'Royal Patron',
       rewardPoints: 100
     });
     showToast('Welcome to Nihara D Aura! 100 Welcome Points Awarded.', 'success');
@@ -32,19 +33,27 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl border border-[#DFBC77]/50 p-6 sm:p-10 max-w-md w-full shadow-xl space-y-6">
+    <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center p-4 py-12">
+      <div className="bg-white/95 backdrop-blur-md rounded-3xl border border-[#DFBC77]/50 p-6 sm:p-10 max-w-md w-full shadow-2xl space-y-6">
         
-        <div className="text-center space-y-2">
-          <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-[#C59B27] to-[#DFBC77] text-white flex items-center justify-center mx-auto shadow-md">
-            <Crown className="w-7 h-7" />
+        <div className="text-center space-y-3">
+          <Link to="/" className="inline-block group transition-transform duration-300 hover:scale-105" title="Return to Nihara D'Aura Home">
+            <div className="p-1 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F5E6C4] to-[#AA7C11] shadow-md inline-block">
+              <Logo className="h-16 sm:h-20 w-auto rounded-full object-contain mx-auto" />
+            </div>
+          </Link>
+
+          <div>
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-[#8C733E] block">
+              HAUTE JEWELLERY & SALON SANCTUARY
+            </span>
+            <h1 className="font-serif text-2xl sm:text-3xl font-extrabold text-[#1C1917] tracking-tight mt-1">
+              Join Nihara Luxury
+            </h1>
+            <p className="text-xs sm:text-sm text-stone-500 font-light mt-1">
+              Create an account to track orders and unlock bespoke salon appointments
+            </p>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-extrabold text-stone-900">
-            Join Nihara Luxury
-          </h1>
-          <p className="text-sm font-medium text-stone-600 leading-snug">
-            Create an account to track orders and unlock bespoke salon appointments
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

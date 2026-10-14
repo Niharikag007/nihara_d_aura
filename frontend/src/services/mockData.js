@@ -2,11 +2,11 @@
 export const mockData = {
   users: [
     {
-      id: "usr_amit_kumar",
-      name: "Amit Kumar",
-      email: "amitky2056@gmail.com",
-      phone: "+91 8004116370",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
+      id: "usr_patron",
+      name: "Nihara Patron",
+      email: "patron@niharadaura.com",
+      phone: "+91 92660 59846",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
       tier: "Royal Elite",
       rewardPoints: 450
     }
@@ -2925,7 +2925,7 @@ export const mockData = {
       durationMinutes: 180,
       rating: 5.0,
       reviewCount: 310,
-      image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=85",
+      image: "/hero-slide-1.jpg",
       description: "Comprehensive royal bridal package including HD Airbrush makeup, luxury hair setting, floral styling, saree draping, and complimentary pre-ceremony glow facial.",
       inclusions: [
         "High-Definition Airbrush Makeup & Hydration Prep",
@@ -2943,7 +2943,7 @@ export const mockData = {
       durationMinutes: 90,
       rating: 4.9,
       reviewCount: 195,
-      image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1200&q=85",
+      image: "/hero-slide-4.jpg",
       description: "Red carpet glam tailored for receptions, sangeets, and galas with sculpted contours, custom false lashes, and radiant glass skin finish.",
       inclusions: [
         "Sculpted Contour Base & Glass Skin Illuminator",
@@ -2961,7 +2961,7 @@ export const mockData = {
       durationMinutes: 120,
       rating: 4.9,
       reviewCount: 145,
-      image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1200&q=85",
+      image: "/hero-slide-7.jpg",
       description: "16-hour sweatproof HD airbrush base with illuminated cheek highlights, soft-focus pore blurring, and customized nude or ruby lip styling.",
       inclusions: [
         "16-Hour Sweatproof HD Airbrush Foundation",
@@ -2979,7 +2979,7 @@ export const mockData = {
       durationMinutes: 75,
       rating: 4.8,
       reviewCount: 112,
-      image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1200&q=85",
+      image: "/hero-slide-5.jpg",
       description: "Dazzling evening look featuring multidimensional metallic eyeshadow, sharp winged liner, dewy rose cheek blush, and glass skin radiance.",
       inclusions: [
         "Multidimensional Molten Gold/Rose Eyelights",
@@ -2997,7 +2997,7 @@ export const mockData = {
       durationMinutes: 150,
       rating: 5.0,
       reviewCount: 168,
-      image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=85",
+      image: "/hero-slide-2.jpg",
       description: "Rejuvenating 24K pure gold leaf facial treatment followed by a soft, glowing, natural royal makeover for pre-wedding celebrations.",
       inclusions: [
         "24K Pure Gold Foil Facial & Lymphatic Drainage",
@@ -3017,7 +3017,7 @@ export const mockData = {
       durationMinutes: 120,
       rating: 4.9,
       reviewCount: 240,
-      image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=1200&q=85",
+      image: "/hero-slide-8.jpg",
       description: "Handcrafted acrylic or soft gel extensions with custom nail art, gold foil accents, or French chrome finish.",
       inclusions: [
         "Soft Gel / Hard Gel Extensions with Bespoke Length",
@@ -3236,7 +3236,8 @@ export const mockData = {
     name: "Nihara Luxury Salon Visit",
     branch: "Bandra Flagship Salon, Mumbai",
     address: "12 Bandra West, Mumbai, Maharashtra 400050",
-    phone: "+91 92660 59846"
+    phone: "+91 92660 59846",
+    email: "niharikagautam007@gmail.com"
   },
   addresses: [
     {
@@ -3265,8 +3266,8 @@ export const mockData = {
       id: "addr_3",
       type: "Hyderabad Residence",
       isDefault: false,
-      fullName: "Amit Kumar",
-      phone: "+91 8004116370",
+      fullName: "Ananya Roy",
+      phone: "+91 92660 59846",
       streetAddress: "Flat 302, Royal Palms, Jubilee Hills, Hyderabad 500033",
       city: "Hyderabad",
       state: "Telangana",

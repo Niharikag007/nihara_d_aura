@@ -19,7 +19,9 @@ import {
   CheckCircle2,
   Camera,
   Mail,
-  UserCheck
+  UserCheck,
+  ShoppingBag,
+  MapPin
 } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 import { useServices } from '../context/ServiceContext';
@@ -66,29 +68,44 @@ export default function Home() {
     {
       id: 1,
       name: "Ananya Roy",
-      role: "Verified Bride (Mumbai)",
+      role: "Verified Royal Bride",
+      city: "Worli, Mumbai",
+      date: "Wedding • Oct 2026",
+      tag: "ROYAL WEDDING",
       rating: 5,
-      comment: "The Royal Kundan Haar set for my wedding was mesmerizing! Everyone complimented the purity and finish of the gold. Absolutely world-class craftsmanship.",
-      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
-      boughtItem: "Royal 22K Gold Kundan Bridal Haar"
+      comment: "The Royal Kundan Haar set for my wedding was mesmerizing! The 24K gold foil and polki craftsmanship stunned everyone in our mandap. Included full Swiss hallmark certification and custom velvet chest.",
+      avatar: "/hero-slide-1.jpg",
+      reviewImage: "/hero-slide-1.jpg",
+      boughtItem: "Royal 22K Gold Kundan Bridal Haar",
+      itemType: "Jewellery"
     },
     {
       id: 2,
       name: "Radhika Malhotra",
-      role: "High Fashion Patron (Delhi)",
+      role: "High Fashion Patron",
+      city: "Defence Colony, New Delhi",
+      date: "Reception • Sep 2026",
+      tag: "BRIDAL MAKEOVER",
       rating: 5,
-      comment: "Priya Sharma did my HD Airbrush Bridal Makeup at home. My skin looked glowing, natural, and lasted through the entire 16-hour wedding ceremony!",
-      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=200&q=80",
-      boughtItem: "Royal Bridal Glow & Makeup Package"
+      comment: "Master stylist Priya did my HD Airbrush Bridal Makeup at our venue. My skin looked flawlessly radiant in all 4K wedding photos and lasted 16+ hours through the pheras without a touch-up!",
+      avatar: "/hero-slide-7.jpg",
+      reviewImage: "/hero-slide-7.jpg",
+      boughtItem: "Royal Bridal Glow & HD Makeup Package",
+      itemType: "Salon Artistry"
     },
     {
       id: 3,
       name: "Sanjana Kapoor",
-      role: "Luxury Collector (Hyderabad)",
+      role: "Heritage Gold Collector",
+      city: "Jubilee Hills, Hyderabad",
+      date: "Festive Collector • Aug 2026",
+      tag: "GOLD HEIRLOOM",
       rating: 5,
-      comment: "The 24K Gold Lakshmi Locket and 22K Peacock Jhumkas are stunning! Swiss gold assay certificate was included in a gorgeous velvet chest.",
-      avatar: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=200&q=80",
-      boughtItem: "24K Gold Lakshmi Coin Locket"
+      comment: "The 22K Solid Gold Peacock Jhumkas and Lakshmi Coin Locket are heirlooms I will pass down to my daughter. The weight, balance, and BIS hallmark purity are absolutely genuine.",
+      avatar: "/hero-slide-5.jpg",
+      reviewImage: "/hero-slide-5.jpg",
+      boughtItem: "22K Peacock Jhumkas & Lakshmi Locket",
+      itemType: "Jewellery"
     }
   ];
 
@@ -97,25 +114,25 @@ export default function Home() {
       id: 1,
       title: "Royal Kundan & HD Airbrush Glam",
       tag: "#NiharaRoyalBride",
-      image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80"
+      image: "/hero-slide-1.jpg"
     },
     {
       id: 2,
       title: "22K Solid Gold Peacock Jhumkas",
       tag: "#NiharaGoldHeirlooms",
-      image: "https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?auto=format&fit=crop&w=800&q=80"
+      image: "/hero-slide-3.jpg"
     },
     {
       id: 3,
       title: "Rose Quartz Gel Nail Extensions",
       tag: "#NiharaNailStudio",
-      image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=800&q=80"
+      image: "/hero-slide-8.jpg"
     },
     {
       id: 4,
       title: "Red Carpet Shimmer & Gold Glow",
       tag: "#NiharaCelebrityGlam",
-      image: "https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?auto=format&fit=crop&w=800&q=80"
+      image: "/hero-slide-4.jpg"
     }
   ];
 
@@ -174,7 +191,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2.5 3-Feature Banner Cards (Matching Reference Video: NEW ARRIVALS, BEST SELLERS, BRIDAL STUDIO) */}
+      {/* 2.5 3-Feature Banner Cards (Real Haute Photography: NEW ARRIVALS, BEST SELLERS, BRIDAL STUDIO) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
@@ -184,11 +201,15 @@ export default function Home() {
             className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block"
           >
             <img 
-              src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=85" 
+              src="/hero-slide-3.jpg" 
               alt="New Arrivals"
+              onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-transparent flex flex-col justify-end p-6 text-center items-center">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300 mb-1">
+                Polki & Antique Gold
+              </span>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-white uppercase tracking-wider mb-2 drop-shadow">
                 NEW ARRIVALS
               </h3>
@@ -198,17 +219,21 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Banner 2: BEST SELLERS */}
+          {/* Banner 2: BEST SELLERS (Fixed Broken Image & Elevated to Real 22K Kundan Heirlooms) */}
           <Link 
             to="/products" 
             className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block"
           >
             <img 
-              src="https://images.unsplash.com/photo-1611591475152-473523dd665f?auto=format&fit=crop&w=800&q=85" 
+              src="/hero-slide-5.jpg" 
               alt="Best Sellers"
+              onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-transparent flex flex-col justify-end p-6 text-center items-center">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300 mb-1">
+                22K Certified Heirlooms
+              </span>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-white uppercase tracking-wider mb-2 drop-shadow">
                 BEST SELLERS
               </h3>
@@ -218,17 +243,21 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Banner 3: BRIDAL & SALON STUDIO */}
+          {/* Banner 3: BRIDAL & SALON STUDIO (Elevated to Real HD Airbrush Artistry) */}
           <Link 
             to="/book" 
             className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block"
           >
             <img 
-              src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=85" 
+              src="/hero-slide-7.jpg" 
               alt="Bridal & Salon Studio"
+              onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-transparent flex flex-col justify-end p-6 text-center items-center">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300 mb-1">
+                Master Salon & Home Visits
+              </span>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-white uppercase tracking-wider mb-2 drop-shadow">
                 BRIDAL & SALON STUDIO
               </h3>
@@ -254,11 +283,11 @@ export default function Home() {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 sm:gap-4">
           {[
-            { name: 'Necklaces & Haar', img: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery', subcat: 'Bridal Haar & Sets' },
-            { name: 'Gold Jhumkas', img: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery', subcat: 'Gold Earrings & Jhumkas' },
-            { name: 'Gold Lockets', img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery', subcat: 'Gold Lockets & Pendants' },
-            { name: 'Silk Foundation', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&q=80', cat: 'Makeup', subcat: 'Face Foundations' },
-            { name: 'Press-On Nails', img: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=300&q=80', cat: 'Nails', subcat: 'Press-On Kits' },
+            { name: 'Necklaces & Haar', img: '/hero-slide-1.jpg', cat: 'Jewellery', subcat: 'Bridal Haar & Sets' },
+            { name: 'Gold Jhumkas', img: '/hero-slide-3.jpg', cat: 'Jewellery', subcat: 'Gold Earrings & Jhumkas' },
+            { name: 'Gold Lockets', img: '/hero-slide-5.jpg', cat: 'Jewellery', subcat: 'Gold Lockets & Pendants' },
+            { name: 'Silk Foundation', img: '/hero-slide-2.jpg', cat: 'Makeup', subcat: 'Face Foundations' },
+            { name: 'Press-On Nails', img: '/hero-slide-8.jpg', cat: 'Nails', subcat: 'Press-On Kits' },
             { name: 'Mogra Candles', img: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=300&q=80', cat: 'Candles', subcat: 'Soy Wax Jar Candles' },
           ].map((catItem, idx) => (
             <Link
@@ -385,26 +414,33 @@ export default function Home() {
       </section>
 
       {/* 5. Signature Salon Services (Elevated to showcase dual identity: Haute Jewellery & Premier Salon) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14">
-        <div className="flex items-end justify-between mb-5">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#A87D17] block">
-              SALON & AT-HOME ARTISTRY
-            </span>
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1C1917]">
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="w-6 h-0.5 bg-[#C59B27]" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#A87D17]">
+                SALON & AT-HOME ARTISTRY
+              </span>
+            </div>
+            <h2 className="font-serif text-2xl sm:text-3xl font-extrabold text-[#1C1917] tracking-tight">
               Signature Salon Services
             </h2>
+            <p className="text-xs sm:text-sm text-stone-500 font-light mt-1 max-w-xl">
+              Real high-definition bridal transformations, red carpet glam, and bespoke nail couture by master artists at our flagship salon or your home.
+            </p>
           </div>
           <Link
             to="/services"
-            className="text-xs font-semibold text-[#855F14] hover:text-[#523A0B] flex items-center gap-1 group"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#DFBC77] bg-white text-xs font-bold text-[#855F14] hover:bg-[#FAF6EE] hover:text-[#523A0B] transition-all shadow-xs group flex-shrink-0"
           >
-            <span>View All Services</span>
+            <span>Explore All Services</span>
             <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
-        <div className="space-y-3 sm:space-y-4">
+        {/* 3-Column Luxury Real-Photography Card Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
           {signatureServices.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
@@ -468,53 +504,113 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 7. Royal Wall of Love (Customer Reviews & Star Testimonials) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14">
-        <div className="text-center max-w-xl mx-auto mb-8 space-y-1">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-[#A87D17]">
-            TESTIMONIALS & REVIEWS
-          </span>
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1C1917]">
+      {/* 7. Royal Wall of Love (Real Client Stories with Authentic Photography) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+        <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+          <div className="inline-flex items-center gap-2 mb-0.5">
+            <span className="w-6 h-0.5 bg-[#C59B27]" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#A87D17]">
+              PATRON STORIES & REVIEWS
+            </span>
+            <span className="w-6 h-0.5 bg-[#C59B27]" />
+          </div>
+          <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#1C1917] tracking-tight">
             The Royal Wall of Love
           </h2>
-          <p className="text-xs text-stone-500">
-            Hear from our happy brides, collectors, and patrons across India.
+          <p className="text-xs sm:text-sm text-stone-500 font-light leading-relaxed">
+            Real wedding ceremonies, red carpet moments, and heirloom jewellery stories shared by our verified brides and collectors across India.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* 3-Column Visual Patron Story Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
           {testimonials.map((t) => (
-            <div key={t.id} className="bg-white rounded-2xl p-6 border border-[#DFBC77]/35 shadow-sm space-y-4 hover:shadow-xl transition-all hover:-translate-y-1 transform-gpu">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-amber-500">
-                  {[...Array(t.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                  ))}
+            <div 
+              key={t.id} 
+              className="group bg-white rounded-3xl border border-[#DFBC77]/45 overflow-hidden shadow-sm hover:shadow-2xl hover:border-[#C59B27] transition-all duration-500 flex flex-col will-change-transform transform-gpu hover:-translate-y-1.5"
+            >
+              {/* Real Client Photo Banner */}
+              <div className="relative aspect-[16/11] w-full overflow-hidden bg-stone-900">
+                <img
+                  src={t.reviewImage}
+                  alt={`${t.name} wedding review`}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                  loading="lazy"
+                />
+
+                {/* Dark Luxury Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
+
+                {/* Top Badges */}
+                <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2 z-10 pointer-events-none">
+                  <span className="inline-flex items-center gap-1 bg-stone-950/80 backdrop-blur-md text-amber-200 border border-amber-400/40 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase shadow-sm">
+                    <Sparkles className="w-3 h-3 text-amber-300" />
+                    <span>{t.tag}</span>
+                  </span>
+
+                  <span className="inline-flex items-center gap-1 bg-emerald-950/80 backdrop-blur-md text-emerald-300 border border-emerald-400/30 px-2.5 py-1 rounded-full text-[11px] font-bold shadow-sm">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                    <span>Verified Patron</span>
+                  </span>
                 </div>
-                <Quote className="w-6 h-6 text-amber-200" />
-              </div>
 
-              <p className="text-xs text-stone-700 italic leading-relaxed">
-                "{t.comment}"
-              </p>
-
-              <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <img 
-                    src={t.avatar} 
-                    alt={t.name} 
-                    onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
-                    className="w-9 h-9 rounded-full object-cover border border-amber-300" 
-                  />
-                  <div>
-                    <h4 className="text-xs font-bold text-stone-900">{t.name}</h4>
-                    <p className="text-[10px] text-amber-700 font-medium">{t.role}</p>
+                {/* Bottom Item Tag on Image */}
+                <div className="absolute bottom-3 inset-x-3 z-10 pointer-events-none">
+                  <div className="inline-flex items-center gap-1.5 bg-black/60 backdrop-blur-sm border border-white/15 px-2.5 py-1 rounded-lg text-white text-[11px] font-medium max-w-full">
+                    <ShoppingBag className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                    <span className="truncate">{t.boughtItem}</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  Verified
-                </span>
               </div>
+
+              {/* Card Body */}
+              <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-4">
+                
+                <div className="space-y-3">
+                  {/* Rating Stars & Quote Icon */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-amber-400">
+                      {[...Array(t.rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                      ))}
+                      <span className="text-xs font-bold text-stone-800 ml-1.5">5.0</span>
+                    </div>
+                    <Quote className="w-5 h-5 text-amber-400/60" />
+                  </div>
+
+                  {/* Testimonial Quote */}
+                  <p className="text-xs sm:text-[13px] text-stone-700 font-light leading-relaxed italic">
+                    "{t.comment}"
+                  </p>
+                </div>
+
+                {/* Patron Footer Details */}
+                <div className="pt-4 border-t border-[#DFBC77]/25 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="p-0.5 rounded-full bg-gradient-to-tr from-[#D4AF37] to-[#855F14] shrink-0 shadow-xs">
+                      <img 
+                        src={t.avatar} 
+                        alt={t.name} 
+                        className="w-10 h-10 rounded-full object-cover" 
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-sm font-bold text-stone-900 truncate leading-snug flex items-center gap-1">
+                        <span>{t.name}</span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 inline shrink-0" />
+                      </h4>
+                      <p className="text-[11px] text-[#A87D17] font-semibold truncate leading-tight mt-0.5">
+                        {t.role}
+                      </p>
+                      <p className="text-[10px] text-stone-400 font-medium truncate mt-0.5">
+                        {t.city} • {t.date}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
             </div>
           ))}
         </div>

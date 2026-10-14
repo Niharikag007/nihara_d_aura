@@ -17,6 +17,7 @@ Welcome to **Nihara D'Aura** (`Jewellery & Makeup`), a state-of-the-art, ultra-l
 - **Tagline**: Jewellery & Makeup | Haute Luxury
 - **Emblem / Seal Logo**: 3D Circular Golden Brush-Frame Emblem Seal with central royal crest branding (`/logo.png`)
 - **Official Contact Number**: `+91 92660 59846`
+- **Official Contact Email**: `niharikagautam007@gmail.com`
 - **Flagship Salon & Corporate Address**: 
   `423 A, 4th Floor, Tower 3, NX One Tower, Greater Noida (West), UP - 201306`
 

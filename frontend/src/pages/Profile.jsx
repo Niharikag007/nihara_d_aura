@@ -34,10 +34,10 @@ export default function Profile() {
   const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
-    name: user?.name || 'Amit Kumar',
-    email: user?.email || 'amitky2056@gmail.com',
-    phone: user?.phone || '+91 8004116370',
-    avatar: user?.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d'
+    name: user?.name || 'Nihara Patron',
+    email: user?.email || 'patron@niharadaura.com',
+    phone: user?.phone || '+91 98765 43210',
+    avatar: user?.avatar || '/hero-slide-1.jpg'
   });
 
   // Keep form synchronized if user profile updates
@@ -189,9 +189,9 @@ export default function Profile() {
     },
     {
       title: 'Help & Concierge Support',
-      subtitle: '24/7 dedicated beauty advisor',
+      subtitle: 'niharikagautam007@gmail.com • 24/7 Support',
       icon: HelpCircle,
-      onClick: () => showToast('Connecting to 24/7 Concierge: +91 92660 59846', 'info')
+      onClick: () => showToast('Concierge: niharikagautam007@gmail.com | +91 92660 59846', 'info')
     },
     {
       title: 'Settings',
@@ -235,7 +235,7 @@ export default function Profile() {
 
           <div>
             <h2 className="font-serif text-base sm:text-lg lg:text-xl font-bold text-[#1C1917] flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <span>{user?.name || 'Amit Kumar'}</span>
+              <span>{user?.name || 'Nihara Patron'}</span>
               <span className={`text-[10px] font-sans font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
                 isAdmin 
                   ? 'bg-amber-100 text-amber-900 border-amber-300' 
@@ -247,8 +247,8 @@ export default function Profile() {
                 {user?.tier || 'Royal Elite'}
               </span>
             </h2>
-            <p className="text-xs lg:text-sm text-stone-500">{user?.email || 'amitky2056@gmail.com'}</p>
-            <p className="text-xs lg:text-sm text-stone-500 font-mono mt-0.5">{user?.phone || '+91 8004116370'}</p>
+            <p className="text-xs lg:text-sm text-stone-500">{user?.email || 'patron@niharadaura.com'}</p>
+            <p className="text-xs lg:text-sm text-stone-500 font-mono mt-0.5">{user?.phone || '+91 98765 43210'}</p>
           </div>
         </div>
 

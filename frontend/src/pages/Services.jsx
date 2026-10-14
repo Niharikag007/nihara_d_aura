@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sparkles, Clock, Star, MapPin, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
+import { Sparkles, Clock, Star, MapPin, CheckCircle2, ArrowRight, Loader2, Mail } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
 
 export default function Services() {
@@ -47,6 +47,12 @@ export default function Services() {
           </p>
           <p className="text-stone-300">{salonInfo?.address || '423 A, 4th Floor, NX One Tower, Greater Noida (West)'}</p>
           <p className="text-stone-400">Hours: {salonInfo?.hours || '09:00 AM - 08:30 PM (Daily)'}</p>
+          <p className="text-stone-300 flex items-center gap-1.5 pt-0.5">
+            <Mail className="w-3.5 h-3.5 text-[#DFBC77] flex-shrink-0" />
+            <a href="mailto:niharikagautam007@gmail.com" className="hover:text-amber-200 transition-colors underline truncate">
+              {salonInfo?.email || 'niharikagautam007@gmail.com'}
+            </a>
+          </p>
           <Link
             to="/book"
             className="block text-center btn-gold py-2 rounded-xl text-xs font-bold uppercase tracking-wider mt-3"
@@ -104,7 +110,16 @@ export default function Services() {
               <div className="flex flex-col sm:flex-row gap-5 flex-1">
                 <div className="w-full sm:w-36 sm:h-36 aspect-[4/3] sm:aspect-square rounded-2xl overflow-hidden bg-[#FBF8F2] flex-shrink-0 border border-stone-200">
                   <img
-                    src={service.image}
+                    src={service.image && !service.image.includes('unsplash') ? service.image : (
+                      service.id === 'srv_bridal_glow' ? '/hero-slide-1.jpg' :
+                      service.id === 'srv_celebrity_glam' ? '/hero-slide-4.jpg' :
+                      service.id === 'srv_quartz_nails' ? '/hero-slide-8.jpg' :
+                      service.id === 'srv_hd_engagement' ? '/hero-slide-7.jpg' :
+                      service.id === 'srv_sangeet_shimmer' ? '/hero-slide-5.jpg' :
+                      service.id === 'srv_gold_facial_makeup' ? '/hero-slide-2.jpg' :
+                      service.id === 'srv_styling_consultation' ? '/hero-slide-3.jpg' :
+                      (service.image || '/hero-slide-1.jpg')
+                    )}
                     alt={service.name}
                     onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
                     className="w-full h-full object-cover"

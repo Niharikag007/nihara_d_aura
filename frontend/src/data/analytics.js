@@ -105,6 +105,6 @@ export const recentActivity = [
   { id: 3, type: 'booking', message: 'Meera Reddy booked Celebrity glam makeup for Oct 15', time: '5 hours ago', icon: 'calendar' },
   { id: 4, type: 'stock', message: 'Waterproof kajal duo pack is now out of stock', time: '6 hours ago', icon: 'alert-triangle' },
   { id: 5, type: 'coupon', message: 'Coupon GLOW20 used 224 times (75% of limit)', time: '1 day ago', icon: 'tag' },
-  { id: 6, type: 'order', message: 'Amit Kumar placed an order for ₹24,500', time: '1 day ago', icon: 'shopping-bag' },
+  { id: 6, type: 'order', message: 'Aarav Singhania placed an order for ₹24,500', time: '1 day ago', icon: 'shopping-bag' },
   { id: 7, type: 'review', message: 'New 5-star review on 22K Peacock Jhumka', time: '2 days ago', icon: 'star' },
 ];

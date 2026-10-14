@@ -11,6 +11,7 @@ This document contains **all the text, products, categories, pricing, salon serv
 - **Announcement Bar Text**: 
   `Complimentary Royal Sample Set on orders above ₹4,999 • Flagship Salon Open at Greater Noida (West)`
 - **Official Contact Number**: `+91 92660 59846`
+- **Official Contact Email**: `niharikagautam007@gmail.com`
 - **Flagship Salon & Corporate Address**: 
   `423 A, 4th Floor, Tower 3, NX One Tower, Greater Noida (West), UP - 201306`
 
@@ -221,5 +222,6 @@ This document contains **all the text, products, categories, pricing, salon serv
 - **Flagship Address**: 
   `423 A, 4th Floor, Tower 3, NX One Tower, Greater Noida (West), UP - 201306`
 - **Phone**: `+91 92660 59846`
+- **Email**: `niharikagautam007@gmail.com`
 - **Customer Care Hours**: Monday – Sunday, 10:00 AM – 8:00 PM IST
 - **Copyright**: © 2026 Nihara D'Aura Haute Luxury. All Rights Reserved.

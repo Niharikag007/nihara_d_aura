@@ -20,14 +20,14 @@ export const ADMIN_USER = {
 };
 
 export const DEFAULT_CUSTOMER = {
-  id: "usr_amit_kumar",
-  name: "Amit Kumar",
-  email: "amitky2056@gmail.com",
-  phone: "+91 8004116370",
-  avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
+  id: "usr_nihara_patron",
+  name: "Nihara Patron",
+  email: "patron@niharadaura.com",
+  phone: "+91 98765 43210",
+  avatar: "/hero-slide-1.jpg",
   role: "user",
-  tier: "Royal Elite",
-  rewardPoints: 450
+  tier: "Royal Patron",
+  rewardPoints: 500
 };
 
 // Persist auth state in localStorage so logout/login survives page refresh

@@ -2948,7 +2948,7 @@ export const initialData = {
       durationMinutes: 180,
       rating: 5.0,
       reviewCount: 310,
-      image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e",
+      image: "/hero-slide-1.jpg",
       description: "Comprehensive royal bridal package including HD Airbrush makeup, luxury hair setting, floral styling, saree draping, and complimentary pre-ceremony glow facial.",
       inclusions: [
         "High-Definition Airbrush Makeup & Hydration Prep",
@@ -2966,7 +2966,7 @@ export const initialData = {
       durationMinutes: 90,
       rating: 4.9,
       reviewCount: 195,
-      image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f",
+      image: "/hero-slide-4.jpg",
       description: "Red carpet glam tailored for receptions, sangeets, and galas with sculpted contours, custom false lashes, and radiant glass skin finish.",
       inclusions: [
         "Sculpted Contour Base & Glass Skin Illuminator",
@@ -2984,7 +2984,7 @@ export const initialData = {
       durationMinutes: 120,
       rating: 4.9,
       reviewCount: 240,
-      image: "https://images.unsplash.com/photo-1632345031435-8727f6897d53",
+      image: "/hero-slide-8.jpg",
       description: "Handcrafted acrylic or soft gel extensions with custom nail art, gold foil accents, or French chrome finish.",
       inclusions: [
         "Soft Gel / Hard Gel Extensions with Bespoke Length",
@@ -3002,7 +3002,7 @@ export const initialData = {
       durationMinutes: 60,
       rating: 4.8,
       reviewCount: 85,
-      image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908",
+      image: "/hero-slide-3.jpg",
       description: "One-on-one session with our senior jewellery and styling advisors. Try curated heirloom pieces matched to your wedding trousseau.",
       inclusions: [
         "Virtual or In-Salon Fitting Session at Bandra Flagship",
@@ -3054,10 +3054,12 @@ export const initialData = {
     }
   ],
   salon: {
-    name: "Nihara Luxury Salon Visit",
-    branch: "Bandra Flagship Salon, Mumbai",
-    address: "12 Bandra West, Mumbai, Maharashtra 400050",
-    phone: "+91 98765 43210"
+    name: "Nihara D'Aura Flagship Salon",
+    branch: "NX One Tower Flagship Salon",
+    address: "423 A, 4th Floor, Tower 3, NX One Tower, Greater Noida (West), UP - 201306",
+    phone: "+91 92660 59846",
+    email: "niharikagautam007@gmail.com",
+    hours: "09:00 AM - 08:30 PM (Daily)"
   },
   addresses: [
     {

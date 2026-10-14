@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ShieldCheck, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import Logo from '../components/common/Logo';
 
 export default function VerifyOTP() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const { showToast } = useToast();
-
   const [otp, setOtp] = useState(['1', '2', '3', '4', '5', '6']);
 
   const handleOtpChange = (val, idx) => {
@@ -20,33 +20,40 @@ export default function VerifyOTP() {
   const handleVerify = (e) => {
     e.preventDefault();
     login({
-      id: 'usr_amit_kumar',
-      name: 'Amit Kumar',
-      email: 'amitky2056@gmail.com',
-      phone: '+91 8004116370',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
-      tier: 'Royal Elite',
-      rewardPoints: 450
+      id: 'usr_patron_' + Date.now(),
+      name: 'Nihara Patron',
+      email: 'patron@niharadaura.com',
+      phone: '+91 98765 43210',
+      avatar: '/hero-slide-1.jpg',
+      tier: 'Royal Patron',
+      rewardPoints: 500
     });
-    showToast('OTP verified successfully!', 'success');
+    showToast('OTP verified successfully! Welcome to Nihara.', 'success');
     navigate('/profile');
   };
 
   return (
-    <div className="min-h-screen bg-transparent flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl border border-[#DFBC77]/50 p-6 sm:p-10 max-w-md w-full shadow-xl space-y-6 text-center">
+    <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center p-4 py-12">
+      <div className="bg-white/95 backdrop-blur-md rounded-3xl border border-[#DFBC77]/50 p-6 sm:p-10 max-w-md w-full shadow-2xl space-y-6 text-center">
         
-        <div className="w-14 h-14 rounded-full bg-[#FAF3E8] border border-[#DFBC77] text-[#C59B27] flex items-center justify-center mx-auto shadow-inner">
-          <ShieldCheck className="w-7 h-7" />
-        </div>
+        <div className="space-y-3">
+          <Link to="/" className="inline-block group transition-transform duration-300 hover:scale-105" title="Return to Nihara D'Aura Home">
+            <div className="p-1 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F5E6C4] to-[#AA7C11] shadow-md inline-block">
+              <Logo className="h-16 sm:h-20 w-auto rounded-full object-contain mx-auto" />
+            </div>
+          </Link>
 
-        <div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-extrabold text-stone-900">
-            Verify Security Code
-          </h1>
-          <p className="text-sm font-medium text-stone-600 mt-1">
-            Enter the 6-digit code sent to <strong className="text-stone-900 font-bold">+91 8004116370</strong>
-          </p>
+          <div>
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.25em] text-[#8C733E] block">
+              TWO-FACTOR AUTHENTICATION
+            </span>
+            <h1 className="font-serif text-2xl sm:text-3xl font-extrabold text-[#1C1917] tracking-tight mt-1">
+              Verify Security Code
+            </h1>
+            <p className="text-xs sm:text-sm text-stone-500 font-light mt-1">
+              Enter the 6-digit verification code dispatched to your registered phone or email
+            </p>
+          </div>
         </div>
 
         <form onSubmit={handleVerify} className="space-y-6">
