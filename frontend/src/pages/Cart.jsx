@@ -78,8 +78,9 @@ export default function Cart() {
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={item.product?.images?.[0] || 'https://images.unsplash.com/photo-1596462502278-27bfdc403348'}
+                  src={item.product?.images?.[0] || '/hero-slide-1.jpg'}
                   alt={item.product?.name}
+                  onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover bg-stone-100 border border-stone-200 flex-shrink-0"
                 />
                 <div>

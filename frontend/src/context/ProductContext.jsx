@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { api } from '../services/api';
 import { mockData } from '../services/mockData';
 
 const ProductContext = createContext();
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 export function ProductProvider({ children }) {
   const [products, setProducts] = useState(() => {
@@ -29,25 +31,17 @@ export function ProductProvider({ children }) {
   // Sync from backend API on mount
   useEffect(() => {
     let isMounted = true;
-    fetch('http://localhost:5000/api/products')
-      .then(res => res.json())
-      .then(data => {
-        if (!isMounted) return;
-        const backendProducts = data.data?.products || data.products;
-        if (Array.isArray(backendProducts) && backendProducts.length > 0) {
-          setProducts(prev => {
-            if (backendProducts.length !== prev.length) {
-              return backendProducts;
-            }
-            return prev;
-          });
-        }
-      })
-      .catch(() => {
-        // Silently use client catalog
-      });
+    api.getProducts().then(res => {
+      if (!isMounted) return;
+      if (res && Array.isArray(res.products) && res.products.length > 0) {
+        setProducts(res.products);
+        saveToStorage(res.products);
+      }
+    }).catch(err => {
+      console.warn('[ProductContext] Backend sync fallback:', err.message);
+    });
     return () => { isMounted = false; };
-  }, []);
+  }, [saveToStorage]);
 
   const addProduct = useCallback(async (productData) => {
     if (!productData.name || !productData.price) {
@@ -116,7 +110,7 @@ const getAuthHeaders = () => {
 
     // Send to backend API
     try {
-      fetch('http://localhost:5000/api/products', {
+      fetch(`${API_BASE}/products`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(newProduct)
@@ -142,7 +136,7 @@ const getAuthHeaders = () => {
 
     if (updated) {
       try {
-        fetch(`http://localhost:5000/api/products/${id}`, {
+        fetch(`${API_BASE}/products/${id}`, {
           method: 'PUT',
           headers: getAuthHeaders(),
           body: JSON.stringify(updateData)
@@ -170,7 +164,7 @@ const getAuthHeaders = () => {
     if (!existing) return { success: false, message: 'Product not found' };
 
     try {
-      fetch(`http://localhost:5000/api/products/${existing.id}`, {
+      fetch(`${API_BASE}/products/${existing.id}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
       }).catch(() => {});

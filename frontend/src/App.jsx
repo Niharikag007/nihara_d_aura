@@ -7,6 +7,7 @@ import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { ToastProvider } from './context/ToastContext';
 import { SocketProvider } from './context/SocketContext';
+import { ServiceProvider } from './context/ServiceContext';
 
 import ScrollToTop from './components/common/ScrollToTop';
 
@@ -118,19 +119,21 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <AuthProvider>
-        <ProductProvider>
-          <OffersProvider>
-            <CartProvider>
-              <WishlistProvider>
-                <ToastProvider>
-                  <SocketProvider>
-                    <AppLayout />
-                  </SocketProvider>
-                </ToastProvider>
-              </WishlistProvider>
-            </CartProvider>
-          </OffersProvider>
-        </ProductProvider>
+        <ToastProvider>
+          <SocketProvider>
+            <ProductProvider>
+              <OffersProvider>
+                <CartProvider>
+                  <WishlistProvider>
+                    <ServiceProvider>
+                      <AppLayout />
+                    </ServiceProvider>
+                  </WishlistProvider>
+                </CartProvider>
+              </OffersProvider>
+            </ProductProvider>
+          </SocketProvider>
+        </ToastProvider>
       </AuthProvider>
     </BrowserRouter>
   );

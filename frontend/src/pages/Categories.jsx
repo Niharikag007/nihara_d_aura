@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles } from 'lucide-react';
-import { mockData } from '../services/mockData';
+import { ArrowRight, Sparkles, Loader2 } from 'lucide-react';
+import { useServices } from '../context/ServiceContext';
 
 export default function Categories() {
   const navigate = useNavigate();
+  const { categories, loading } = useServices();
 
   return (
     <div className="min-h-screen bg-transparent py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -23,9 +24,16 @@ export default function Categories() {
         </p>
       </div>
 
-      {/* Categories Grid / Stack */}
-      <div className="space-y-6">
-        {mockData.categories.map((cat) => (
+      {/* Loading state */}
+      {loading ? (
+        <div className="py-20 text-center flex flex-col items-center justify-center gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-[#DFBC77]" />
+          <p className="text-stone-500 font-serif italic text-sm">Loading luxury verticals...</p>
+        </div>
+      ) : (
+        /* Categories Grid / Stack */
+        <div className="space-y-6">
+          {categories.map((cat) => (
           <div
             key={cat.id}
             className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-[#DFBC77]/40 bg-white"
@@ -33,8 +41,9 @@ export default function Categories() {
             {/* Banner Background Image with Gradient Overlay */}
             <div className="relative h-48 sm:h-64 w-full overflow-hidden">
               <img
-                src={cat.image}
+                src={cat.image || '/hero-slide-1.jpg'}
                 alt={cat.name}
+                onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
@@ -82,6 +91,7 @@ export default function Categories() {
           </div>
         ))}
       </div>
+      )}
 
     </div>
   );

@@ -1,21 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, Calendar, Clock, MapPin, Sparkles, XCircle } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, Calendar, Clock, MapPin, Sparkles, XCircle, Loader2 } from 'lucide-react';
 import { api } from '../services/api';
 import { useToast } from '../context/ToastContext';
+import { useSocket } from '../context/SocketContext';
 
 export default function Bookings() {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { socket } = useSocket();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api.getBookings().then(res => {
+  const fetchBookings = useCallback(async () => {
+    try {
+      const res = await api.getBookings();
       if (res && res.bookings) setBookings(res.bookings);
+    } finally {
       setLoading(false);
-    });
+    }
   }, []);
+
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
+
+  // Real-time socket event listener for live appointments
+  useEffect(() => {
+    if (!socket) return;
+    socket.on('booking:created', fetchBookings);
+    socket.on('booking:cancelled', fetchBookings);
+    return () => {
+      socket.off('booking:created', fetchBookings);
+      socket.off('booking:cancelled', fetchBookings);
+    };
+  }, [socket, fetchBookings]);
 
   const handleCancel = async (bookingId) => {
     await api.cancelBooking(bookingId);
@@ -83,7 +102,12 @@ export default function Bookings() {
 
       {/* Bookings List */}
       <div className="space-y-4">
-        {bookings.length === 0 ? (
+        {loading ? (
+          <div className="py-16 text-center flex flex-col items-center justify-center gap-3 bg-white rounded-3xl border border-[#DFBC77]/30">
+            <Loader2 className="w-8 h-8 animate-spin text-[#DFBC77]" />
+            <p className="text-xs text-stone-500 font-serif italic">Loading your appointments...</p>
+          </div>
+        ) : bookings.length === 0 ? (
           <div className="bg-white rounded-3xl p-10 text-center border border-stone-200">
             <Calendar className="w-12 h-12 text-[#DFBC77] mx-auto mb-3" />
             <h3 className="font-serif text-lg font-bold text-stone-900">No Appointments Scheduled</h3>

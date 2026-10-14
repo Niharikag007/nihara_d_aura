@@ -1,27 +1,76 @@
-import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { api } from '../services/api';
 
 const WishlistContext = createContext();
 
 export function WishlistProvider({ children }) {
-  // Pre-seed with the 3 items seen in APK/Video: Foundation, Chandbali Earrings, Jasmine Candle
-  const [wishlistIds, setWishlistIds] = useState(["prod_foundation", "prod_earrings", "prod_candle"]);
+  const [wishlistIds, setWishlistIds] = useState(() => {
+    try {
+      const saved = localStorage.getItem('nihara_wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
-  const toggleWishlist = useCallback((productId) => {
-    setWishlistIds(prev => {
-      if (prev.includes(productId)) {
-        return prev.filter(id => id !== productId);
-      } else {
-        return [...prev, productId];
+  // Sync with server wishlist on mount
+  useEffect(() => {
+    let isMounted = true;
+    api.getWishlist().then(res => {
+      if (isMounted && res && res.wishlist) {
+        const serverIds = res.wishlist.map(p => p.id || p._id);
+        if (serverIds.length > 0) {
+          setWishlistIds(prev => {
+            const merged = Array.from(new Set([...prev, ...serverIds]));
+            try {
+              localStorage.setItem('nihara_wishlist', JSON.stringify(merged));
+            } catch {}
+            return merged;
+          });
+        }
       }
+    }).catch(err => {
+      console.warn('Could not sync wishlist with server:', err.message);
     });
+    return () => { isMounted = false; };
+  }, []);
+
+  const toggleWishlist = useCallback(async (productId) => {
+    setWishlistIds(prev => {
+      const next = prev.includes(productId)
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId];
+      try {
+        localStorage.setItem('nihara_wishlist', JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+
+    try {
+      await api.toggleWishlistOnServer(productId);
+    } catch (err) {
+      console.warn('Server wishlist toggle error:', err.message);
+    }
   }, []);
 
   const isInWishlist = useCallback((productId) => {
     return wishlistIds.includes(productId);
   }, [wishlistIds]);
 
-  const removeFromWishlist = useCallback((productId) => {
-    setWishlistIds(prev => prev.filter(id => id !== productId));
+  const removeFromWishlist = useCallback(async (productId) => {
+    setWishlistIds(prev => {
+      const next = prev.filter(id => id !== productId);
+      try {
+        localStorage.setItem('nihara_wishlist', JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+
+    try {
+      await api.toggleWishlistOnServer(productId);
+    } catch (err) {
+      console.warn('Server wishlist remove error:', err.message);
+    }
   }, []);
 
   const value = useMemo(() => ({

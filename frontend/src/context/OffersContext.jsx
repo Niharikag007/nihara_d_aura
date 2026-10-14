@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 
 const OffersContext = createContext();
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const DEFAULT_OFFERS = [
   {
@@ -62,7 +63,7 @@ export function OffersProvider({ children }) {
   // Sync with backend API if reachable
   useEffect(() => {
     let isMounted = true;
-    fetch('http://localhost:5000/api/offers')
+    fetch(`${API_BASE}/offers`)
       .then(res => res.json())
       .then(data => {
         if (!isMounted) return;
@@ -127,7 +128,7 @@ const getAuthHeaders = () => {
 
     // Send to backend API
     try {
-      fetch('http://localhost:5000/api/offers', {
+      fetch(`${API_BASE}/offers`, {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify(newOffer)
@@ -149,7 +150,7 @@ const getAuthHeaders = () => {
 
     // Send to backend API
     try {
-      fetch(`http://localhost:5000/api/offers/${target.id}`, { 
+      fetch(`${API_BASE}/offers/${target.id}`, { 
         method: 'DELETE',
         headers: getAuthHeaders()
       }).catch(() => {});
@@ -174,7 +175,7 @@ const getAuthHeaders = () => {
 
     if (updatedOffer) {
       try {
-        fetch(`http://localhost:5000/api/offers/${updatedOffer.id}/toggle`, { 
+        fetch(`${API_BASE}/offers/${updatedOffer.id}/toggle`, { 
           method: 'PATCH',
           headers: getAuthHeaders()
         }).catch(() => {});

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -54,12 +54,7 @@ export default function Addresses() {
     isDefault: false
   });
 
-  // Load addresses on mount
-  useEffect(() => {
-    loadAddresses();
-  }, []);
-
-  const loadAddresses = async () => {
+  const loadAddresses = useCallback(async () => {
     try {
       const res = await api.getAddresses();
       if (res && res.addresses) {
@@ -70,7 +65,12 @@ export default function Addresses() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Load addresses on mount
+  useEffect(() => {
+    loadAddresses();
+  }, [loadAddresses]);
 
   // Set default address
   const handleSetDefault = async (id) => {

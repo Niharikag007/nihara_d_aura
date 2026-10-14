@@ -10,15 +10,14 @@ import {
   Home, 
   Calendar as CalendarIcon, 
   CheckCircle2, 
-  User, 
   ShoppingBag,
-  Star,
   Sun,
   Moon,
-  CalendarDays,
-  RotateCcw
+  Edit3,
+  Loader2
 } from 'lucide-react';
-import { mockData } from '../services/mockData';
+import { useServices } from '../context/ServiceContext';
+import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 
 export default function Booking() {
@@ -26,13 +25,27 @@ export default function Booking() {
   const [searchParams] = useSearchParams();
   const preselectedServiceId = searchParams.get('serviceId');
 
+  const { services, artists, salonInfo, loading: servicesLoading } = useServices();
+  const { user } = useAuth();
+
   // Step state (1 to 5)
   const [currentStep, setCurrentStep] = useState(1);
 
   // Step 1: Selected service IDs
   const [selectedServiceIds, setSelectedServiceIds] = useState(
-    preselectedServiceId ? [preselectedServiceId] : ['srv_bridal_glow']
+    preselectedServiceId ? [preselectedServiceId] : []
   );
+
+  // Ensure default service selection once services load from backend
+  useEffect(() => {
+    if (selectedServiceIds.length === 0 && services && services.length > 0) {
+      if (preselectedServiceId && services.some(s => s.id === preselectedServiceId)) {
+        setSelectedServiceIds([preselectedServiceId]);
+      } else {
+        setSelectedServiceIds([services[0].id]);
+      }
+    }
+  }, [services, preselectedServiceId, selectedServiceIds.length]);
 
   // Step 2: Dynamic Calendar & Time Slot State
   const [currentCalDate, setCurrentCalDate] = useState(new Date(2026, 9, 1)); // October 2026
@@ -43,11 +56,21 @@ export default function Booking() {
   // Step 3: Location
   const [locationType, setLocationType] = useState('home'); // 'salon' or 'home'
   const [serviceAddress, setServiceAddress] = useState(
-    'Flat 302, Royal Palms, Jubilee Hills, Hyderabad'
+    user?.address || 'Flat 302, Royal Palms, Jubilee Hills, Hyderabad'
+  );
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [tempAddress, setTempAddress] = useState(
+    user?.address || 'Flat 302, Royal Palms, Jubilee Hills, Hyderabad'
   );
 
   // Step 4: Artist
-  const [selectedArtistId, setSelectedArtistId] = useState('art_ananya');
+  const [selectedArtistId, setSelectedArtistId] = useState('');
+
+  useEffect(() => {
+    if (!selectedArtistId && artists && artists.length > 0) {
+      setSelectedArtistId(artists[0].id);
+    }
+  }, [artists, selectedArtistId]);
 
   // Step 5: Final booking details & Confirmation Modal
   const [isConfirmedModalOpen, setIsConfirmedModalOpen] = useState(false);
@@ -60,13 +83,19 @@ export default function Booking() {
   }, [currentStep]);
 
   // Derived selected services
-  const selectedServices = mockData.services.filter(s => selectedServiceIds.includes(s.id));
+  const selectedServices = (services || []).filter(s => selectedServiceIds.includes(s.id));
   const subtotal = selectedServices.reduce((sum, s) => sum + s.price, 0);
   const travelCharge = locationType === 'home' ? 500 : 0;
   const totalPayable = subtotal + travelCharge;
 
   // Selected artist object
-  const selectedArtist = mockData.artists.find(a => a.id === selectedArtistId) || mockData.artists[0];
+  const selectedArtist = (artists || []).find(a => a.id === selectedArtistId) || artists?.[0] || {
+    id: 'art_default',
+    name: 'Senior Beauty Specialist',
+    title: 'Master Bridal Therapist',
+    avatar: '/hero-slide-1.jpg',
+    rating: 4.9
+  };
 
   // Toggle service selection in Step 1
   const toggleService = (serviceId) => {
@@ -221,34 +250,41 @@ export default function Booking() {
             )}
 
             {/* Services List with Checkboxes */}
-            <div className="space-y-3">
-              {mockData.services.map((service) => {
-                const isSelected = selectedServiceIds.includes(service.id);
-                return (
-                  <div
-                    key={service.id}
-                    onClick={() => toggleService(service.id)}
-                    className={`cursor-pointer rounded-2xl p-4 border transition-all duration-200 flex items-center justify-between gap-4 ${
-                      isSelected
-                        ? 'bg-[#FAF3E8]/80 border-[#C59B27] shadow-sm'
-                        : 'bg-white border-stone-200 hover:border-[#DFBC77]'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3.5 flex-1 min-w-0">
-                      <img
-                        src={service.image}
-                        alt={service.name}
-                        className="w-16 h-16 rounded-xl object-cover border border-stone-200 flex-shrink-0"
-                      />
-                      <div className="min-w-0">
-                        <h4 className="font-serif text-sm font-bold text-[#1C1917] truncate">
-                          {service.name}
-                        </h4>
-                        <p className="text-xs text-stone-500 mt-0.5">
-                          {service.durationMinutes} Mins • <strong className="text-stone-900">₹{service.price.toLocaleString('en-IN')}</strong>
-                        </p>
+            {servicesLoading ? (
+              <div className="py-12 text-center flex flex-col items-center justify-center gap-2">
+                <Loader2 className="w-7 h-7 animate-spin text-[#DFBC77]" />
+                <p className="text-xs text-stone-500 font-serif italic">Loading bespoke salon services...</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {services.map((service) => {
+                  const isSelected = selectedServiceIds.includes(service.id);
+                  return (
+                    <div
+                      key={service.id}
+                      onClick={() => toggleService(service.id)}
+                      className={`cursor-pointer rounded-2xl p-4 border transition-all duration-200 flex items-center justify-between gap-4 ${
+                        isSelected
+                          ? 'bg-[#FAF3E8]/80 border-[#C59B27] shadow-sm'
+                          : 'bg-white border-stone-200 hover:border-[#DFBC77]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3.5 flex-1 min-w-0">
+                        <img
+                          src={service.image}
+                          alt={service.name}
+                          onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                          className="w-16 h-16 rounded-xl object-cover border border-stone-200 flex-shrink-0"
+                        />
+                        <div className="min-w-0">
+                          <h4 className="font-serif text-sm font-bold text-[#1C1917] truncate">
+                            {service.name}
+                          </h4>
+                          <p className="text-xs text-stone-500 mt-0.5">
+                            {service.durationMinutes} Mins • <strong className="text-stone-900">₹{service.price.toLocaleString('en-IN')}</strong>
+                          </p>
+                        </div>
                       </div>
-                    </div>
 
                     {/* Radio/Checkbox indicator matching video */}
                     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all ${
@@ -262,6 +298,7 @@ export default function Booking() {
                 );
               })}
             </div>
+            )}
 
             {/* Bottom Actions */}
             <div className="pt-4 flex justify-end">
@@ -551,10 +588,10 @@ export default function Booking() {
                   </div>
                   <div>
                     <h4 className="font-serif text-sm font-bold text-[#1C1917]">
-                      Nihara Luxury Salon Visit
+                      {salonInfo?.name || 'Nihara Flagship Salon Visit'}
                     </h4>
                     <p className="text-xs text-stone-500">
-                      Bandra Flagship Salon, Mumbai
+                      {salonInfo?.address || 'NX One Tower, Greater Noida (West)'}
                     </p>
                   </div>
                 </div>
@@ -599,16 +636,58 @@ export default function Booking() {
 
             {/* If Home Service: Address Card / Input matching video */}
             {locationType === 'home' && (
-              <div className="mt-4 p-4 rounded-2xl bg-[#FCF9F2] border border-[#DFBC77]/60 space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#855F14]">
-                  Your Delivery & Service Address
-                </span>
-                <p className="text-xs font-semibold text-stone-800">
-                  {serviceAddress}
-                </p>
-                <p className="text-[11px] text-stone-500">
-                  Primary Contact: Amit Kumar (+91 8004116370)
-                </p>
+              <div className="mt-4 p-4 rounded-2xl bg-[#FCF9F2] border border-[#DFBC77]/60 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#855F14]">
+                    Your Delivery & Service Address
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTempAddress(serviceAddress);
+                      setIsEditingAddress(!isEditingAddress);
+                    }}
+                    className="text-xs font-semibold text-[#855F14] hover:text-[#523A0B] flex items-center gap-1"
+                  >
+                    <Edit3 className="w-3.5 h-3.5" />
+                    <span>{isEditingAddress ? 'Cancel' : 'Edit Address'}</span>
+                  </button>
+                </div>
+
+                {isEditingAddress ? (
+                  <div className="space-y-2 pt-1">
+                    <textarea
+                      rows={2}
+                      value={tempAddress}
+                      onChange={(e) => setTempAddress(e.target.value)}
+                      placeholder="Enter full flat, building, and street address..."
+                      className="w-full p-2.5 text-xs rounded-xl border border-[#DFBC77] bg-white text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#C59B27]/30"
+                    />
+                    <div className="flex justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (tempAddress.trim()) {
+                            setServiceAddress(tempAddress.trim());
+                            setIsEditingAddress(false);
+                          }
+                        }}
+                        className="btn-gold px-4 py-1.5 rounded-full text-[11px] font-bold uppercase"
+                      >
+                        Save Address
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs font-semibold text-stone-800 leading-relaxed">
+                      {serviceAddress}
+                    </p>
+                    <p className="text-[11px] text-stone-500">
+                      Primary Contact: {user?.name || 'Valued Guest'} ({user?.phone || '+91 8004116370'})
+                    </p>
+                  </>
+                )}
               </div>
             )}
 
@@ -644,7 +723,7 @@ export default function Booking() {
             </div>
 
             <div className="space-y-3">
-              {mockData.artists.map((artist) => {
+              {artists.map((artist) => {
                 const isSelected = selectedArtistId === artist.id;
                 return (
                   <div
@@ -660,6 +739,7 @@ export default function Booking() {
                       <img
                         src={artist.avatar}
                         alt={artist.name}
+                        onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
                         className="w-12 h-12 rounded-full object-cover border border-stone-200 flex-shrink-0"
                       />
                       <div className="min-w-0">
@@ -727,7 +807,12 @@ export default function Booking() {
                 {selectedServices.map(s => (
                   <div key={s.id} className="bg-[#FAF3E8]/50 p-3 rounded-xl border border-stone-200 flex items-center justify-between text-xs">
                     <div className="flex items-center gap-3">
-                      <img src={s.image} alt={s.name} className="w-10 h-10 rounded-lg object-cover" />
+                      <img
+                        src={s.image}
+                        alt={s.name}
+                        onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                        className="w-10 h-10 rounded-lg object-cover"
+                      />
                       <div>
                         <p className="font-serif font-bold text-stone-900">{s.name}</p>
                         <p className="text-stone-500">{s.durationMinutes} Mins</p>
@@ -752,7 +837,7 @@ export default function Booking() {
               <div className="flex justify-between py-1 border-b border-stone-100">
                 <span className="text-stone-500">Location</span>
                 <span className="font-semibold text-stone-900">
-                  {locationType === 'home' ? 'At Home Service' : 'At Salon - Bandra Flagship'}
+                  {locationType === 'home' ? 'At Home Service' : `At Salon - ${salonInfo?.name || 'Flagship Salon'}`}
                 </span>
               </div>
               {locationType === 'home' && (

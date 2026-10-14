@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { api } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -112,6 +113,19 @@ export function AuthProvider({ children }) {
     return { success: true, role: 'user', user: customer };
   }, []);
 
+  // Sync with backend profile on mount if authenticated
+  useEffect(() => {
+    let isMounted = true;
+    if (token) {
+      api.getProfile().then(res => {
+        if (isMounted && res && res.user) {
+          setUser(prev => ({ ...prev, ...res.user }));
+        }
+      }).catch(() => {});
+    }
+    return () => { isMounted = false; };
+  }, [token]);
+
   const logout = useCallback(() => {
     setUser(null);
     setIsAuthenticated(false);
@@ -123,6 +137,11 @@ export function AuthProvider({ children }) {
     const merged = { ...user, ...updatedData };
     setUser(merged);
     saveState(merged, true, token);
+    try {
+      await api.updateProfile(updatedData);
+    } catch (e) {
+      console.warn('Profile sync to server error:', e.message);
+    }
     return merged;
   }, [user, token]);
 

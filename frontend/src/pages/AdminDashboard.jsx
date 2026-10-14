@@ -43,7 +43,7 @@ import {
 import { useProducts } from '../context/ProductContext';
 import { useOffers } from '../context/OffersContext';
 import { useToast } from '../context/ToastContext';
-import { mockData } from '../services/mockData';
+import { api } from '../services/api';
 
 export default function AdminDashboard() {
   const { products, addProduct, updateProduct, deleteProduct } = useProducts();
@@ -80,7 +80,7 @@ export default function AdminDashboard() {
   const [selectedSubcategory, setSelectedSubcategory] = useState('All');
   const [stockFilter, setStockFilter] = useState('all'); // 'all' | 'in_stock' | 'low_stock'
 
-  // Salon Bookings State (Loaded from mockData with local update capability)
+  // Salon Bookings State (Loaded dynamically from API)
   const [bookingsList, setBookingsList] = useState(() => {
     try {
       const saved = localStorage.getItem('nihara_admin_bookings');
@@ -88,11 +88,11 @@ export default function AdminDashboard() {
     } catch (e) {
       console.warn(e);
     }
-    return mockData.bookings || [];
+    return [];
   });
   const [bookingStatusFilter, setBookingStatusFilter] = useState('All');
 
-  // Customer Orders State (Loaded from mockData with local update capability)
+  // Customer Orders State (Loaded dynamically from API)
   const [ordersList, setOrdersList] = useState(() => {
     try {
       const saved = localStorage.getItem('nihara_admin_orders');
@@ -100,9 +100,19 @@ export default function AdminDashboard() {
     } catch (e) {
       console.warn(e);
     }
-    return mockData.orders || [];
+    return [];
   });
   const [orderStatusFilter, setOrderStatusFilter] = useState('All');
+
+  // Fetch live bookings and orders from backend on mount
+  useEffect(() => {
+    api.getBookings().then(res => {
+      if (res && res.bookings) setBookingsList(res.bookings);
+    }).catch(() => {});
+    api.getOrders().then(res => {
+      if (res && res.orders) setOrdersList(res.orders);
+    }).catch(() => {});
+  }, []);
 
   // Modals state
   const [showAddProductModal, setShowAddProductModal] = useState(false);

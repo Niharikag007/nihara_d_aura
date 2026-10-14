@@ -1,19 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, ShoppingBag, PackageCheck, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ShoppingBag, PackageCheck, ChevronRight, Loader2 } from 'lucide-react';
 import { api } from '../services/api';
+import { useSocket } from '../context/SocketContext';
 
 export default function Orders() {
   const navigate = useNavigate();
+  const { socket } = useSocket();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    api.getOrders().then(res => {
+  const fetchOrders = useCallback(async () => {
+    try {
+      const res = await api.getOrders();
       if (res && res.orders) setOrders(res.orders);
+    } finally {
       setLoading(false);
-    });
+    }
   }, []);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
+
+  // Real-time socket event listener for live placed orders
+  useEffect(() => {
+    if (!socket) return;
+    socket.on('order:created', fetchOrders);
+    return () => {
+      socket.off('order:created', fetchOrders);
+    };
+  }, [socket, fetchOrders]);
 
   const getStatusBadge = (status) => {
     if (status === 'Delivered') {
@@ -61,7 +78,12 @@ export default function Orders() {
 
       {/* Orders List */}
       <div className="space-y-4">
-        {orders.length === 0 ? (
+        {loading ? (
+          <div className="py-16 text-center flex flex-col items-center justify-center gap-3 bg-white rounded-3xl border border-[#DFBC77]/30">
+            <Loader2 className="w-8 h-8 animate-spin text-[#DFBC77]" />
+            <p className="text-xs text-stone-500 font-serif italic">Loading your royal orders...</p>
+          </div>
+        ) : orders.length === 0 ? (
           <div className="bg-white rounded-3xl p-10 text-center border border-stone-200">
             <PackageCheck className="w-12 h-12 text-[#DFBC77] mx-auto mb-3" />
             <h3 className="font-serif text-lg font-bold text-stone-900">No Orders Yet</h3>
@@ -98,6 +120,7 @@ export default function Orders() {
                         <img
                           src={item.image}
                           alt={item.name}
+                          onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
                           className="w-10 h-10 rounded-lg object-cover border border-stone-200"
                         />
                       )}

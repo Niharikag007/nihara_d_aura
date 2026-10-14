@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, Filter, ArrowUpDown, Sparkles, X } from 'lucide-react';
-import { mockData } from '../services/mockData';
 import { useProducts } from '../context/ProductContext';
 import ProductCard from '../components/products/ProductCard';
 
@@ -268,14 +267,19 @@ export default function Products() {
 
       {/* Product Grid */}
       {filtered.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-3xl border border-stone-200 mt-6 p-8">
-          <p className="font-serif text-lg font-bold text-stone-800">No luxury items match your criteria</p>
-          <p className="text-xs text-stone-500 mt-1">Try modifying your search query or selecting a different category.</p>
+        <div className="text-center py-20 bg-white rounded-3xl border border-[#DFBC77]/40 shadow-sm mt-6 p-8 max-w-md mx-auto">
+          <div className="w-16 h-16 rounded-full bg-[#FCF9F2] border border-[#DFBC77]/50 flex items-center justify-center mx-auto mb-4 text-[#C59B27] shadow-inner">
+            <Sparkles className="w-8 h-8" />
+          </div>
+          <h3 className="font-serif text-xl font-bold text-[#1C1917]">No Treasures Match Your Search</h3>
+          <p className="text-xs text-stone-500 mt-1.5 leading-relaxed">
+            Try adjusting your search keywords, clearing price limits, or exploring all royal collections.
+          </p>
           <button
             onClick={handleClearFilters}
-            className="btn-gold mt-4 px-5 py-2 rounded-full text-xs font-semibold"
+            className="btn-gold mt-6 px-6 py-2.5 rounded-full text-xs uppercase tracking-wider font-bold shadow-md"
           >
-            Reset Filters
+            Reset All Filters
           </button>
         </div>
       ) : (

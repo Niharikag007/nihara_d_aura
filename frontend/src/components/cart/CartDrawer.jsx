@@ -24,6 +24,21 @@ export default function CartDrawer() {
   const [couponCode, setCouponCode] = useState('');
   const [couponMsg, setCouponMsg] = useState('');
 
+  // Handle ESC key to close cart
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsDrawerOpen(false);
+    };
+    if (isDrawerOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isDrawerOpen, setIsDrawerOpen]);
+
   if (!isDrawerOpen) return null;
 
   const handleApplyCoupon = (e) => {
@@ -41,56 +56,58 @@ export default function CartDrawer() {
     <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-black/55 backdrop-blur-sm transition-opacity animate-fade-in"
         onClick={() => setIsDrawerOpen(false)}
       />
 
       {/* Drawer */}
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-gradient-to-b from-[#FBF6EC] to-[#F5EAD5] flex flex-col shadow-2xl border-l border-[#DFBC77]/40">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-8 sm:pl-10">
+        <div className="w-screen max-w-md bg-gradient-to-b from-[#FDFBF7] via-[#FAF3E8] to-[#F5EAD5] flex flex-col shadow-2xl border-l border-[#DFBC77]/40 animate-slide-left">
           
           {/* Header */}
-          <div className="p-5 border-b border-[#E8DFC8] flex items-center justify-between bg-white">
+          <div className="p-4 sm:p-5 border-b border-[#E8DFC8] flex items-center justify-between bg-white/90 backdrop-blur-sm">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-5 h-5 text-[#C59B27]" />
               <h2 className="font-serif text-lg font-bold text-[#1C1917]">Shopping Bag</h2>
               <span className="text-xs bg-[#FCF9F2] text-[#855F14] font-bold px-2 py-0.5 rounded-full border border-[#DFBC77]/40">
-                {items.length} items
+                {items.length} {items.length === 1 ? 'item' : 'items'}
               </span>
             </div>
             <button
               onClick={() => setIsDrawerOpen(false)}
               className="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-full transition-colors"
+              aria-label="Close Shopping Bag"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Items List */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-4">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5">
             {items.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="w-16 h-16 rounded-full bg-[#FCF9F2] border border-[#DFBC77]/40 flex items-center justify-center mx-auto mb-4 text-[#C59B27]">
+              <div className="text-center py-16 px-4">
+                <div className="w-16 h-16 rounded-full bg-[#FCF9F2] border border-[#DFBC77]/40 flex items-center justify-center mx-auto mb-4 text-[#C59B27] shadow-inner">
                   <ShoppingBag className="w-8 h-8" />
                 </div>
                 <h3 className="font-serif text-lg font-bold text-[#1C1917]">Your Bag is Empty</h3>
-                <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto">
-                  Discover our curated luxury beauty products and add your favorites.
+                <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto leading-relaxed">
+                  Discover our certified Kundan jewellery, silk cosmetics, and salon suites.
                 </p>
                 <button
                   onClick={() => { setIsDrawerOpen(false); navigate('/products'); }}
-                  className="btn-gold mt-6 px-6 py-2 rounded-full text-xs font-semibold"
+                  className="btn-gold mt-6 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-md"
                 >
-                  Explore Nihara Products
+                  Explore Collection
                 </button>
               </div>
             ) : (
               items.map((item, idx) => (
-                <div key={idx} className="bg-white rounded-xl p-3 border border-[#E8DFC8] flex gap-3 shadow-sm">
+                <div key={idx} className="bg-white rounded-2xl p-3.5 border border-[#DFBC77]/35 flex gap-3 shadow-sm hover:shadow-md transition-shadow">
                   <img
-                    src={item.product?.images?.[0] || 'https://images.unsplash.com/photo-1596462502278-27bfdc403348'}
+                    src={item.product?.images?.[0] || '/hero-slide-1.jpg'}
                     alt={item.product?.name}
-                    className="w-16 h-16 rounded-lg object-cover bg-stone-100 flex-shrink-0"
+                    onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                    className="w-16 h-16 rounded-xl object-cover bg-stone-50 border border-[#E8DFC8] flex-shrink-0"
                   />
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>

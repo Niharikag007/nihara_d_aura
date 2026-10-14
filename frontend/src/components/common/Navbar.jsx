@@ -81,8 +81,11 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-[#E8DFC8] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] transition-colors will-change-transform transform-gpu">
       {/* Top Announcement Bar */}
-      <div className="bg-[#C59B27] text-white text-[10px] sm:text-xs py-1.5 px-2.5 sm:px-4 text-center font-medium tracking-wide flex justify-center items-center gap-1.5 leading-tight sm:leading-normal">
-        <Sparkles className="w-3.5 h-3.5 text-white animate-pulse flex-shrink-0" />
+      <div className="bg-gradient-to-r from-[#A87D17] via-[#C59B27] to-[#855F14] text-white text-[10px] sm:text-xs py-1.5 px-3 sm:px-4 text-center font-medium tracking-wide flex justify-center items-center gap-2 leading-tight">
+        <Sparkles className="w-3.5 h-3.5 text-amber-200 animate-pulse flex-shrink-0" />
+        <span className="font-semibold tracking-wider uppercase text-[10px] sm:text-[11px]">
+          Complimentary Insured Pan-India Express Delivery on Orders Above ₹2,500 | 100% BIS Hallmarked Pure Gold
+        </span>
       </div>
 
       {/* Main Navbar */}
@@ -231,8 +234,8 @@ export default function Navbar() {
 
       {/* Dropdown Search Bar */}
       {isSearchOpen && (
-        <div className="border-t border-[#E8DFC8] bg-[#FAF3E6]/95 backdrop-blur-md px-4 py-3 sm:py-3.5 shadow-xl transition-all duration-300 animate-fade-in">
-          <div className="max-w-3xl mx-auto">
+        <div className="border-t border-[#E8DFC8] bg-[#FAF3E6]/95 backdrop-blur-md px-4 py-3.5 sm:py-4 shadow-xl transition-all duration-300 animate-fade-in">
+          <div className="max-w-3xl mx-auto space-y-2.5">
             <form onSubmit={handleSearchSubmit} className="relative flex items-center">
               <Search className="absolute left-4 w-4 sm:w-5 h-4 sm:h-5 text-[#C59B27] pointer-events-none" />
               <input
@@ -262,6 +265,33 @@ export default function Navbar() {
                 </button>
               </div>
             </form>
+
+            {/* Popular Searches Quick Tags */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-[11px]">
+              <span className="text-stone-400 uppercase tracking-wider font-bold whitespace-nowrap text-[10px]">
+                Popular:
+              </span>
+              {[
+                'Kundan Haar',
+                'Gold Jhumkas',
+                'Silk Foundation',
+                'Press-On Nails',
+                'Mogra Candles',
+                'Bridal Makeover'
+              ].map((term) => (
+                <button
+                  key={term}
+                  type="button"
+                  onClick={() => {
+                    navigate(`/products?search=${encodeURIComponent(term)}`);
+                    setIsSearchOpen(false);
+                  }}
+                  className="px-2.5 py-1 rounded-full bg-white border border-[#DFBC77]/60 text-[#855F14] hover:bg-[#C59B27] hover:text-white transition-all whitespace-nowrap shadow-xs font-medium"
+                >
+                  {term}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}

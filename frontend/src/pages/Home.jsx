@@ -21,16 +21,18 @@ import {
   Mail,
   UserCheck
 } from 'lucide-react';
-import { mockData } from '../services/mockData';
 import { useProducts } from '../context/ProductContext';
+import { useServices } from '../context/ServiceContext';
 import ProductCard from '../components/products/ProductCard';
 import ServiceCard from '../components/services/ServiceCard';
 import HeroSlider from '../components/common/HeroSlider';
 
 export default function Home() {
   const { products } = useProducts();
+  const { services } = useServices();
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('All');
+  const [patronTab, setPatronTab] = useState('bestsellers'); // 'bestsellers' | 'featured'
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
 
@@ -51,7 +53,7 @@ export default function Home() {
 
   const bestsellerProducts = allUniqueProducts.filter(p => p.isBestseller);
   const featuredProducts = allUniqueProducts.filter(p => p.isFeatured);
-  const signatureServices = mockData.services.slice(0, 3);
+  const signatureServices = (services || []).slice(0, 3);
 
   const handleNewsletterSubmit = (e) => {
     e.preventDefault();
@@ -239,7 +241,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2.7 Top Categories Showcase (Matching reference video) */}
+      {/* 2.7 Top Categories Showcase */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
         <div className="text-center mb-6">
           <span className="text-[11px] font-bold uppercase tracking-widest text-[#A87D17] block">
@@ -250,24 +252,30 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 sm:gap-4">
           {[
-            { name: 'Necklaces & Haar', img: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery' },
-            { name: 'Gold Jhumkas', img: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery' },
-            { name: 'Gold Lockets', img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery' },
-            { name: 'Silk Foundation', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&q=80', cat: 'Makeup' },
-            { name: 'Press-On Nails', img: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=300&q=80', cat: 'Nails' },
-            { name: 'Mogra Candles', img: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=300&q=80', cat: 'Candles' },
+            { name: 'Necklaces & Haar', img: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery', subcat: 'Bridal Haar & Sets' },
+            { name: 'Gold Jhumkas', img: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery', subcat: 'Gold Earrings & Jhumkas' },
+            { name: 'Gold Lockets', img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=300&q=80', cat: 'Jewellery', subcat: 'Gold Lockets & Pendants' },
+            { name: 'Silk Foundation', img: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=300&q=80', cat: 'Makeup', subcat: 'Face Foundations' },
+            { name: 'Press-On Nails', img: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=300&q=80', cat: 'Nails', subcat: 'Press-On Kits' },
+            { name: 'Mogra Candles', img: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=300&q=80', cat: 'Candles', subcat: 'Soy Wax Jar Candles' },
           ].map((catItem, idx) => (
             <Link
               key={idx}
-              to={`/products?category=${catItem.cat}`}
-              className="group bg-white p-3.5 rounded-2xl border border-[#DFBC77]/30 hover:border-[#C59B27] shadow-sm hover:shadow-md transition-all text-center flex flex-col items-center"
+              to={`/products?category=${encodeURIComponent(catItem.cat)}${catItem.subcat ? `&subcategory=${encodeURIComponent(catItem.subcat)}` : ''}`}
+              className="group bg-white p-3.5 sm:p-4 rounded-2xl border border-[#DFBC77]/35 hover:border-[#C59B27] shadow-xs hover:shadow-md transition-all text-center flex flex-col items-center hover:-translate-y-1 transform-gpu"
             >
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 border-2 border-[#EADECF] group-hover:border-[#C59B27] transition-all group-hover:scale-105">
-                <img src={catItem.img} alt={catItem.name} className="w-full h-full object-cover" />
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 border-2 border-[#EADECF] group-hover:border-[#C59B27] transition-all group-hover:scale-105 shadow-inner bg-[#FBF8F2]">
+                <img 
+                  src={catItem.img} 
+                  alt={catItem.name} 
+                  onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                  className="w-full h-full object-cover" 
+                  loading="lazy"
+                />
               </div>
-              <span className="text-xs font-serif font-bold text-[#1C1917] uppercase tracking-wider group-hover:text-[#C59B27] transition-colors">
+              <span className="text-xs font-serif font-bold text-[#1C1917] uppercase tracking-wider group-hover:text-[#C59B27] transition-colors leading-tight">
                 {catItem.name}
               </span>
             </Link>
@@ -376,55 +384,85 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Bestseller Beauties Grid (Shows 6 products) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+      {/* 5. Signature Salon Services (Elevated to showcase dual identity: Haute Jewellery & Premier Salon) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14">
         <div className="flex items-end justify-between mb-5">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#A87D17] block">
-              PATRON FAVORITES
+              SALON & AT-HOME ARTISTRY
             </span>
             <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1C1917]">
-              Bestseller Beauties
+              Signature Salon Services
             </h2>
           </div>
           <Link
-            to="/products"
+            to="/services"
             className="text-xs font-semibold text-[#855F14] hover:text-[#523A0B] flex items-center gap-1 group"
           >
-            <span>See All</span>
+            <span>View All Services</span>
             <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3 sm:gap-5">
-          {bestsellerProducts.slice(0, 5).map((product) => (
-            <ProductCard key={product.id} product={product} />
+        <div className="space-y-3 sm:space-y-4">
+          {signatureServices.map((service) => (
+            <ServiceCard key={service.id} service={service} />
           ))}
         </div>
       </section>
 
-      {/* 6. Featured Luxuries Grid (Shows 5 products) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
-        <div className="flex items-end justify-between mb-5">
+      {/* 6. Heritage Collections & Patron Favorites (Unified Tabbed Showcase) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-widest text-[#A87D17] block">
-              HERITAGE ELEGANCE
+              CURATED EXCELLENCE
             </span>
             <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1C1917]">
-              Featured Luxuries
+              {patronTab === 'bestsellers' ? 'Bestseller Beauties' : 'Featured Luxuries'}
             </h2>
           </div>
-          <Link
-            to="/products"
-            className="text-xs font-semibold text-[#855F14] hover:text-[#523A0B] flex items-center gap-1 group"
-          >
-            <span>See All</span>
-            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
+
+          <div className="flex items-center gap-2">
+            {/* Toggle Tabs */}
+            <div className="inline-flex p-1 bg-stone-100 rounded-full border border-stone-200">
+              <button
+                type="button"
+                onClick={() => setPatronTab('bestsellers')}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                  patronTab === 'bestsellers'
+                    ? 'bg-white text-[#C59B27] shadow-sm'
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                Bestsellers ({bestsellerProducts.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setPatronTab('featured')}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                  patronTab === 'featured'
+                    ? 'bg-white text-[#C59B27] shadow-sm'
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
+              >
+                Featured Luxuries ({featuredProducts.length})
+              </button>
+            </div>
+
+            <Link
+              to="/products"
+              className="hidden sm:flex text-xs font-semibold text-[#855F14] hover:text-[#523A0B] items-center gap-1 group ml-2"
+            >
+              <span>See All</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3 sm:gap-5">
-          {featuredProducts.slice(0, 5).map((product) => (
+        {/* Tab Content */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3.5 sm:gap-5 animate-fade-in">
+          {(patronTab === 'bestsellers' ? bestsellerProducts : featuredProducts).slice(0, 5).map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
@@ -446,7 +484,7 @@ export default function Home() {
 
         <div className="grid md:grid-cols-3 gap-6">
           {testimonials.map((t) => (
-            <div key={t.id} className="bg-white rounded-2xl p-6 border border-[#DFBC77]/30 shadow-sm space-y-4 hover:shadow-xl transition-all">
+            <div key={t.id} className="bg-white rounded-2xl p-6 border border-[#DFBC77]/35 shadow-sm space-y-4 hover:shadow-xl transition-all hover:-translate-y-1 transform-gpu">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-amber-500">
                   {[...Array(t.rating)].map((_, i) => (
@@ -462,7 +500,12 @@ export default function Home() {
 
               <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <img src={t.avatar} alt={t.name} className="w-9 h-9 rounded-full object-cover border border-amber-300" />
+                  <img 
+                    src={t.avatar} 
+                    alt={t.name} 
+                    onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                    className="w-9 h-9 rounded-full object-cover border border-amber-300" 
+                  />
                   <div>
                     <h4 className="text-xs font-bold text-stone-900">{t.name}</h4>
                     <p className="text-[10px] text-amber-700 font-medium">{t.role}</p>
@@ -505,6 +548,7 @@ export default function Home() {
               <img
                 src={item.image}
                 alt={item.title}
+                onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
@@ -512,33 +556,6 @@ export default function Home() {
                 <p className="text-xs font-bold text-white">{item.title}</p>
               </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 9. Signature Salon Services */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14">
-        <div className="flex items-end justify-between mb-5">
-          <div>
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#A87D17] block">
-              SALON & AT-HOME ARTISTRY
-            </span>
-            <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1C1917]">
-              Signature Salon Services
-            </h2>
-          </div>
-          <Link
-            to="/services"
-            className="text-xs font-semibold text-[#855F14] hover:text-[#523A0B] flex items-center gap-1 group"
-          >
-            <span>See All</span>
-            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </div>
-
-        <div className="space-y-3 sm:space-y-4">
-          {signatureServices.map((service) => (
-            <ServiceCard key={service.id} service={service} />
           ))}
         </div>
       </section>

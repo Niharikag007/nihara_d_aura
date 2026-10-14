@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sparkles, Clock, Star, MapPin, CheckCircle2, ArrowRight } from 'lucide-react';
-import { mockData } from '../services/mockData';
-import ServiceCard from '../components/services/ServiceCard';
+import { Sparkles, Clock, Star, MapPin, CheckCircle2, ArrowRight, Loader2 } from 'lucide-react';
+import { useServices } from '../context/ServiceContext';
 
 export default function Services() {
   const navigate = useNavigate();
+  const { services, salonInfo, loading } = useServices();
   const [activeFilter, setActiveFilter] = useState('All');
 
-  const categories = ['All', 'Makeup', 'Nails', 'Jewellery & Styling'];
+  const filterCategories = useMemo(() => {
+    if (!services || services.length === 0) return ['All', 'Makeup', 'Nails', 'Jewellery & Styling'];
+    const unique = Array.from(new Set(services.map(s => s.category).filter(Boolean)));
+    return ['All', ...unique];
+  }, [services]);
 
-  const filteredServices = activeFilter === 'All'
-    ? mockData.services
-    : mockData.services.filter(s => s.category.toLowerCase().includes(activeFilter.toLowerCase()));
+  const filteredServices = useMemo(() => {
+    if (!services) return [];
+    if (activeFilter === 'All') return services;
+    return services.filter(s => s.category?.toLowerCase().includes(activeFilter.toLowerCase()));
+  }, [services, activeFilter]);
 
   return (
     <div className="min-h-screen bg-transparent py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -37,10 +43,10 @@ export default function Services() {
         <div className="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/20 text-xs space-y-2 flex-shrink-0 w-full md:w-72">
           <p className="font-serif font-bold text-amber-200 text-sm flex items-center gap-1.5">
             <MapPin className="w-4 h-4 text-[#DFBC77]" />
-            NX One Tower Flagship Salon
+            {salonInfo?.name || 'Flagship Salon'}
           </p>
-          <p className="text-stone-300">423 A, 4th Floor, Tower 3, NX One Tower, Greater Noida (West), UP - 201306</p>
-          <p className="text-stone-400">Hours: 09:00 AM - 08:30 PM (Daily)</p>
+          <p className="text-stone-300">{salonInfo?.address || '423 A, 4th Floor, NX One Tower, Greater Noida (West)'}</p>
+          <p className="text-stone-400">Hours: {salonInfo?.hours || '09:00 AM - 08:30 PM (Daily)'}</p>
           <Link
             to="/book"
             className="block text-center btn-gold py-2 rounded-xl text-xs font-bold uppercase tracking-wider mt-3"
@@ -52,7 +58,7 @@ export default function Services() {
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
-        {categories.map((cat) => {
+        {filterCategories.map((cat) => {
           const isActive = activeFilter === cat;
           return (
             <button
@@ -71,21 +77,39 @@ export default function Services() {
       </div>
 
       {/* Services Listing */}
-      <div className="space-y-6">
-        {filteredServices.map((service) => (
-          <div
-            key={service.id}
-            className="bg-white rounded-3xl border border-[#DFBC77]/40 p-5 sm:p-8 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6"
+      {loading ? (
+        <div className="py-20 text-center flex flex-col items-center justify-center gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-[#DFBC77]" />
+          <p className="text-stone-500 font-serif italic text-sm">Retrieving bespoke salon services...</p>
+        </div>
+      ) : filteredServices.length === 0 ? (
+        <div className="bg-white rounded-3xl p-12 text-center border border-[#DFBC77]/30 max-w-lg mx-auto">
+          <Sparkles className="w-8 h-8 text-[#DFBC77] mx-auto mb-3" />
+          <p className="font-serif text-lg font-bold text-stone-800">No services found in this ritual</p>
+          <button
+            onClick={() => setActiveFilter('All')}
+            className="mt-4 px-6 py-2 rounded-full btn-gold text-xs font-bold"
           >
-            {/* Image & Main Info */}
-            <div className="flex flex-col sm:flex-row gap-5 flex-1">
-              <div className="w-full sm:w-36 sm:h-36 aspect-[4/3] sm:aspect-square rounded-2xl overflow-hidden bg-[#FBF8F2] flex-shrink-0 border border-stone-200">
-                <img
-                  src={service.image}
-                  alt={service.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            View All Services
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {filteredServices.map((service) => (
+            <div
+              key={service.id}
+              className="bg-white rounded-3xl border border-[#DFBC77]/40 p-5 sm:p-8 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6"
+            >
+              {/* Image & Main Info */}
+              <div className="flex flex-col sm:flex-row gap-5 flex-1">
+                <div className="w-full sm:w-36 sm:h-36 aspect-[4/3] sm:aspect-square rounded-2xl overflow-hidden bg-[#FBF8F2] flex-shrink-0 border border-stone-200">
+                  <img
+                    src={service.image}
+                    alt={service.name}
+                    onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-2">
@@ -145,6 +169,7 @@ export default function Services() {
           </div>
         ))}
       </div>
+      )}
 
     </div>
   );

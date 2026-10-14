@@ -2,12 +2,29 @@ import { mockData } from './mockData.js';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
+const getAuthHeaders = () => {
+  try {
+    const stored = localStorage.getItem('nihara_auth');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed?.token) {
+        return {
+          'Authorization': `Bearer ${parsed.token}`,
+          'x-user-role': parsed.user?.role || 'user'
+        };
+      }
+    }
+  } catch (e) {}
+  return {};
+};
+
 // Safe request wrapper that tries the Express server first and falls back to mockData
 async function request(endpoint, options = {}) {
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
+        ...getAuthHeaders(),
         ...(options.headers || {})
       },
       ...options
@@ -58,11 +75,25 @@ export const api = {
     return { success: true, categories: mockData.categories };
   },
 
+  async getCategoryBySlug(slug) {
+    const serverRes = await request(`/categories/${slug}`);
+    if (serverRes && serverRes.category) return serverRes;
+    const category = mockData.categories.find(c => c.slug === slug || c.id === slug);
+    return { success: true, category };
+  },
+
   // Salon Services & Artists
   async getServices() {
     const serverRes = await request('/services');
     if (serverRes && serverRes.services) return serverRes;
     return { success: true, services: mockData.services };
+  },
+
+  async getServiceById(id) {
+    const serverRes = await request(`/services/${id}`);
+    if (serverRes && serverRes.service) return serverRes;
+    const service = mockData.services.find(s => s.id === id);
+    return { success: true, service };
   },
 
   async getArtists() {
@@ -129,6 +160,26 @@ export const api = {
     return { success: true, items: [], subtotal: 0, totalAmount: 0, deliveryFee: 0 };
   },
 
+  async updateCartOnServer(items) {
+    return await request('/cart', {
+      method: 'POST',
+      body: JSON.stringify({ items })
+    });
+  },
+
+  // Wishlist
+  async getWishlist() {
+    const serverRes = await request('/profile/wishlist');
+    if (serverRes && serverRes.wishlist) return serverRes;
+    return { success: true, wishlist: [] };
+  },
+
+  async toggleWishlistOnServer(productId) {
+    return await request(`/profile/wishlist/${productId}`, {
+      method: 'POST'
+    });
+  },
+
   // Payment Gateway
   async createPaymentIntent(payload) {
     const serverRes = await request('/payment/create-intent', {
@@ -185,7 +236,7 @@ export const api = {
     const newOrder = {
       id: `ord_${Date.now()}`,
       orderId: ref,
-      placedDate: 'Oct 1, 2026',
+      placedDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       status: 'Processing',
       totalAmount: orderData.totalAmount || 2499,
       paymentMethod: orderData.paymentMethod || 'UPI / GPay / PhonePe',
@@ -197,7 +248,6 @@ export const api = {
     mockData.orders.unshift(newOrder);
     return { success: true, order: newOrder };
   },
-
 
   // Profile & Addresses
   async getProfile() {
@@ -262,3 +312,4 @@ export const api = {
     return { success: true };
   }
 };
+

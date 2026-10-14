@@ -11,7 +11,6 @@ import {
   ArrowLeft,
   Check
 } from 'lucide-react';
-import { mockData } from '../services/mockData';
 import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -35,6 +34,16 @@ export default function ProductDetails() {
   const [activeImageIdx, setActiveImageIdx] = useState(0);
 
   const isFavorited = isInWishlist(product.id);
+
+  const cleanCategoryLabel = React.useMemo(() => {
+    if (!product?.category) return 'Luxury';
+    if (!product.subcategory || 
+        product.subcategory.toLowerCase().startsWith('all') || 
+        product.subcategory.toLowerCase() === product.category.toLowerCase()) {
+      return product.category;
+    }
+    return `${product.category} • ${product.subcategory}`;
+  }, [product?.category, product?.subcategory]);
 
   const handleAddToCart = () => {
     addToCart(product, quantity, selectedVariant, selectedSize);
@@ -76,8 +85,9 @@ export default function ProductDetails() {
               <Heart className={`w-5 h-5 ${isFavorited ? 'fill-[#C59B27] text-[#C59B27]' : 'text-stone-500'}`} />
             </button>
             <img
-              src={product.images[activeImageIdx] || product.images[0]}
+              src={product.images[activeImageIdx] || product.images[0] || '/hero-slide-1.jpg'}
               alt={product.name}
+              onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
               className="w-full h-full object-cover object-center"
             />
           </div>
@@ -104,8 +114,8 @@ export default function ProductDetails() {
         <div className="flex flex-col justify-between space-y-6">
           
           <div className="space-y-4">
-            <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#A87D17] bg-[#FCF9F2] px-3 py-1 rounded-full border border-[#DFBC77]/40">
-              {product.category} {product.subcategory ? `• ${product.subcategory}` : ''}
+            <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#A87D17] bg-[#FCF9F2] px-3.5 py-1 rounded-full border border-[#DFBC77]/40 shadow-xs">
+              {cleanCategoryLabel}
             </span>
 
             <h1 className="font-serif text-2xl sm:text-4xl font-bold text-[#1C1917] leading-snug">
