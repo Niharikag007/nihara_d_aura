@@ -70,6 +70,15 @@
   background: #C59B27;
 }
 
+/* Hide scrollbar for clean horizontal mobile swiping */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Luxury Card & Button Components with GPU Acceleration */
 .btn-gold {
   background: linear-gradient(135deg, #D4AF37 0%, #B3861B 100%);

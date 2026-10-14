@@ -46,8 +46,8 @@ export default function Home() {
     { label: 'Candles', icon: Flame },
   ];
 
-  // Filtered products for active category (guaranteed 100% unique)
-  const allUniqueProducts = Array.from(new Map(products.map(p => [p.id, p])).values());
+  // Filtered products for active category (guaranteed 100% unique from MongoDB)
+  const allUniqueProducts = Array.from(new Map(products.map(p => [(p.id || p._id), p])).values());
 
   const filteredProducts = activeCategory === 'All' 
     ? allUniqueProducts 
@@ -193,12 +193,12 @@ export default function Home() {
 
       {/* 2.5 3-Feature Banner Cards (Real Haute Photography: NEW ARRIVALS, BEST SELLERS, BRIDAL STUDIO) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="flex md:grid md:grid-cols-3 gap-4 sm:gap-6 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
           
           {/* Banner 1: NEW ARRIVALS */}
           <Link 
             to="/products?category=Jewellery" 
-            className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block"
+            className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block w-[84vw] sm:w-[65vw] md:w-auto flex-shrink-0 snap-center"
           >
             <img 
               src="/hero-slide-3.jpg" 
@@ -222,7 +222,7 @@ export default function Home() {
           {/* Banner 2: BEST SELLERS (Fixed Broken Image & Elevated to Real 22K Kundan Heirlooms) */}
           <Link 
             to="/products" 
-            className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block"
+            className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block w-[84vw] sm:w-[65vw] md:w-auto flex-shrink-0 snap-center"
           >
             <img 
               src="/hero-slide-5.jpg" 
@@ -246,7 +246,7 @@ export default function Home() {
           {/* Banner 3: BRIDAL & SALON STUDIO (Elevated to Real HD Airbrush Artistry) */}
           <Link 
             to="/book" 
-            className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block"
+            className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block w-[84vw] sm:w-[65vw] md:w-auto flex-shrink-0 snap-center"
           >
             <img 
               src="/hero-slide-7.jpg" 
@@ -281,7 +281,7 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 sm:gap-4">
+        <div className="flex md:grid md:grid-cols-6 gap-3.5 sm:gap-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
           {[
             { name: 'Necklaces & Haar', img: '/hero-slide-1.jpg', cat: 'Jewellery', subcat: 'Bridal Haar & Sets' },
             { name: 'Gold Jhumkas', img: '/hero-slide-3.jpg', cat: 'Jewellery', subcat: 'Gold Earrings & Jhumkas' },
@@ -293,7 +293,7 @@ export default function Home() {
             <Link
               key={idx}
               to={`/products?category=${encodeURIComponent(catItem.cat)}${catItem.subcat ? `&subcategory=${encodeURIComponent(catItem.subcat)}` : ''}`}
-              className="group bg-white p-3.5 sm:p-4 rounded-2xl border border-[#DFBC77]/35 hover:border-[#C59B27] shadow-xs hover:shadow-md transition-all text-center flex flex-col items-center hover:-translate-y-1 transform-gpu"
+              className="group bg-white p-3.5 sm:p-4 rounded-2xl border border-[#DFBC77]/35 hover:border-[#C59B27] shadow-xs hover:shadow-md transition-all text-center flex flex-col items-center hover:-translate-y-1 transform-gpu min-w-[130px] sm:min-w-[140px] md:min-w-0 flex-shrink-0 snap-center"
             >
               <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 border-2 border-[#EADECF] group-hover:border-[#C59B27] transition-all group-hover:scale-105 shadow-inner bg-[#FBF8F2]">
                 <img 
@@ -349,10 +349,12 @@ export default function Home() {
           })}
         </div>
 
-        {/* Display 5 products for selected category */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3 sm:gap-5 pt-4">
+        {/* Display 5 products for selected category (Mobile Horizontal Slide & Desktop Grid) */}
+        <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-5 pt-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
           {filteredProducts.slice(0, 5).map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <div key={product.id || product._id} className="w-[68vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       </section>
@@ -496,10 +498,12 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Tab Content */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3.5 sm:gap-5 animate-fade-in">
+        {/* Tab Content (Mobile Horizontal Slide & Desktop Grid) */}
+        <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-5 animate-fade-in overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
           {(patronTab === 'bestsellers' ? bestsellerProducts : featuredProducts).slice(0, 5).map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <div key={product.id || product._id} className="w-[68vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       </section>
@@ -522,12 +526,12 @@ export default function Home() {
           </p>
         </div>
 
-        {/* 3-Column Visual Patron Story Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+        {/* 3-Column Visual Patron Story Cards (Mobile Horizontal Slide & Desktop Grid) */}
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
           {testimonials.map((t) => (
             <div 
               key={t.id} 
-              className="group bg-white rounded-3xl border border-[#DFBC77]/45 overflow-hidden shadow-sm hover:shadow-2xl hover:border-[#C59B27] transition-all duration-500 flex flex-col will-change-transform transform-gpu hover:-translate-y-1.5"
+              className="group bg-white rounded-3xl border border-[#DFBC77]/45 overflow-hidden shadow-sm hover:shadow-2xl hover:border-[#C59B27] transition-all duration-500 flex flex-col will-change-transform transform-gpu hover:-translate-y-1.5 w-[85vw] sm:w-[65vw] md:w-auto flex-shrink-0 snap-center"
             >
               {/* Real Client Photo Banner */}
               <div className="relative aspect-[16/11] w-full overflow-hidden bg-stone-900">
@@ -638,9 +642,9 @@ export default function Home() {
           </a>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="flex md:grid md:grid-cols-4 gap-3.5 sm:gap-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
           {lookbookItems.map((item) => (
-            <div key={item.id} className="group relative aspect-square rounded-2xl overflow-hidden shadow-md border border-[#DFBC77]/30">
+            <div key={item.id} className="group relative aspect-square rounded-2xl overflow-hidden shadow-md border border-[#DFBC77]/30 w-[70vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
               <img
                 src={item.image}
                 alt={item.title}

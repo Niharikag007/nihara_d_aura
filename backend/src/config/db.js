@@ -1,15 +1,19 @@
 import mongoose from 'mongoose';
+import { seedDatabaseIfEmpty } from './seed.js';
 
 export const connectDB = async () => {
   const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/nihara_d_aura';
   try {
     const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 2500, // Quick timeout if mongo is not locally active
+      serverSelectionTimeoutMS: 5000,
     });
-    console.log(`[Database] MongoDB Connected: ${conn.connection.host}`);
+    console.log(`[Database] MongoDB Live Connected: ${conn.connection.host}`);
+    
+    // Ensure all collections are populated with initial data if empty
+    await seedDatabaseIfEmpty();
     return true;
   } catch (err) {
-    console.warn(`[Database] MongoDB offline or not found (${err.message}). Using High-Performance Memory Data Store.`);
+    console.error(`[Database] MongoDB Connection Error: ${err.message}`);
     return false;
   }
 };

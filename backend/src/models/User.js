@@ -1,13 +1,25 @@
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
+  id: { type: String },
   name: { type: String, required: true, trim: true },
   email: { type: String, required: true, lowercase: true, trim: true },
   phone: { type: String, required: true, trim: true },
   password: { type: String, select: false },
+  role: { type: String, enum: ['user', 'admin'], default: 'user' },
   avatar: { type: String, default: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d' },
-  tier: { type: String, enum: ['Silver', 'Gold', 'Royal Elite'], default: 'Royal Elite' },
-  rewardPoints: { type: Number, default: 450 }
-}, { timestamps: true });
+  tier: { type: String, enum: ['Silver', 'Gold', 'Royal Elite', 'Master Admin'], default: 'Royal Elite' },
+  rewardPoints: { type: Number, default: 450 },
+  wishlist: [{ type: String }]
+}, {
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    transform: (doc, ret) => {
+      ret.id = ret.id || ret._id.toString();
+      return ret;
+    }
+  }
+});
 
 export const User = mongoose.models.User || mongoose.model('User', UserSchema);

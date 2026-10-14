@@ -1,95 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { api } from '../services/api';
-import { mockData } from '../services/mockData';
+import { useSocket } from './SocketContext';
 
 const ProductContext = createContext();
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
-
-export function ProductProvider({ children }) {
-  const [products, setProducts] = useState(() => {
-    try {
-      const saved = localStorage.getItem('nihara_products');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      }
-    } catch (e) {
-      console.warn('Error loading products from localStorage', e);
-    }
-    return mockData.products;
-  });
-
-  // Sync state to localStorage safely only when modified
-  const saveToStorage = useCallback((productList) => {
-    try {
-      localStorage.setItem('nihara_products', JSON.stringify(productList));
-    } catch (e) {
-      console.warn('Failed to persist products to localStorage:', e);
-    }
-  }, []);
-
-  // Sync from backend API on mount
-  useEffect(() => {
-    let isMounted = true;
-    api.getProducts().then(res => {
-      if (!isMounted) return;
-      if (res && Array.isArray(res.products) && res.products.length > 0) {
-        setProducts(res.products);
-        saveToStorage(res.products);
-      }
-    }).catch(err => {
-      console.warn('[ProductContext] Backend sync fallback:', err.message);
-    });
-    return () => { isMounted = false; };
-  }, [saveToStorage]);
-
-  const addProduct = useCallback(async (productData) => {
-    if (!productData.name || !productData.price) {
-      return { success: false, message: 'Product title and price are required.' };
-    }
-
-    const id = productData.id || `prod_${Date.now()}`;
-    const slug = productData.slug || productData.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '');
-
-    const newProduct = {
-      id,
-      slug,
-      name: productData.name,
-      category: productData.category || 'Jewellery',
-      categorySlug: (productData.category || 'jewellery').toLowerCase(),
-      subcategory: productData.subcategory || 'All Jewellery',
-      price: Number(productData.price),
-      originalPrice: Number(productData.originalPrice || productData.price),
-      discountPercent: productData.discountPercent || (productData.originalPrice && productData.price ? Math.max(0, Math.round(((productData.originalPrice - productData.price) / productData.originalPrice) * 100)) : 0),
-      rating: Number(productData.rating) || 5.0,
-      reviewCount: Number(productData.reviewCount) || 1,
-      isFeatured: !!productData.isFeatured,
-      isBestseller: !!productData.isBestseller,
-      images: Array.isArray(productData.images) && productData.images.length > 0
-        ? productData.images
-        : [productData.image || "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=85"],
-      description: productData.description || "Exquisite artisan handcrafted creation from Nihara D'Aura Haute Luxury collection.",
-      variants: Array.isArray(productData.variants) && productData.variants.length > 0
-        ? productData.variants
-        : ["Standard Royal Edition"],
-      sizes: Array.isArray(productData.sizes) && productData.sizes.length > 0
-        ? productData.sizes
-        : ["Standard Size"],
-      features: Array.isArray(productData.features) && productData.features.length > 0
-        ? productData.features
-        : ["100% Certified Authentic Craftsmanship", "Includes Royal Velvet Box & Certificate"],
-      stock: Number(productData.stock) || 20,
-      createdAt: new Date().toISOString()
-    };
-
-    setProducts(prev => {
-      const next = [newProduct, ...prev];
-      saveToStorage(next);
-      return next;
-    });
 
 const getAuthHeaders = () => {
   try {
@@ -108,82 +22,190 @@ const getAuthHeaders = () => {
   return { 'Content-Type': 'application/json' };
 };
 
-    // Send to backend API
+export function ProductProvider({ children }) {
+  const { socket } = useSocket();
+  const [products, setProducts] = useState(() => {
     try {
-      fetch(`${API_BASE}/products`, {
+      const saved = localStorage.getItem('nihara_products');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      console.warn('Error loading products from localStorage', e);
+    }
+    return [];
+  });
+
+  const [loading, setLoading] = useState(products.length === 0);
+
+  // Sync state to localStorage safely only when modified
+  const saveToStorage = useCallback((productList) => {
+    try {
+      localStorage.setItem('nihara_products', JSON.stringify(productList));
+    } catch (e) {
+      console.warn('Failed to persist products to localStorage:', e);
+    }
+  }, []);
+
+  // Fetch live products directly from MongoDB backend API on mount
+  const fetchLiveProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await api.getProducts();
+      if (res && Array.isArray(res.products) && res.products.length > 0) {
+        setProducts(res.products);
+        saveToStorage(res.products);
+      }
+    } catch (err) {
+      console.warn('[ProductContext] Live MongoDB fetch error:', err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [saveToStorage]);
+
+  useEffect(() => {
+    fetchLiveProducts();
+  }, [fetchLiveProducts]);
+
+  // Real-time synchronization via Socket.io for live MongoDB updates
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleProductCreated = (newProd) => {
+      if (!newProd) return;
+      setProducts(prev => {
+        const prodId = newProd.id || newProd._id;
+        if (prev.some(p => (p.id || p._id) === prodId || p.slug === newProd.slug)) {
+          return prev;
+        }
+        const next = [newProd, ...prev];
+        saveToStorage(next);
+        return next;
+      });
+    };
+
+    const handleProductUpdated = (updatedProd) => {
+      if (!updatedProd) return;
+      const targetId = updatedProd.id || updatedProd._id;
+      setProducts(prev => {
+        const next = prev.map(p => {
+          if ((p.id || p._id) === targetId || p.slug === updatedProd.slug) {
+            return { ...p, ...updatedProd };
+          }
+          return p;
+        });
+        saveToStorage(next);
+        return next;
+      });
+    };
+
+    const handleProductDeleted = ({ id }) => {
+      if (!id) return;
+      setProducts(prev => {
+        const next = prev.filter(p => (p.id || p._id) !== id && p.slug !== id);
+        saveToStorage(next);
+        return next;
+      });
+    };
+
+    socket.on('product:created', handleProductCreated);
+    socket.on('product:updated', handleProductUpdated);
+    socket.on('product:deleted', handleProductDeleted);
+
+    return () => {
+      socket.off('product:created', handleProductCreated);
+      socket.off('product:updated', handleProductUpdated);
+      socket.off('product:deleted', handleProductDeleted);
+    };
+  }, [socket, saveToStorage]);
+
+  const addProduct = useCallback(async (productData) => {
+    if (!productData.name || !productData.price) {
+      return { success: false, message: 'Product title and price are required.' };
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/products`, {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify(newProduct)
-      }).catch(() => {});
-    } catch (e) {}
+        body: JSON.stringify(productData)
+      });
+      const data = await res.json();
+      if (res.ok && data?.product) {
+        const newProduct = data.product;
+        setProducts(prev => {
+          const next = [newProduct, ...prev.filter(p => (p.id || p._id) !== (newProduct.id || newProduct._id))];
+          saveToStorage(next);
+          return next;
+        });
+        return { success: true, message: `Product "${newProduct.name}" added to MongoDB!`, product: newProduct };
+      }
+    } catch (e) {
+      console.error('Failed to create product in MongoDB:', e);
+    }
 
-    return { success: true, message: `Product "${newProduct.name}" added successfully!`, product: newProduct };
+    return { success: false, message: 'Failed to create product in MongoDB.' };
   }, [saveToStorage]);
 
   const updateProduct = useCallback(async (id, updateData) => {
-    let updated = null;
-    setProducts(prev => {
-      const next = prev.map(p => {
-        if (p.id === id || p.slug === id) {
-          updated = { ...p, ...updateData };
-          return updated;
-        }
-        return p;
+    try {
+      const res = await fetch(`${API_BASE}/products/${id}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(updateData)
       });
-      if (updated) saveToStorage(next);
-      return next;
-    });
-
-    if (updated) {
-      try {
-        fetch(`${API_BASE}/products/${id}`, {
-          method: 'PUT',
-          headers: getAuthHeaders(),
-          body: JSON.stringify(updateData)
-        }).catch(() => {});
-      } catch (e) {}
+      const data = await res.json();
+      if (res.ok && data?.product) {
+        const updated = data.product;
+        setProducts(prev => {
+          const next = prev.map(p => ((p.id || p._id) === id || p.slug === id ? updated : p));
+          saveToStorage(next);
+          return next;
+        });
+        return { success: true, message: 'Product updated successfully in MongoDB!', product: updated };
+      }
+    } catch (e) {
+      console.error('Failed to update product in MongoDB:', e);
     }
 
-    return {
-      success: !!updated,
-      message: updated ? `Product updated successfully!` : 'Product not found',
-      product: updated
-    };
+    return { success: false, message: 'Product update failed.' };
   }, [saveToStorage]);
 
   const deleteProduct = useCallback(async (id) => {
-    let existing = null;
-    setProducts(prev => {
-      existing = prev.find(p => p.id === id || p.slug === id);
-      if (!existing) return prev;
-      const next = prev.filter(p => p.id !== existing.id && p.slug !== existing.slug);
-      saveToStorage(next);
-      return next;
-    });
-
-    if (!existing) return { success: false, message: 'Product not found' };
-
     try {
-      fetch(`${API_BASE}/products/${existing.id}`, {
+      const res = await fetch(`${API_BASE}/products/${id}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
-      }).catch(() => {});
-    } catch (e) {}
+      });
+      if (res.ok) {
+        setProducts(prev => {
+          const next = prev.filter(p => (p.id || p._id) !== id && p.slug !== id);
+          saveToStorage(next);
+          return next;
+        });
+        return { success: true, message: 'Product deleted successfully from MongoDB!' };
+      }
+    } catch (e) {
+      console.error('Failed to delete product from MongoDB:', e);
+    }
 
-    return { success: true, message: `Product "${existing.name}" deleted successfully!` };
+    return { success: false, message: 'Failed to delete product.' };
   }, [saveToStorage]);
 
   const getProductById = useCallback((idOrSlug) => {
-    return products.find(p => p.id === idOrSlug || p.slug === idOrSlug);
+    return products.find(p => (p.id || p._id) === idOrSlug || p.slug === idOrSlug);
   }, [products]);
 
   const contextValue = useMemo(() => ({
     products,
+    loading,
     addProduct,
     updateProduct,
     deleteProduct,
-    getProductById
-  }), [products, addProduct, updateProduct, deleteProduct, getProductById]);
+    getProductById,
+    refetchProducts: fetchLiveProducts
+  }), [products, loading, addProduct, updateProduct, deleteProduct, getProductById, fetchLiveProducts]);
 
   return (
     <ProductContext.Provider value={contextValue}>

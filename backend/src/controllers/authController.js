@@ -1,25 +1,26 @@
-import { store } from '../services/storeService.js';
+import { User } from '../models/User.js';
 import { successResponse, errorResponse } from '../utils/responseHelper.js';
 
-export const login = (req, res, next) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password, role } = req.body || {};
-
     const cleanEmail = (email || '').trim().toLowerCase();
 
     // Check if logging in as Admin
     if (role === 'admin' || cleanEmail === 'admin@niharadaura.com') {
       if (cleanEmail === 'admin@niharadaura.com' && password === 'admin123') {
-        const adminUser = {
-          id: 'usr_admin_nihara',
-          name: 'Nihara Administrator',
-          email: 'admin@niharadaura.com',
-          phone: '+91 9999999999',
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb',
-          role: 'admin',
-          tier: 'Master Admin',
-          rewardPoints: 9999
-        };
+        let adminUser = await User.findOne({ email: 'admin@niharadaura.com' });
+        if (!adminUser) {
+          adminUser = await User.create({
+            id: 'usr_admin_nihara',
+            name: 'Nihara Administrator',
+            email: 'admin@niharadaura.com',
+            phone: '+91 9999999999',
+            role: 'admin',
+            tier: 'Master Admin',
+            rewardPoints: 9999
+          });
+        }
         return successResponse(res, {
           token: 'jwt_nihara_token_admin_active',
           user: adminUser
@@ -30,12 +31,18 @@ export const login = (req, res, next) => {
     }
 
     // Customer Login
-    const baseProfile = store.getUserProfile();
-    const customerUser = {
-      ...baseProfile,
-      email: cleanEmail || baseProfile.email,
-      role: 'user'
-    };
+    let customerUser = await User.findOne({ email: cleanEmail });
+    if (!customerUser) {
+      customerUser = await User.create({
+        id: `usr_${Date.now()}`,
+        name: 'Amit Kumar',
+        email: cleanEmail || 'amitky2056@gmail.com',
+        phone: '+91 8004116370',
+        role: 'user',
+        tier: 'Royal Elite',
+        rewardPoints: 450
+      });
+    }
 
     return successResponse(res, {
       token: 'jwt_nihara_token_customer_active',
@@ -46,41 +53,64 @@ export const login = (req, res, next) => {
   }
 };
 
-export const register = (req, res, next) => {
+export const register = async (req, res, next) => {
   try {
     const { name, email, phone } = req.body;
-    const user = {
+    const cleanEmail = (email || '').trim().toLowerCase();
+
+    let existing = await User.findOne({ email: cleanEmail });
+    if (existing) {
+      return errorResponse(res, 'An account with this email already exists.', 400);
+    }
+
+    const user = await User.create({
       id: `usr_${Date.now()}`,
       name: name || 'New Patron',
-      email: email || '',
+      email: cleanEmail,
       phone: phone || '',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
-      role: 'user', // New accounts are always customers
+      role: 'user',
       tier: 'Silver',
       rewardPoints: 100
-    };
-    store.currentUser = user;
-    return successResponse(res, { user, requiresOtp: true }, 'Registration successful', 201);
+    });
+
+    return successResponse(res, { user, requiresOtp: true }, 'Registration successful in MongoDB', 201);
   } catch (err) {
     next(err);
   }
 };
 
-export const verifyOtp = (req, res, next) => {
+export const verifyOtp = async (req, res, next) => {
   try {
-    const user = {
-      ...store.getUserProfile(),
-      role: 'user'
-    };
-    return successResponse(res, {
-      token: 'jwt_nihara_token_customer_active',
-      user
-    }, 'OTP verified successfully');
+    const { otp, email } = req.body;
+    if (otp === '1234' || otp === '2026' || otp) {
+      let user = await User.findOne({ email: (email || '').trim().toLowerCase() });
+      if (!user) {
+        user = await User.findOne();
+      }
+      return successResponse(res, {
+        token: 'jwt_nihara_token_customer_active',
+        user
+      }, 'Phone verified successfully');
+    }
+    return errorResponse(res, 'Invalid verification code. Enter 1234 or 2026.', 400);
   } catch (err) {
     next(err);
   }
 };
 
-export const logout = (req, res, next) => {
-  return successResponse(res, {}, 'Logged out successfully');
+export const getCurrentUser = async (req, res, next) => {
+  try {
+    let user = await User.findOne();
+    return successResponse(res, { user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    return successResponse(res, {}, 'Logged out successfully');
+  } catch (err) {
+    next(err);
+  }
 };

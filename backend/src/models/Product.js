@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
 
 const ProductSchema = new mongoose.Schema({
+  id: { type: String },
   name: { type: String, required: true, trim: true },
-  slug: { type: String, required: true, unique: true },
+  slug: { type: String, required: true },
   category: { type: String, required: true },
   categorySlug: { type: String, required: true },
   subcategory: { type: String },
@@ -19,6 +20,15 @@ const ProductSchema = new mongoose.Schema({
   stock: { type: Number, default: 20 },
   isFeatured: { type: Boolean, default: false },
   isBestseller: { type: Boolean, default: false }
-}, { timestamps: true });
+}, {
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    transform: (doc, ret) => {
+      ret.id = ret.id || ret._id.toString();
+      return ret;
+    }
+  }
+});
 
 export const Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
