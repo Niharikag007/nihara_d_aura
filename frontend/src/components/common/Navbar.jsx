@@ -5,7 +5,6 @@ import {
   Heart, 
   User, 
   Search, 
-  Sparkles, 
   Menu, 
   X,
   Phone,
@@ -80,14 +79,6 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-[#E8DFC8] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] transition-colors will-change-transform transform-gpu">
-      {/* Top Announcement Bar */}
-      <div className="bg-gradient-to-r from-[#A87D17] via-[#C59B27] to-[#855F14] text-white text-[10px] sm:text-xs py-1.5 px-3 sm:px-4 text-center font-medium tracking-wide flex justify-center items-center gap-2 leading-tight">
-        <Sparkles className="w-3.5 h-3.5 text-amber-200 animate-pulse flex-shrink-0" />
-        <span className="font-semibold tracking-wider uppercase text-[10px] sm:text-[11px]">
-          Complimentary Insured Pan-India Express Delivery on Orders Above ₹2,500 | 100% BIS Hallmarked Pure Gold
-        </span>
-      </div>
-
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-1 sm:gap-4">
