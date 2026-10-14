@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -38,6 +39,8 @@ export default {
       fontFamily: {
         serif: ['"Playfair Display"', 'Georgia', 'serif'],
         sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        cormorant: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+        manrope: ['"Manrope"', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         'luxury': '0 4px 20px -2px rgba(197, 155, 39, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04)',
