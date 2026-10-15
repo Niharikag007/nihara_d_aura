@@ -21,9 +21,9 @@ export const ADMIN_USER = {
 
 export const DEFAULT_CUSTOMER = {
   id: "usr_nihara_patron",
-  name: "Nihara Patron",
-  email: "patron@niharadaura.com",
-  phone: "+91 98765 43210",
+  name: "Amit Kumar",
+  email: "amitky2056@gmail.com",
+  phone: "+918004116370",
   avatar: "/hero-slide-1.jpg",
   role: "user",
   tier: "Royal Patron",
