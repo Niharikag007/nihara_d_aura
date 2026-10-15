@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Sparkles, 
@@ -47,11 +47,36 @@ export default function Home() {
   ];
 
   // Filtered products for active category (guaranteed 100% unique from MongoDB)
-  const allUniqueProducts = Array.from(new Map(products.map(p => [(p.id || p._id), p])).values());
+  const allUniqueProducts = useMemo(() => {
+    return Array.from(new Map(products.map(p => [(p.id || p._id), p])).values());
+  }, [products]);
 
-  const filteredProducts = activeCategory === 'All' 
-    ? allUniqueProducts 
-    : allUniqueProducts.filter(p => p.category.toLowerCase() === activeCategory.toLowerCase());
+  const filteredProducts = useMemo(() => {
+    if (activeCategory === 'All') {
+      const prioritySlugs = [
+        'antique-22k-gold-guluband-collar-earrings-suite',
+        '24k-gold-lakshmi-coin-locket-chain-set',
+        '18k-rose-gold-diamond-heart-pendant-chain',
+        '24k-solid-gold-divine-swastik-pendant-chain',
+        '18k-gold-turquoise-evil-eye-talisman-pendant'
+      ];
+
+      const jewelleryProducts = allUniqueProducts.filter(p => p.category?.toLowerCase() === 'jewellery');
+      
+      jewelleryProducts.sort((a, b) => {
+        const aIdx = prioritySlugs.indexOf(a.slug);
+        const bIdx = prioritySlugs.indexOf(b.slug);
+        if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+        if (aIdx !== -1) return -1;
+        if (bIdx !== -1) return 1;
+        return (b.price || 0) - (a.price || 0);
+      });
+
+      const otherProducts = allUniqueProducts.filter(p => p.category?.toLowerCase() !== 'jewellery');
+      return [...jewelleryProducts, ...otherProducts];
+    }
+    return allUniqueProducts.filter(p => p.category?.toLowerCase() === activeCategory.toLowerCase());
+  }, [activeCategory, allUniqueProducts]);
 
   const bestsellerProducts = allUniqueProducts.filter(p => p.isBestseller);
   const featuredProducts = allUniqueProducts.filter(p => p.isFeatured);
@@ -283,30 +308,46 @@ export default function Home() {
 
         <div className="flex md:grid md:grid-cols-6 gap-3.5 sm:gap-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
           {[
-            { name: 'Necklaces & Haar', img: '/hero-slide-1.jpg', cat: 'Jewellery', subcat: 'Bridal Haar & Sets' },
-            { name: 'Gold Jhumkas', img: '/hero-slide-3.jpg', cat: 'Jewellery', subcat: 'Gold Earrings & Jhumkas' },
-            { name: 'Gold Lockets', img: '/hero-slide-5.jpg', cat: 'Jewellery', subcat: 'Gold Lockets & Pendants' },
-            { name: 'Silk Foundation', img: '/hero-slide-2.jpg', cat: 'Makeup', subcat: 'Face Foundations' },
-            { name: 'Press-On Nails', img: '/hero-slide-8.jpg', cat: 'Nails', subcat: 'Press-On Kits' },
-            { name: 'Mogra Candles', img: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=300&q=80', cat: 'Candles', subcat: 'Soy Wax Jar Candles' },
+            { name: 'Necklaces & Haar', tag: 'Royal Heirlooms', img: '/hero-slide-1.jpg', cat: 'Jewellery', subcat: 'Bridal Haar & Sets' },
+            { name: 'Gold Jhumkas', tag: '22K Hallmarked', img: '/hero-slide-3.jpg', cat: 'Jewellery', subcat: 'Gold Earrings & Jhumkas' },
+            { name: 'Gold Lockets', tag: 'Temple & Polki', img: '/hero-slide-5.jpg', cat: 'Jewellery', subcat: 'Gold Lockets & Pendants' },
+            { name: 'Silk Foundation', tag: 'Weightless HD', img: '/hero-slide-2.jpg', cat: 'Makeup', subcat: 'Face Foundations' },
+            { name: 'Press-On Nails', tag: 'Salon Art Suite', img: '/hero-slide-8.jpg', cat: 'Nails', subcat: 'Press-On Kits' },
+            { name: 'Mogra Candles', tag: 'Pure Soy Wax', img: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=400&q=80', cat: 'Candles', subcat: 'Soy Wax Jar Candles' },
           ].map((catItem, idx) => (
             <Link
               key={idx}
               to={`/products?category=${encodeURIComponent(catItem.cat)}${catItem.subcat ? `&subcategory=${encodeURIComponent(catItem.subcat)}` : ''}`}
-              className="group bg-white p-3.5 sm:p-4 rounded-2xl border border-[#DFBC77]/35 hover:border-[#C59B27] shadow-xs hover:shadow-md transition-all text-center flex flex-col items-center hover:-translate-y-1 transform-gpu min-w-[130px] sm:min-w-[140px] md:min-w-0 flex-shrink-0 snap-center"
+              className="group relative bg-gradient-to-b from-white via-[#FCF9F3] to-[#F7F2E7] p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-[#DFBC77]/40 hover:border-[#C59B27] shadow-[0_4px_20px_rgba(212,175,55,0.07)] hover:shadow-[0_12px_32px_rgba(212,175,55,0.22)] transition-all duration-400 text-center flex flex-col items-center justify-between hover:-translate-y-1.5 transform-gpu min-w-[145px] sm:min-w-[160px] md:min-w-0 flex-shrink-0 snap-center overflow-hidden"
             >
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 border-2 border-[#EADECF] group-hover:border-[#C59B27] transition-all group-hover:scale-105 shadow-inner bg-[#FBF8F2]">
-                <img 
-                  src={catItem.img} 
-                  alt={catItem.name} 
-                  onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
-                  className="w-full h-full object-cover" 
-                  loading="lazy"
-                />
+              {/* Luxury Gold Halo on Hover */}
+              <div className="absolute inset-0 bg-radial-gradient from-[#DFBC77]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              {/* Image Circle with Golden Ring Accent */}
+              <div className="relative mb-3.5">
+                <div className="p-1 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F5E6C4] to-[#AA7C11] shadow-md group-hover:scale-105 transition-transform duration-500">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-white bg-[#FBF8F2] shadow-inner">
+                    <img 
+                      src={catItem.img} 
+                      alt={catItem.name} 
+                      onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
               </div>
-              <span className="text-xs font-serif font-bold text-[#1C1917] uppercase tracking-wider group-hover:text-[#C59B27] transition-colors leading-tight">
-                {catItem.name}
-              </span>
+
+              {/* Category Title & Royal Tag */}
+              <div className="flex flex-col items-center">
+                <span className="text-xs sm:text-[13px] font-serif font-extrabold text-[#1C1917] uppercase tracking-wider group-hover:text-[#C59B27] transition-colors leading-tight line-clamp-1">
+                  {catItem.name}
+                </span>
+                <span className="text-[9px] uppercase tracking-widest text-[#9E7318] font-bold mt-1 opacity-90 group-hover:opacity-100 transition-opacity">
+                  {catItem.tag}
+                </span>
+                <span className="w-4 h-0.5 bg-[#DFBC77]/40 group-hover:w-8 group-hover:bg-[#C59B27] rounded-full transition-all duration-300 mt-2" />
+              </div>
             </Link>
           ))}
         </div>

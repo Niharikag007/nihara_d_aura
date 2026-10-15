@@ -1762,7 +1762,7 @@ export const mockData = {
     "isFeatured": false,
     "isBestseller": true,
     "images": [
-      "https://images.pexels.com/photos/3997379/pexels-photo-3997379.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Regal dark emerald green nails embellished with hand-placed golden Swarovski crystals and filigree patterns.",
     "variants": [
@@ -1794,7 +1794,7 @@ export const mockData = {
     "isFeatured": false,
     "isBestseller": false,
     "images": [
-      "https://images.unsplash.com/photo-1522337094846-8a818192de1f?auto=format&fit=crop&w=1200&q=85"
+      "https://images.unsplash.com/photo-1583001809873-a128495da465?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Subtle pink blush marble with delicate white swirls and glossy topcoat for an effortless elevated manicure.",
     "variants": [
@@ -1826,7 +1826,7 @@ export const mockData = {
     "isFeatured": true,
     "isBestseller": true,
     "images": [
-      "https://images.pexels.com/photos/3997380/pexels-photo-3997380.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Pro-salon high-pigment gel formula with plumping high-gloss resin. Lasts up to 14 days without UV lamp or chipping.",
     "variants": [
@@ -1860,7 +1860,7 @@ export const mockData = {
     "isFeatured": true,
     "isBestseller": false,
     "images": [
-      "https://images.pexels.com/photos/3997381/pexels-photo-3997381.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1515688594390-b649af70d282?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Ultra-sparkly diamond dust nail polish that catches rainbow prismatic light reflections with every movement.",
     "variants": [
@@ -1892,7 +1892,7 @@ export const mockData = {
     "isFeatured": false,
     "isBestseller": true,
     "images": [
-      "https://images.pexels.com/photos/3997382/pexels-photo-3997382.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Intense, dramatic deep wine burgundy gel lacquer with glass-like high gloss and 3-week wear longevity.",
     "variants": [
@@ -1924,7 +1924,7 @@ export const mockData = {
     "isFeatured": false,
     "isBestseller": false,
     "images": [
-      "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "The viral glazed donut sheer milky white base designed for clean aesthetic manicures and chrome layering.",
     "variants": [
@@ -1956,7 +1956,7 @@ export const mockData = {
     "isFeatured": true,
     "isBestseller": true,
     "images": [
-      "https://images.pexels.com/photos/3997384/pexels-photo-3997384.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Essential salon pair containing ultra-strong rubber base coat and glass-hard no-wipe shiny top coat.",
     "variants": [
@@ -2020,7 +2020,7 @@ export const mockData = {
     "isFeatured": true,
     "isBestseller": false,
     "images": [
-      "https://images.pexels.com/photos/3997385/pexels-photo-3997385.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "No-mess sponge cushion pen filled with rose gold chrome powder for precise, spill-free chrome nail art.",
     "variants": [
@@ -2052,7 +2052,7 @@ export const mockData = {
     "isFeatured": false,
     "isBestseller": true,
     "images": [
-      "https://images.pexels.com/photos/3997386/pexels-photo-3997386.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Ultra-thin color-shifting opal flakes that transform from green to purple to gold over dark or light base coats.",
     "variants": [
@@ -2084,7 +2084,7 @@ export const mockData = {
     "isFeatured": false,
     "isBestseller": false,
     "images": [
-      "https://images.pexels.com/photos/3997387/pexels-photo-3997387.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Crinkled luxury metallic transfer foils in gold, champagne, and rose copper paired with fast-curing foil glue.",
     "variants": [
@@ -2115,7 +2115,7 @@ export const mockData = {
     "isFeatured": true,
     "isBestseller": true,
     "images": [
-      "https://images.pexels.com/photos/3997388/pexels-photo-3997388.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "The ultimate bridal glazed chrome powder producing a delicate pink-pearl and golden-hued iridescence on nude nails.",
     "variants": [
@@ -2179,7 +2179,7 @@ export const mockData = {
     "isFeatured": false,
     "isBestseller": true,
     "images": [
-      "https://images.pexels.com/photos/3997389/pexels-photo-3997389.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Pocket-sized twist pen with soft brush applicator filled with Moroccan jojoba and damask rose oils.",
     "variants": [
@@ -2210,7 +2210,7 @@ export const mockData = {
     "isFeatured": false,
     "isBestseller": false,
     "images": [
-      "https://images.pexels.com/photos/3997390/pexels-photo-3997390.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Fortifying treatment for brittle, peeling nails damaged from acrylics or gel extensions with plant-based keratin.",
     "variants": [
@@ -2241,7 +2241,7 @@ export const mockData = {
     "isFeatured": true,
     "isBestseller": false,
     "images": [
-      "https://images.pexels.com/photos/3997391/pexels-photo-3997391.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Rich nighttime balm made with pure shea butter, coconut wax, and French lavender essential oil.",
     "variants": [
@@ -2272,7 +2272,7 @@ export const mockData = {
     "isFeatured": false,
     "isBestseller": false,
     "images": [
-      "https://images.pexels.com/photos/3997392/pexels-photo-3997392.jpeg?auto=compress&cs=tinysrgb&w=800"
+      "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=85"
     ],
     "description": "Stimulates rapid nail growth and provides vital fatty acids to dry cuticles and peeling nail matrices.",
     "variants": [
