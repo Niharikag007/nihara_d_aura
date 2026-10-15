@@ -36,12 +36,14 @@ export const initialData = {
       "image": "/images/products/jewellery_royal_kundan_haar.jpg",
       "description": "BIS 22K/18K Hallmarked gold jhumkas, bridal haar sets, 24K gold lockets & pendants, solitaire rings, and antique gold bangles.",
       "subcategories": [
-        "Gold Earrings & Jhumkas",
-        "Bridal Haar & Sets",
-        "Gold Lockets & Pendants",
-        "Temple Gold Bangles",
-        "Gold Rings & Bands",
-        "Rose Gold Chokers"
+        "Royal Kundan Haar",
+        "Temple Gold Jhumkas",
+        "Nakshi Temple Kada",
+        "Lakshmi Gold Locket",
+        "Gold Ganesha Pendant",
+        "Evil Eye Pendant",
+        "Sacred Om Locket",
+        "Kundan Chandbalis"
       ]
     },
     {
@@ -80,7 +82,7 @@ export const initialData = {
       "slug": "nihara-signature-18k-rose-gold-choker",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Rose Gold Chokers",
+      "subcategory": "Royal Kundan Haar",
       "price": 24500,
       "originalPrice": 28000,
       "discountPercent": 13,
@@ -112,7 +114,7 @@ export const initialData = {
       "slug": "luminary-diamond-18k-rose-gold-tennis-choker",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Rose Gold Chokers",
+      "subcategory": "Royal Kundan Haar",
       "price": 32900,
       "originalPrice": 38000,
       "discountPercent": 13,
@@ -144,7 +146,7 @@ export const initialData = {
       "slug": "blooming-flora-18k-rose-gold-layered-choker",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Rose Gold Chokers",
+      "subcategory": "Royal Kundan Haar",
       "price": 28500,
       "originalPrice": 33000,
       "discountPercent": 14,
@@ -176,7 +178,7 @@ export const initialData = {
       "slug": "regal-emerald-drop-18k-rose-gold-collar",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Rose Gold Chokers",
+      "subcategory": "Royal Kundan Haar",
       "price": 36000,
       "originalPrice": 42000,
       "discountPercent": 14,
@@ -208,7 +210,7 @@ export const initialData = {
       "slug": "basra-pearl-18k-rose-gold-cascade-choker",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Rose Gold Chokers",
+      "subcategory": "Royal Kundan Haar",
       "price": 26800,
       "originalPrice": 31000,
       "discountPercent": 14,
@@ -240,7 +242,7 @@ export const initialData = {
       "slug": "22k-solid-gold-peacock-temple-jhumkas",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Earrings & Jhumkas",
+      "subcategory": "Temple Gold Jhumkas",
       "price": 18999,
       "originalPrice": 22000,
       "discountPercent": 14,
@@ -272,7 +274,7 @@ export const initialData = {
       "slug": "royal-jadau-kundan-pearl-chandbalis",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Earrings & Jhumkas",
+      "subcategory": "Kundan Chandbalis",
       "price": 16500,
       "originalPrice": 19500,
       "discountPercent": 15,
@@ -304,7 +306,7 @@ export const initialData = {
       "slug": "18k-gold-floral-solitaire-stud-earrings",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Earrings & Jhumkas",
+      "subcategory": "Temple Gold Jhumkas",
       "price": 14200,
       "originalPrice": 16500,
       "discountPercent": 14,
@@ -336,7 +338,7 @@ export const initialData = {
       "slug": "antique-22k-gold-lakshmi-temple-danglers",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Earrings & Jhumkas",
+      "subcategory": "Kundan Chandbalis",
       "price": 21000,
       "originalPrice": 24500,
       "discountPercent": 14,
@@ -367,7 +369,7 @@ export const initialData = {
       "slug": "traditional-rajasthani-filigree-22k-gold-jhumkas",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Earrings & Jhumkas",
+      "subcategory": "Temple Gold Jhumkas",
       "price": 19800,
       "originalPrice": 23000,
       "discountPercent": 14,
@@ -398,7 +400,7 @@ export const initialData = {
       "slug": "royal-22k-gold-kundan-bridal-haar-set",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Bridal Haar & Sets",
+      "subcategory": "Royal Kundan Haar",
       "price": 38500,
       "originalPrice": 45000,
       "discountPercent": 14,
@@ -430,7 +432,7 @@ export const initialData = {
       "slug": "heritage-22k-gold-ruby-bridal-maang-tikka",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Bridal Haar & Sets",
+      "subcategory": "Royal Kundan Haar",
       "price": 12500,
       "originalPrice": 14500,
       "discountPercent": 14,
@@ -462,7 +464,7 @@ export const initialData = {
       "slug": "mughal-polki-emerald-grand-bridal-haar-set",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Bridal Haar & Sets",
+      "subcategory": "Royal Kundan Haar",
       "price": 54000,
       "originalPrice": 62000,
       "discountPercent": 13,
@@ -493,7 +495,7 @@ export const initialData = {
       "slug": "south-indian-temple-gold-kasu-mala-bridal-set",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Bridal Haar & Sets",
+      "subcategory": "Royal Kundan Haar",
       "price": 48500,
       "originalPrice": 55000,
       "discountPercent": 12,
@@ -524,7 +526,7 @@ export const initialData = {
       "slug": "antique-22k-gold-guluband-collar-earrings-suite",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Bridal Haar & Sets",
+      "subcategory": "Royal Kundan Haar",
       "price": 42000,
       "originalPrice": 48000,
       "discountPercent": 12,
@@ -555,7 +557,7 @@ export const initialData = {
       "slug": "24k-gold-lakshmi-coin-locket-chain-set",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Lockets & Pendants",
+      "subcategory": "Lakshmi Gold Locket",
       "price": 21500,
       "originalPrice": 25000,
       "discountPercent": 14,
@@ -586,7 +588,7 @@ export const initialData = {
       "slug": "18k-rose-gold-diamond-heart-pendant-chain",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Lockets & Pendants",
+      "subcategory": "Royal Kundan Haar",
       "price": 15800,
       "originalPrice": 18500,
       "discountPercent": 15,
@@ -618,7 +620,7 @@ export const initialData = {
       "slug": "24k-solid-gold-divine-ganesha-embossed-pendant",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Lockets & Pendants",
+      "subcategory": "Gold Ganesha Pendant",
       "price": 18200,
       "originalPrice": 21000,
       "discountPercent": 13,
@@ -649,7 +651,7 @@ export const initialData = {
       "slug": "18k-gold-turquoise-evil-eye-medallion-pendant",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Lockets & Pendants",
+      "subcategory": "Evil Eye Pendant",
       "price": 13900,
       "originalPrice": 16000,
       "discountPercent": 13,
@@ -681,7 +683,7 @@ export const initialData = {
       "slug": "22k-hallmarked-sacred-om-mantra-filigree-locket",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Lockets & Pendants",
+      "subcategory": "Sacred Om Locket",
       "price": 16700,
       "originalPrice": 19500,
       "discountPercent": 14,
@@ -712,7 +714,7 @@ export const initialData = {
       "slug": "22k-solid-gold-carved-antique-kangan-set-of-2",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Temple Gold Bangles",
+      "subcategory": "Nakshi Temple Kada",
       "price": 32000,
       "originalPrice": 38000,
       "discountPercent": 16,
@@ -745,7 +747,7 @@ export const initialData = {
       "slug": "handcrafted-nakshi-lakshmi-temple-kada",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Temple Gold Bangles",
+      "subcategory": "Nakshi Temple Kada",
       "price": 28500,
       "originalPrice": 33000,
       "discountPercent": 14,
@@ -777,7 +779,7 @@ export const initialData = {
       "slug": "22k-floral-ruby-studded-gold-churi-set-of-4",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Temple Gold Bangles",
+      "subcategory": "Nakshi Temple Kada",
       "price": 45000,
       "originalPrice": 52000,
       "discountPercent": 13,
@@ -809,7 +811,7 @@ export const initialData = {
       "slug": "royal-jaipur-openable-filigree-gold-bangle",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Temple Gold Bangles",
+      "subcategory": "Nakshi Temple Kada",
       "price": 24900,
       "originalPrice": 29000,
       "discountPercent": 14,
@@ -841,7 +843,7 @@ export const initialData = {
       "slug": "antique-finish-22k-gold-peacock-kada-cuff",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Temple Gold Bangles",
+      "subcategory": "Nakshi Temple Kada",
       "price": 31000,
       "originalPrice": 36000,
       "discountPercent": 14,
@@ -872,7 +874,7 @@ export const initialData = {
       "slug": "uncut-polki-diamond-18k-gold-solitaire-ring",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Rings & Bands",
+      "subcategory": "Royal Kundan Haar",
       "price": 18500,
       "originalPrice": 21500,
       "discountPercent": 14,
@@ -905,7 +907,7 @@ export const initialData = {
       "slug": "22k-gold-royal-peacock-statement-cocktail-ring",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Rings & Bands",
+      "subcategory": "Royal Kundan Haar",
       "price": 15200,
       "originalPrice": 17800,
       "discountPercent": 15,
@@ -936,7 +938,7 @@ export const initialData = {
       "slug": "18k-rose-gold-eternity-diamond-band",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Rings & Bands",
+      "subcategory": "Royal Kundan Haar",
       "price": 16800,
       "originalPrice": 19500,
       "discountPercent": 14,
@@ -969,7 +971,7 @@ export const initialData = {
       "slug": "heritage-navratna-emerald-22k-gold-ring",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Rings & Bands",
+      "subcategory": "Royal Kundan Haar",
       "price": 19400,
       "originalPrice": 22500,
       "discountPercent": 14,
@@ -1001,7 +1003,7 @@ export const initialData = {
       "slug": "22k-hand-engraved-floral-gold-signet-ring",
       "category": "Jewellery",
       "categorySlug": "jewellery",
-      "subcategory": "Gold Rings & Bands",
+      "subcategory": "Royal Kundan Haar",
       "price": 13600,
       "originalPrice": 15800,
       "discountPercent": 14,
@@ -1721,7 +1723,7 @@ export const initialData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.pexels.com/photos/3270223/pexels-photo-3270223.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1543257580-7269da773bf5?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Exquisite hand-poured double-wick candle with intoxicating night-blooming Indian mogra and warm Mysuru sandalwood.",
       "variants": [
@@ -1815,7 +1817,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1543257580-7269da773bf5?auto=format&fit=crop&w=1200&q=85"
+        "https://images.unsplash.com/photo-1570823635306-250abb06d4b3?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "A comforting blend of Madagascar vanilla bean, freshly ground Ceylon cinnamon, and toasted nutmeg.",
       "variants": [
@@ -1878,7 +1880,7 @@ export const initialData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.pexels.com/photos/4198139/pexels-photo-4198139.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Enchanting aroma of fresh morning Kashmiri roses blended with creamy Mysore sandalwood in an ombre gold glass bottle.",
       "variants": [
@@ -1909,7 +1911,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": true,
       "images": [
-        "https://images.pexels.com/photos/4198140/pexels-photo-4198140.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Opulent masculine accords of dark agarwood, smoked leather, and spicy pink pepper for royal executive living.",
       "variants": [
@@ -1940,7 +1942,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.pexels.com/photos/4198141/pexels-photo-4198141.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Therapeutic herbal notes designed to dissolve anxiety, promote tranquil sleep, and refresh room air gently.",
       "variants": [
@@ -1971,7 +1973,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.pexels.com/photos/4198142/pexels-photo-4198142.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1533158326339-7f3cf2404354?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Vibrant zesty citrus bouquet that instantly revitalizes workspaces, lobbies, and kitchen areas.",
       "variants": [
@@ -2002,7 +2004,7 @@ export const initialData = {
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "https://images.pexels.com/photos/4198143/pexels-photo-4198143.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1616683693504-3ea7e9ad6fec?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Opulent room mist combining damask rose petals, smoky agarwood (Oud), and spicy cardamom for instant royal ambiance.",
       "variants": [
@@ -2034,7 +2036,7 @@ export const initialData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.pexels.com/photos/3865676/pexels-photo-3865676.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Captures the intoxicating night breeze of blooming Indian queen of the night jasmine flowers and warm amber musk.",
       "variants": [
@@ -2065,7 +2067,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": true,
       "images": [
-        "https://images.pexels.com/photos/4202392/pexels-photo-4202392.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Sacred Mysuru sandalwood distilled with holy basil and cedarwood to cleanse spaces and induce deep meditation.",
       "variants": [
@@ -2096,7 +2098,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.pexels.com/photos/672051/pexels-photo-672051.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Sparkling orange blossom and sunshine citrus designed to instantly clear stagnant odors and uplift spirit.",
       "variants": [
@@ -2127,7 +2129,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.pexels.com/photos/724925/pexels-photo-724925.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Turn your bathroom or bedroom into an authentic 5-star steam spa with crisp blue eucalyptus and cooling mint.",
       "variants": [
@@ -2158,7 +2160,7 @@ export const initialData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.pexels.com/photos/6758532/pexels-photo-6758532.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Pack of 12 soy wax melt cubes topped with dried rose petals, French lavender buds, and golden mica powder.",
       "variants": [
@@ -2190,7 +2192,7 @@ export const initialData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.pexels.com/photos/1070534/pexels-photo-1070534.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Heart-shaped soy melts topped with crushed dried mogra flowers and golden pearl shimmer that melts into molten gold.",
       "variants": [
@@ -2221,7 +2223,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.pexels.com/photos/1666067/pexels-photo-1666067.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Comforting notes of freshly crushed cardamom, ginger, clove, and rich vanilla custard in snap-bar form.",
       "variants": [
@@ -2252,7 +2254,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": true,
       "images": [
-        "https://images.pexels.com/photos/1898555/pexels-photo-1898555.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1506152983158-b4a74a01c721?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Infused with blue chamomile buds and lavender blossoms to create a soothing bedtime haven in any bedroom.",
       "variants": [
@@ -2283,7 +2285,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.pexels.com/photos/208052/pexels-photo-208052.jpeg?auto=compress&cs=tinysrgb&w=800"
+        "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Sensual dark oud, Indonesian patchouli, and golden amber dusted with antique bronze shimmer.",
       "variants": [

@@ -36,7 +36,17 @@ export default function Products() {
   const categories = ['All', 'Jewellery', 'Makeup', 'Nails', 'Candles'];
 
   const subcategoriesMap = {
-    Jewellery: ['All Jewellery', 'Gold Earrings & Jhumkas', 'Bridal Haar & Sets', 'Gold Lockets & Pendants', 'Temple Gold Bangles', 'Gold Rings & Bands', 'Rose Gold Chokers'],
+    Jewellery: [
+      'All Jewellery',
+      'Royal Kundan Haar',
+      'Temple Gold Jhumkas',
+      'Nakshi Temple Kada',
+      'Lakshmi Gold Locket',
+      'Gold Ganesha Pendant',
+      'Evil Eye Pendant',
+      'Sacred Om Locket',
+      'Kundan Chandbalis'
+    ],
     Makeup: ['All Makeup', 'Face Foundations', 'Lipsticks & Gloss', 'Eyeshadow Palettes', 'Blushes & Highlighters'],
     Nails: ['All Nails', 'Press-On Kits', 'Gel Lacquer', 'Chrome Nail Art', 'Cuticle Elixirs'],
     Candles: ['All Candles', 'Soy Wax Jar Candles', 'Reed Diffusers', 'Aroma Room Sprays', 'Wax Melts']
@@ -57,10 +67,12 @@ export default function Products() {
     }
     // Subcategory filter
     if (activeSubcategory && 
-        !activeSubcategory.toLowerCase().startsWith('all') &&
-        p.subcategory &&
-        p.subcategory.toLowerCase() !== activeSubcategory.toLowerCase()) {
-      return false;
+        !activeSubcategory.toLowerCase().startsWith('all')) {
+      const active = activeSubcategory.toLowerCase().trim();
+      const pSub = (p.subcategory || '').toLowerCase().trim();
+      const pName = (p.name || '').toLowerCase();
+      const isMatch = pSub === active || pSub.includes(active) || active.includes(pSub) || pName.includes(active);
+      if (!isMatch) return false;
     }
     // Search query filter
     if (searchQuery.trim()) {

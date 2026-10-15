@@ -306,34 +306,46 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="flex md:grid md:grid-cols-6 gap-3.5 sm:gap-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex gap-3.5 sm:gap-4 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
           {[
-            { name: 'Necklaces & Haar', tag: 'Royal Heirlooms', img: '/hero-slide-1.jpg', cat: 'Jewellery', subcat: 'Bridal Haar & Sets' },
-            { name: 'Gold Jhumkas', tag: '22K Hallmarked', img: '/hero-slide-3.jpg', cat: 'Jewellery', subcat: 'Gold Earrings & Jhumkas' },
-            { name: 'Gold Lockets', tag: 'Temple & Polki', img: '/hero-slide-5.jpg', cat: 'Jewellery', subcat: 'Gold Lockets & Pendants' },
+            { name: 'Royal Kundan Haar', tag: 'Bridal Heritage', img: null, cat: 'Jewellery', subcat: 'Royal Kundan Haar' },
+            { name: 'Temple Gold Jhumkas', tag: '22K Hallmarked', img: null, cat: 'Jewellery', subcat: 'Temple Gold Jhumkas' },
+            { name: 'Nakshi Temple Kada', tag: 'Antique Handcrafted', img: null, cat: 'Jewellery', subcat: 'Nakshi Temple Kada' },
+            { name: 'Lakshmi Gold Locket', tag: 'Auspicious Polki', img: null, cat: 'Jewellery', subcat: 'Lakshmi Gold Locket' },
+            { name: 'Gold Ganesha Pendant', tag: 'Divine Blessing', img: null, cat: 'Jewellery', subcat: 'Gold Ganesha Pendant' },
+            { name: 'Evil Eye Pendant', tag: 'Turquoise 22K', img: null, cat: 'Jewellery', subcat: 'Evil Eye Pendant' },
+            { name: 'Sacred Om Locket', tag: 'Spiritual Grace', img: null, cat: 'Jewellery', subcat: 'Sacred Om Locket' },
+            { name: 'Kundan Chandbalis', tag: 'Jaipur Meenakari', img: null, cat: 'Jewellery', subcat: 'Kundan Chandbalis' },
             { name: 'Silk Foundation', tag: 'Weightless HD', img: '/hero-slide-2.jpg', cat: 'Makeup', subcat: 'Face Foundations' },
-            { name: 'Press-On Nails', tag: 'Salon Art Suite', img: '/hero-slide-8.jpg', cat: 'Nails', subcat: 'Press-On Kits' },
+            { name: 'Press-On Nails', tag: 'Salon Art Suite', img: '/images/nails/nail_img_1.png', cat: 'Nails', subcat: 'Press-On Kits' },
             { name: 'Mogra Candles', tag: 'Pure Soy Wax', img: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=400&q=80', cat: 'Candles', subcat: 'Soy Wax Jar Candles' },
           ].map((catItem, idx) => (
             <Link
               key={idx}
               to={`/products?category=${encodeURIComponent(catItem.cat)}${catItem.subcat ? `&subcategory=${encodeURIComponent(catItem.subcat)}` : ''}`}
-              className="group relative bg-gradient-to-b from-white via-[#FCF9F3] to-[#F7F2E7] p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-[#DFBC77]/40 hover:border-[#C59B27] shadow-[0_4px_20px_rgba(212,175,55,0.07)] hover:shadow-[0_12px_32px_rgba(212,175,55,0.22)] transition-all duration-400 text-center flex flex-col items-center justify-between hover:-translate-y-1.5 transform-gpu min-w-[145px] sm:min-w-[160px] md:min-w-0 flex-shrink-0 snap-center overflow-hidden"
+              className="group relative bg-gradient-to-b from-white via-[#FCF9F3] to-[#F7F2E7] p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-[#DFBC77]/40 hover:border-[#C59B27] shadow-[0_4px_20px_rgba(212,175,55,0.07)] hover:shadow-[0_12px_32px_rgba(212,175,55,0.22)] transition-all duration-400 text-center flex flex-col items-center justify-between hover:-translate-y-1.5 transform-gpu min-w-[155px] sm:min-w-[170px] flex-shrink-0 snap-center overflow-hidden"
             >
               {/* Luxury Gold Halo on Hover */}
               <div className="absolute inset-0 bg-radial-gradient from-[#DFBC77]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-              {/* Image Circle with Golden Ring Accent */}
+              {/* Circle Badge Accent (No image for jewellery, royal gold sparkles icon) */}
               <div className="relative mb-3.5">
                 <div className="p-1 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F5E6C4] to-[#AA7C11] shadow-md group-hover:scale-105 transition-transform duration-500">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-white bg-[#FBF8F2] shadow-inner">
-                    <img 
-                      src={catItem.img} 
-                      alt={catItem.name} 
-                      onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
-                      loading="lazy"
-                    />
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-white bg-gradient-to-br from-[#FFFDF9] via-[#FBF8F2] to-[#F5EEDC] shadow-inner flex items-center justify-center">
+                    {catItem.img ? (
+                      <img 
+                        src={catItem.img} 
+                        alt={catItem.name} 
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out" 
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center p-2 text-center select-none">
+                        <Sparkles className="w-7 h-7 sm:w-8 sm:h-8 text-[#C59B27] drop-shadow-sm group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500" />
+                        <span className="text-[8px] font-serif font-bold text-[#855F14] tracking-wider uppercase mt-1">22K Gold</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

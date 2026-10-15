@@ -124,7 +124,16 @@ export default function AdminDashboard() {
 
   // Subcategories mapping
   const subcategoriesMap = {
-    Jewellery: ['Gold Earrings & Jhumkas', 'Bridal Haar & Sets', 'Gold Lockets & Pendants', 'Temple Gold Bangles', 'Gold Rings & Bands', 'Rose Gold Chokers'],
+    Jewellery: [
+      'Royal Kundan Haar',
+      'Temple Gold Jhumkas',
+      'Nakshi Temple Kada',
+      'Lakshmi Gold Locket',
+      'Gold Ganesha Pendant',
+      'Evil Eye Pendant',
+      'Sacred Om Locket',
+      'Kundan Chandbalis'
+    ],
     Makeup: ['Face Foundations', 'Lipsticks & Gloss', 'Eyeshadow Palettes', 'Blushes & Highlighters'],
     Nails: ['Press-On Kits', 'Gel Lacquer', 'Chrome Nail Art', 'Cuticle Elixirs'],
     Candles: ['Soy Wax Jar Candles', 'Reed Diffusers', 'Aroma Room Sprays', 'Wax Melts']
@@ -134,7 +143,7 @@ export default function AdminDashboard() {
   const initialProductForm = {
     name: '',
     category: 'Jewellery',
-    subcategory: 'Gold Earrings & Jhumkas',
+    subcategory: 'Royal Kundan Haar',
     price: '',
     originalPrice: '',
     stock: '25',

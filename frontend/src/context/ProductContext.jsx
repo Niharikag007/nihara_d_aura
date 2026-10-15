@@ -24,11 +24,13 @@ const getAuthHeaders = () => {
 
 export function ProductProvider({ children }) {
   const { socket } = useSocket();
-  const STORAGE_KEY = 'nihara_products_v2';
+  const STORAGE_KEY = 'nihara_products_v4';
 
   const [products, setProducts] = useState(() => {
     try {
-      localStorage.removeItem('nihara_products'); // clear legacy cache
+      localStorage.removeItem('nihara_products');
+      localStorage.removeItem('nihara_products_v2');
+      localStorage.removeItem('nihara_products_v3');
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
