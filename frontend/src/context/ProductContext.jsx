@@ -24,9 +24,12 @@ const getAuthHeaders = () => {
 
 export function ProductProvider({ children }) {
   const { socket } = useSocket();
+  const STORAGE_KEY = 'nihara_products_v2';
+
   const [products, setProducts] = useState(() => {
     try {
-      const saved = localStorage.getItem('nihara_products');
+      localStorage.removeItem('nihara_products'); // clear legacy cache
+      const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
@@ -42,7 +45,7 @@ export function ProductProvider({ children }) {
   // Sync state to localStorage safely only when modified
   const saveToStorage = useCallback((productList) => {
     try {
-      localStorage.setItem('nihara_products', JSON.stringify(productList));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(productList));
     } catch (e) {
       console.warn('Failed to persist products to localStorage:', e);
     }

@@ -23,6 +23,7 @@ connectDB();
 // Global Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/images', express.static('public/images'));
 app.use(requestLogger);
 
 // Health check endpoint

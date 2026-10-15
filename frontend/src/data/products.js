@@ -22,12 +22,12 @@ const products = [
   { id: 'PRD-015', name: 'Setting spray – dewy finish', collection: 'Makeup', sku: 'MKP-SSD-015', cost: 440, price: 799, stock: 3, status: 'Live', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400', soldLast30: 0, createdAt: '2026-08-20' },
 
   // ── NAILS ──
-  { id: 'PRD-016', name: 'Rose quartz gel press-on kit', collection: 'Nails', sku: 'NAL-RQG-016', cost: 520, price: 1199, stock: 30, status: 'Live', image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400', soldLast30: 16, createdAt: '2026-03-05' },
-  { id: 'PRD-017', name: 'Chrome mirror nail art set', collection: 'Nails', sku: 'NAL-CMA-017', cost: 680, price: 1499, stock: 22, status: 'Live', image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400', soldLast30: 9, createdAt: '2026-04-18' },
-  { id: 'PRD-018', name: 'French tip soft-gel extensions', collection: 'Nails', sku: 'NAL-FTG-018', cost: 400, price: 899, stock: 40, status: 'Live', image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400', soldLast30: 21, createdAt: '2026-05-25' },
-  { id: 'PRD-019', name: 'Cuticle oil elixir (15 ml)', collection: 'Nails', sku: 'NAL-COE-019', cost: 180, price: 399, stock: 55, status: 'Live', image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400', soldLast30: 32, createdAt: '2026-01-08' },
-  { id: 'PRD-020', name: 'Bridal ombré press-on set', collection: 'Nails', sku: 'NAL-BOP-020', cost: 750, price: 1699, stock: 12, status: 'Live', image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400', soldLast30: 5, createdAt: '2026-07-14' },
-  { id: 'PRD-021', name: 'Holographic glitter set', collection: 'Nails', sku: 'NAL-HGS-021', cost: 350, price: 749, stock: 0, status: 'Draft', image: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400', soldLast30: 0, createdAt: '2026-09-01' },
+  { id: 'PRD-016', name: 'Superior Bright Mirror Chrome Silver Nail Polish', collection: 'Nails', sku: 'NAL-RQG-016', cost: 52, price: 94, stock: 45, status: 'Live', image: '/images/nails/nail_img_1.png', soldLast30: 38, createdAt: '2026-03-05' },
+  { id: 'PRD-017', name: 'Professional Enriched Bronze & Wine Dual Nail Colour', collection: 'Nails', sku: 'NAL-CMA-017', cost: 68, price: 113, stock: 50, status: 'Live', image: '/images/nails/nail_img_2.png', soldLast30: 29, createdAt: '2026-04-18' },
+  { id: 'PRD-018', name: 'Sensational Collection Velvet Burgundy 4-Shade Lacquer', collection: 'Nails', sku: 'NAL-FTG-018', cost: 75, price: 131, stock: 35, status: 'Live', image: '/images/nails/nail_img_3.png', soldLast30: 42, createdAt: '2026-05-25' },
+  { id: 'PRD-019', name: 'Colors Queen Super Gel Royal Maroon UV Polish', collection: 'Nails', sku: 'NAL-COE-019', cost: 120, price: 245, stock: 40, status: 'Live', image: '/images/nails/nail_img_4.png', soldLast30: 32, createdAt: '2026-01-08' },
+  { id: 'PRD-020', name: 'SUGAR POP Bold Classic Cherry Red Glossy Lacquer', collection: 'Nails', sku: 'NAL-BOP-020', cost: 45, price: 80, stock: 75, status: 'Live', image: '/images/nails/nail_img_8.png', soldLast30: 65, createdAt: '2026-07-14' },
+  { id: 'PRD-021', name: 'Bella Dual Enriched Glossy Black & Clear Top Coat', collection: 'Nails', sku: 'NAL-HGS-021', cost: 50, price: 96, stock: 45, status: 'Live', image: '/images/nails/nail_img_9.png', soldLast30: 24, createdAt: '2026-09-01' },
 
   // ── CANDLES ──
   { id: 'PRD-022', name: 'Jasmine & amber soy candle', collection: 'Candles', sku: 'CND-JAS-022', cost: 480, price: 1199, stock: 20, status: 'Live', image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?w=400', soldLast30: 18, createdAt: '2026-02-28' },
