@@ -74,14 +74,14 @@ export default function Cart() {
           {items.map((item, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl p-4 sm:p-5 border border-[#DFBC77]/40 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              className="bg-white rounded-3xl p-4 sm:p-5 border border-stone-200/90 shadow-sm hover:border-[#0A6847]/40 hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
               <div className="flex items-center gap-4">
                 <img
                   src={item.product?.images?.[0] || '/hero-slide-1.jpg'}
                   alt={item.product?.name}
                   onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
-                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover bg-stone-100 border border-stone-200 flex-shrink-0"
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover bg-stone-100 border border-stone-200 flex-shrink-0"
                 />
                 <div>
                   <h3 className="font-serif text-sm sm:text-base font-bold text-[#1C1917]">
@@ -90,29 +90,29 @@ export default function Cart() {
                   <p className="text-xs text-stone-500 mt-0.5">
                     Variant: <span className="font-medium text-stone-800">{item.variant}</span> {item.size ? `• Size: ${item.size}` : ''}
                   </p>
-                  <p className="text-sm font-bold text-[#1C1917] mt-1 sm:hidden">
+                  <p className="text-sm font-bold text-[#0A6847] mt-1 sm:hidden">
                     ₹{((item.product?.price || 0) * item.quantity).toLocaleString('en-IN')}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center justify-between sm:justify-end gap-6 pt-2 sm:pt-0 border-t sm:border-t-0 border-stone-100">
-                <span className="hidden sm:block text-base font-bold text-[#1C1917]">
+                <span className="hidden sm:block text-base font-bold text-[#0A6847]">
                   ₹{((item.product?.price || 0) * item.quantity).toLocaleString('en-IN')}
                 </span>
 
                 {/* Quantity Controls */}
-                <div className="flex items-center border border-[#DFBC77]/50 rounded-xl overflow-hidden bg-[#FAF3E8]/60">
+                <div className="flex items-center border border-stone-200 rounded-xl overflow-hidden bg-stone-50">
                   <button
                     onClick={() => updateQuantity(item.productId, item.variant, -1)}
-                    className="px-3 py-1.5 text-xs text-[#855F14] hover:bg-[#EAD7AD] font-bold"
+                    className="px-3 py-1.5 text-xs text-stone-700 hover:bg-stone-200 font-bold transition-colors"
                   >
                     -
                   </button>
                   <span className="px-3 text-xs font-bold text-stone-900">{item.quantity}</span>
                   <button
                     onClick={() => updateQuantity(item.productId, item.variant, 1)}
-                    className="px-3 py-1.5 text-xs text-[#855F14] hover:bg-[#EAD7AD] font-bold"
+                    className="px-3 py-1.5 text-xs text-stone-700 hover:bg-stone-200 font-bold transition-colors"
                   >
                     +
                   </button>
@@ -131,8 +131,8 @@ export default function Cart() {
           ))}
         </div>
 
-        {/* Promo Code / Voucher Card matching APK */}
-        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-[#DFBC77]/40 shadow-sm space-y-2">
+        {/* Promo Code / Voucher Card */}
+        <div className="bg-white rounded-3xl p-4 sm:p-5 border border-stone-200/90 shadow-sm space-y-2">
           <label className="block text-xs font-bold uppercase tracking-wider text-stone-700">
             Promo Code / Voucher
           </label>
@@ -142,11 +142,11 @@ export default function Cart() {
               placeholder="Enter coupon code"
               value={promoCode}
               onChange={(e) => setPromoCode(e.target.value)}
-              className="flex-1 px-4 py-2.5 rounded-xl border border-stone-300 text-xs uppercase tracking-wider focus:outline-none focus:border-[#C59B27] bg-[#FCF9F2]"
+              className="flex-1 px-4 py-2.5 rounded-xl border border-stone-200 text-xs uppercase tracking-wider focus:outline-none focus:border-[#0A6847] bg-stone-50/50"
             />
             <button
               type="submit"
-              className="btn-gold px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm"
+              className="bg-[#0A6847] hover:bg-[#085238] text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-sm transition-colors"
             >
               Apply
             </button>
@@ -164,7 +164,7 @@ export default function Cart() {
                   const res = applyCoupon(o.code);
                   setCouponMessage(res.message);
                 }}
-                className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-50 border border-amber-200 text-[#9E7318] hover:bg-amber-100 transition-colors"
+                className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E8F5E9] border border-[#0A6847]/20 text-[#0A6847] hover:bg-[#D4EDDA] transition-colors"
                 title={`Click to apply ${o.discountPercent}% OFF (Min ₹${o.minOrder})`}
               >
                 {o.code} ({o.discountPercent}% OFF)
@@ -176,15 +176,15 @@ export default function Cart() {
             <p className="text-xs text-amber-800 font-medium pl-1">{couponMessage}</p>
           )}
           {coupon && (
-            <div className="flex items-center justify-between bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 text-xs text-amber-900 mt-2">
+            <div className="flex items-center justify-between bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 text-xs text-emerald-900 mt-2">
               <span>Applied: <strong>{coupon.code}</strong> ({coupon.discountPercent}% OFF - {coupon.name})</span>
               <button type="button" onClick={removeCoupon} className="text-stone-400 hover:text-stone-700 text-xs font-semibold">Remove</button>
             </div>
           )}
         </div>
 
-        {/* Price Breakdown Card matching APK */}
-        <div className="bg-white rounded-2xl p-5 border border-[#DFBC77]/40 shadow-sm space-y-3 text-xs text-stone-600">
+        {/* Price Breakdown Card */}
+        <div className="bg-white rounded-3xl p-5 border border-stone-200/90 shadow-sm space-y-3 text-xs text-stone-600">
           <div className="flex justify-between">
             <span>Subtotal</span>
             <span className="font-semibold text-stone-900">₹{subtotal.toLocaleString('en-IN')}</span>
@@ -197,18 +197,18 @@ export default function Cart() {
           )}
           <div className="flex justify-between">
             <span>Delivery Fee</span>
-            <span className="text-stone-900 font-bold">FREE</span>
+            <span className="text-[#0A6847] font-bold">FREE</span>
           </div>
           <div className="flex justify-between text-base font-bold text-stone-900 pt-3 border-t border-stone-200">
             <span>Total Amount</span>
-            <span className="text-[#855F14] font-sans font-bold text-lg">₹{totalAmount.toLocaleString('en-IN')}</span>
+            <span className="text-[#0A6847] font-sans font-bold text-lg">₹{totalAmount.toLocaleString('en-IN')}</span>
           </div>
         </div>
 
         {/* Proceed to Checkout CTA */}
         <button
           onClick={() => navigate('/checkout')}
-          className="w-full btn-gold py-3.5 rounded-2xl text-xs uppercase tracking-widest font-bold shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+          className="w-full bg-[#0A6847] hover:bg-[#085238] text-white py-3.5 rounded-2xl text-xs uppercase tracking-widest font-bold shadow-lg hover:shadow-xl flex items-center justify-center gap-2 transition-all"
         >
           <span>Proceed to Checkout</span>
           <ArrowRight className="w-4 h-4" />
