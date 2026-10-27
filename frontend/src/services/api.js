@@ -320,6 +320,46 @@ export const api = {
     });
     mockData.addresses = mockData.addresses.filter(a => a.id !== id);
     return { success: true };
+  },
+
+  // Auth & Real OTP API
+  async register(fullName, email) {
+    try {
+      const res = await fetch(`${API_BASE}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName, email })
+      });
+      return await res.json();
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  },
+
+  async login(email, password = '', role = 'user') {
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role })
+      });
+      return await res.json();
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
+  },
+
+  async verifyOtp(email, otp) {
+    try {
+      const res = await fetch(`${API_BASE}/auth/verify-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp })
+      });
+      return await res.json();
+    } catch (err) {
+      return { success: false, message: err.message };
+    }
   }
 };
 

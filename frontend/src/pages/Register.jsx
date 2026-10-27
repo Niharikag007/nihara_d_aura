@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Sparkles, User, Mail, Lock, ShieldCheck, ArrowRight, AlertCircle, Phone } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { api } from '../services/api';
 import Logo from '../components/common/Logo';
 
 export default function Register() {
@@ -73,7 +74,7 @@ export default function Register() {
     if (fieldErrors.identifier) setFieldErrors((prev) => ({ ...prev, identifier: false }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
 
@@ -97,27 +98,21 @@ export default function Register() {
     const cleanName = formData.name.trim();
     const cleanIdentifier = formData.identifier.trim().toLowerCase();
 
-    setTimeout(() => {
-      const isEmail = cleanIdentifier.includes('@');
-      const userEmail = isEmail ? cleanIdentifier : `${cleanName.toLowerCase().replace(/[^a-z0-9]/g, '')}@niharapatron.com`;
-      const cleanDigits = cleanIdentifier.replace(/[^0-9]/g, '');
-      const userPhone = isEmail ? '+91 98765 43210' : `+91 ${cleanDigits}`;
-
-      login({
-        id: `usr_${Date.now()}`,
-        name: cleanName,
-        email: userEmail,
-        phone: userPhone,
-        avatar: '/hero-slide-1.jpg',
-        tier: 'Royal Patron',
-        rewardPoints: 100,
-        role: 'user'
-      });
-
+    try {
+      const res = await api.register(cleanName, cleanIdentifier);
       setIsSubmitting(false);
-      showToast(`Welcome to Nihara D'Aura, ${cleanName}! 100 Welcome Points Awarded.`, 'success');
-      navigate('/profile');
-    }, 400);
+
+      if (res && res.success) {
+        showToast(res.message || `Verification OTP sent to ${cleanIdentifier}!`, 'success');
+        // Transition to verification on login screen with email prefilled
+        navigate(`/login?email=${encodeURIComponent(cleanIdentifier)}&verify=true`);
+      } else {
+        setErrorMessage(res?.message || 'Registration failed. Please check your details and try again.');
+      }
+    } catch (err) {
+      setIsSubmitting(false);
+      setErrorMessage(err.message || 'Registration request failed. Please try again.');
+    }
   };
 
   const isPhoneInput = Boolean(

@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useAuth, ADMIN_CREDENTIALS } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { api } from '../services/api';
 import Logo from '../components/common/Logo';
 
 export default function Login() {
@@ -25,6 +26,8 @@ export default function Login() {
 
   const roleParam = searchParams.get('role');
   const redirectParam = searchParams.get('redirect');
+  const emailParam = searchParams.get('email');
+  const verifyParam = searchParams.get('verify');
 
   // Admin Mode detection
   const [isAdminMode, setIsAdminMode] = useState(
@@ -54,12 +57,19 @@ export default function Login() {
   // Check if identifier is phone-like
   const isPhoneInput = Boolean(identifier && !identifier.includes('@') && /^[+0-9\s-]+$/.test(identifier.trim()));
 
-  // Sync role param if URL changes
+  // Sync params if URL changes (Admin mode or Registration redirect)
   useEffect(() => {
     if (roleParam === 'admin' || redirectParam === '/admin') {
       setIsAdminMode(true);
     }
-  }, [roleParam, redirectParam]);
+    if (emailParam) {
+      setIdentifier(emailParam);
+      if (verifyParam === 'true') {
+        setOtpStep('enter_otp');
+        setResendTimer(45);
+      }
+    }
+  }, [roleParam, redirectParam, emailParam, verifyParam]);
 
   // Resend Countdown Timer
   useEffect(() => {
@@ -82,46 +92,45 @@ export default function Login() {
     }
   }
 
-  // Handle Send OTP (Email or Phone Number)
-  const handleSendOtp = (e) => {
+  // Handle Send OTP (Email via Real Backend)
+  const handleSendOtp = async (e) => {
     if (e) e.preventDefault();
     setErrorMessage('');
 
     const cleanInput = identifier.trim().toLowerCase();
     if (!cleanInput) {
-      setErrorMessage('Please enter your email address or phone number.');
+      setErrorMessage('Please enter your email address.');
       return;
     }
 
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-    const cleanDigits = cleanInput.replace(/[^0-9]/g, '');
-    const hasLetters = /[a-z]/i.test(cleanInput);
-
-    if (cleanInput.includes('@') || hasLetters) {
-      if (!emailRegex.test(cleanInput)) {
-        setErrorMessage('Please enter a valid standard email address in lowercase (e.g., yourname@domain.com).');
-        return;
-      }
-    } else {
-      if (cleanDigits.length !== 10 || !/^[6-9]\d{9}$/.test(cleanDigits)) {
-        setErrorMessage('Please enter a valid 10-digit mobile number (starting with 6, 7, 8, or 9).');
-        return;
-      }
+    if (!emailRegex.test(cleanInput)) {
+      setErrorMessage('Please enter a valid standard email address in lowercase (e.g., yourname@domain.com).');
+      return;
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
+    try {
+      const res = await api.login(cleanInput);
       setIsSubmitting(false);
-      setOtpStep('enter_otp');
-      setResendTimer(45);
-      setOtp(['', '', '', '', '', '']);
-      showToast(`Verification code dispatched to ${cleanInput}. (Code: 123456)`, 'info');
-      setTimeout(() => {
-        if (otpInputsRef.current[0]) {
-          otpInputsRef.current[0].focus();
-        }
-      }, 150);
-    }, 500);
+
+      if (res && res.success) {
+        setOtpStep('enter_otp');
+        setResendTimer(45);
+        setOtp(['', '', '', '', '', '']);
+        showToast(res.message || `Verification OTP sent to ${cleanInput}`, 'success');
+        setTimeout(() => {
+          if (otpInputsRef.current[0]) {
+            otpInputsRef.current[0].focus();
+          }
+        }, 150);
+      } else {
+        setErrorMessage(res?.message || 'Failed to dispatch OTP. Please check your email and try again.');
+      }
+    } catch (err) {
+      setIsSubmitting(false);
+      setErrorMessage(err.message || 'Connection error. Please try again.');
+    }
   };
 
   // Handle OTP digit changes
@@ -162,18 +171,30 @@ export default function Login() {
   };
 
   // Resend OTP
-  const handleResendOtp = () => {
+  const handleResendOtp = async () => {
     if (resendTimer > 0) return;
+    const cleanInput = identifier.trim().toLowerCase();
     setResendTimer(45);
     setOtp(['', '', '', '', '', '']);
-    showToast(`Fresh OTP dispatched to ${identifier}. (Code: 123456)`, 'info');
+
+    try {
+      const res = await api.login(cleanInput);
+      if (res && res.success) {
+        showToast(res.message || `Fresh OTP dispatched to ${cleanInput}`, 'info');
+      } else {
+        showToast(res?.message || 'Failed to resend OTP', 'error');
+      }
+    } catch (err) {
+      showToast('Error requesting fresh OTP', 'error');
+    }
+
     if (otpInputsRef.current[0]) {
       otpInputsRef.current[0].focus();
     }
   };
 
   // Submit OTP Verification
-  const handleVerifyOtp = (e) => {
+  const handleVerifyOtp = async (e) => {
     e.preventDefault();
     setErrorMessage('');
     const fullOtp = otp.join('').trim();
@@ -184,43 +205,32 @@ export default function Login() {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      const cleanInput = identifier.trim();
-      const isEmail = cleanInput.includes('@');
+    const cleanEmail = identifier.trim().toLowerCase();
 
-      let patronName = 'Amit Kumar';
-      let userEmail = cleanInput;
-      let userPhone = '+91 8004116370';
-
-      if (isEmail) {
-        const extracted = cleanInput.split('@')[0] || 'Amit Kumar';
-        patronName = extracted.charAt(0).toUpperCase() + extracted.slice(1);
-        userEmail = cleanInput;
-      } else {
-        userPhone = cleanInput.startsWith('+') ? cleanInput : `+91 ${cleanInput}`;
-        userEmail = 'amitky2056@gmail.com';
-        patronName = 'Amit Kumar';
-      }
-
-      const res = login({
-        id: 'usr_' + Date.now(),
-        name: patronName,
-        email: userEmail,
-        phone: userPhone,
-        avatar: '/hero-slide-1.jpg',
-        tier: 'Royal Patron',
-        rewardPoints: 500,
-        role: 'user'
-      });
-
+    try {
+      const res = await api.verifyOtp(cleanEmail, fullOtp);
       setIsSubmitting(false);
-      if (res?.success) {
-        showToast(`Welcome back, ${patronName}! Session active.`, 'success');
+
+      if (res && res.success) {
+        const verifiedUser = res.data?.user || {
+          id: 'usr_' + Date.now(),
+          name: cleanEmail.split('@')[0],
+          email: cleanEmail,
+          role: 'user',
+          tier: 'Royal Patron',
+          rewardPoints: 100
+        };
+
+        login(verifiedUser);
+        showToast(`Welcome back, ${verifiedUser.name}! Authentication verified.`, 'success');
         navigate(redirectParam && redirectParam !== '/admin' ? redirectParam : '/profile');
       } else {
-        setErrorMessage(res?.message || 'Verification failed. Please try again.');
+        setErrorMessage(res?.message || 'Invalid or expired verification code.');
       }
-    }, 500);
+    } catch (err) {
+      setIsSubmitting(false);
+      setErrorMessage(err.message || 'Verification error. Please try again.');
+    }
   };
 
   // Submit Admin Password Login (Staff only)
