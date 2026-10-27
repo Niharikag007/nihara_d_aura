@@ -55,8 +55,21 @@ export const login = async (req, res, next) => {
 
 export const register = async (req, res, next) => {
   try {
-    const { name, email, phone } = req.body;
+    const { name, email, phone } = req.body || {};
+    const cleanName = (name || '').trim();
     const cleanEmail = (email || '').trim().toLowerCase();
+
+    // Name validation: only alphabets and spaces, min 2 chars
+    const nameRegex = /^[a-zA-Z\s'.]{2,50}$/;
+    if (!cleanName || !nameRegex.test(cleanName)) {
+      return errorResponse(res, 'Name must only contain alphabetic letters and spaces (minimum 2 characters).', 400);
+    }
+
+    // Email validation: standard email format
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+    if (!cleanEmail || !emailRegex.test(cleanEmail)) {
+      return errorResponse(res, 'Please provide a valid standard email address in lowercase (e.g. name@example.com).', 400);
+    }
 
     let existing = await User.findOne({ email: cleanEmail });
     if (existing) {

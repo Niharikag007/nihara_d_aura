@@ -87,19 +87,26 @@ export default function Login() {
     if (e) e.preventDefault();
     setErrorMessage('');
 
-    const cleanInput = identifier.trim();
+    const cleanInput = identifier.trim().toLowerCase();
     if (!cleanInput) {
       setErrorMessage('Please enter your email address or phone number.');
       return;
     }
 
-    const isEmail = cleanInput.includes('@') && cleanInput.includes('.');
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
     const cleanDigits = cleanInput.replace(/[^0-9]/g, '');
-    const isPhone = cleanDigits.length >= 10;
+    const hasLetters = /[a-z]/i.test(cleanInput);
 
-    if (!isEmail && !isPhone) {
-      setErrorMessage('Please enter a valid email address or 10-digit mobile number.');
-      return;
+    if (cleanInput.includes('@') || hasLetters) {
+      if (!emailRegex.test(cleanInput)) {
+        setErrorMessage('Please enter a valid standard email address in lowercase (e.g., yourname@domain.com).');
+        return;
+      }
+    } else {
+      if (cleanDigits.length !== 10 || !/^[6-9]\d{9}$/.test(cleanDigits)) {
+        setErrorMessage('Please enter a valid 10-digit mobile number (starting with 6, 7, 8, or 9).');
+        return;
+      }
     }
 
     setIsSubmitting(true);
@@ -302,8 +309,14 @@ export default function Login() {
           </div>
 
           {/* Screen Title & Subtitle */}
-          <div className="pt-1.5">
-            <h1 className="text-2xl sm:text-[26px] font-bold text-stone-900 tracking-tight">
+          <div className="pt-1.5 space-y-1">
+            {!isAdminMode && otpStep === 'enter_identifier' && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#FAF3E7] via-[#FFF8EC] to-[#FAF3E7] border border-[#D4AF37]/50 text-[#855F14] text-xs font-bold tracking-wide shadow-xs mb-1">
+                <Sparkles className="w-3.5 h-3.5 text-[#B8860B]" />
+                <span>Welcome to Nihara D'Aura</span>
+              </div>
+            )}
+            <h1 className="font-serif text-2xl sm:text-[28px] font-bold text-stone-900 tracking-tight">
               {isAdminMode 
                 ? 'Staff Portal' 
                 : otpStep === 'enter_otp' 
@@ -315,7 +328,7 @@ export default function Login() {
                 ? 'Enter administrative credentials to access management console'
                 : otpStep === 'enter_otp'
                   ? `Enter the 6-digit code sent to ${identifier}`
-                  : 'Enter your email or phone number to receive an instant secure OTP'}
+                  : 'Welcome back! Enter your email or phone number to receive an instant secure OTP'}
             </p>
           </div>
         </div>
@@ -407,9 +420,12 @@ export default function Login() {
               /* Step 1: Identifier Input Form */
               <form onSubmit={handleSendOtp} className="space-y-4 sm:space-y-5">
                 <div>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-stone-700 block mb-1.5">
-                    EMAIL OR PHONE NUMBER
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-stone-700">
+                      EMAIL OR PHONE NUMBER
+                    </label>
+                    <span className="text-[10px] text-stone-400 font-medium">Small letters for email</span>
+                  </div>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#855F14]">
                       {isPhoneInput ? (
@@ -422,8 +438,13 @@ export default function Login() {
                       type="text"
                       required
                       value={identifier}
-                      onChange={(e) => setIdentifier(e.target.value)}
-                      placeholder="Email or Phone Number"
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        const cleaned = val.includes('@') || /[A-Z]/.test(val) ? val.toLowerCase() : val;
+                        setIdentifier(cleaned);
+                        if (errorMessage) setErrorMessage('');
+                      }}
+                      placeholder="name@gmail.com or 10-digit phone"
                       className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#C59B27] bg-[#FCFBF8] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:border-[#855F14] focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-xs"
                     />
                   </div>
