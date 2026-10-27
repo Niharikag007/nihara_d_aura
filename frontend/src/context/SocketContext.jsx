@@ -17,7 +17,7 @@ export function SocketProvider({ children }) {
   const [isConnected, setIsConnected] = useState(false);
   const { showToast } = useToast();
 
-  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+  const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
 
   useEffect(() => {
     // Initialize Socket.io client
