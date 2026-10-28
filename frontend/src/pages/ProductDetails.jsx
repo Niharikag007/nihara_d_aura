@@ -249,7 +249,7 @@ export default function ProductDetails() {
               {/* Add to Bag */}
               <button
                 onClick={handleAddToCart}
-                className="flex-1 btn-gold py-3 px-6 rounded-xl text-xs uppercase tracking-wider font-bold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                className="flex-1 btn-gold py-3 px-6 rounded-xl text-xs uppercase tracking-wider font-extrabold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>Add to Shopping Bag</span>
@@ -258,7 +258,7 @@ export default function ProductDetails() {
               {/* Buy Now */}
               <button
                 onClick={handleBuyNow}
-                className="btn-gold-outline py-3 px-6 rounded-xl text-xs uppercase tracking-wider font-bold shadow-sm"
+                className="btn-gold-outline py-3 px-6 rounded-xl text-xs uppercase tracking-wider font-extrabold shadow-sm"
               >
                 Buy Now
               </button>

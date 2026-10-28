@@ -261,7 +261,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleAddAndOpenDrawer}
-                    className="flex-1 btn-gold py-2.5 rounded-full text-xs uppercase tracking-wider font-bold shadow-md flex items-center justify-center gap-2"
+                    className="flex-1 btn-gold py-2.5 rounded-full text-xs uppercase tracking-wider font-extrabold shadow-md flex items-center justify-center gap-2"
                   >
                     <ShoppingBag className="w-4 h-4" />
                     <span>Add to Bag</span>

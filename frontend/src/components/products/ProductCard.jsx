@@ -95,7 +95,7 @@ export default function ProductCard({ product }) {
           <div className="absolute inset-x-3 bottom-3 z-10 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none group-hover:pointer-events-auto">
             <button
               onClick={handleQuickViewOpen}
-              className="w-full py-2 px-3 rounded-xl bg-white/95 backdrop-blur-md text-[#1C1917] hover:text-[#C59B27] hover:bg-white text-xs font-bold uppercase tracking-wider shadow-lg border border-[#DFBC77]/60 flex items-center justify-center gap-1.5 transition-all transform active:scale-95"
+              className="w-full py-2 px-3 rounded-xl bg-white/95 backdrop-blur-md text-[#1C1917] hover:text-[#C59B27] hover:bg-white text-xs font-extrabold uppercase tracking-wider shadow-lg border border-[#DFBC77]/60 flex items-center justify-center gap-1.5 transition-all transform active:scale-95"
             >
               <Eye className="w-3.5 h-3.5 text-[#C59B27]" />
               <span>Quick View</span>

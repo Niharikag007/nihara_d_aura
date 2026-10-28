@@ -117,7 +117,7 @@ export default function Navbar() {
                   <Link
                     key={item.path}
                     to={item.path}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs uppercase tracking-wider font-semibold bg-gradient-to-r from-[#D4AF37] to-[#B3861B] text-white shadow-sm hover:shadow-md hover:scale-105 transition-all"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs tracking-wider font-semibold bg-gradient-to-r from-[#D4AF37] to-[#B3861B] text-white shadow-sm hover:shadow-md hover:scale-105 transition-all"
                   >
                     <Calendar className="w-3.5 h-3.5" />
                     <span>{item.label}</span>
@@ -128,7 +128,7 @@ export default function Navbar() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`text-sm font-medium tracking-wide transition-colors relative py-1 uppercase ${
+                  className={`text-sm font-medium tracking-wide transition-colors relative py-1 ${
                     isActive 
                       ? 'text-[#C59B27] font-semibold' 
                       : 'text-[#26221F] hover:text-[#C59B27]'
