@@ -76,7 +76,7 @@ export function AuthProvider({ children }) {
    * - If attempting admin login, email & password MUST match admin credentials
    * - Otherwise creates or logs in as regular customer (role: 'user')
    */
-  const login = useCallback((credentials) => {
+  const login = useCallback((credentials, authToken) => {
     const { email, password, role, ...extra } = credentials || {};
     const cleanEmail = (email || '').trim().toLowerCase();
 
@@ -84,7 +84,7 @@ export function AuthProvider({ children }) {
     if (role === 'admin' || cleanEmail === ADMIN_CREDENTIALS.email) {
       if (cleanEmail === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
         const admin = { ...ADMIN_USER, ...extra };
-        const adminToken = 'jwt_nihara_token_admin_active';
+        const adminToken = authToken || 'jwt_nihara_token_admin_active';
         setUser(admin);
         setIsAuthenticated(true);
         setToken(adminToken);
@@ -100,12 +100,15 @@ export function AuthProvider({ children }) {
 
     // Customer Login (Read & Purchase privileges only)
     const customer = {
-      ...(credentials?.id ? credentials : DEFAULT_CUSTOMER),
-      ...extra,
-      email: cleanEmail || DEFAULT_CUSTOMER.email,
+      ...DEFAULT_CUSTOMER,
+      ...(credentials || {}),
+      email: cleanEmail || credentials?.email || DEFAULT_CUSTOMER.email,
+      name: credentials?.name || (cleanEmail ? cleanEmail.split('@')[0] : DEFAULT_CUSTOMER.name),
+      avatar: credentials?.avatar || DEFAULT_CUSTOMER.avatar,
+      phone: credentials?.phone || DEFAULT_CUSTOMER.phone,
       role: 'user'
     };
-    const customerToken = 'jwt_nihara_token_customer_active';
+    const customerToken = authToken || credentials?.token || 'jwt_nihara_token_customer_active';
     setUser(customer);
     setIsAuthenticated(true);
     setToken(customerToken);

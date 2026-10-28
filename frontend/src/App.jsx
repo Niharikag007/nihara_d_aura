@@ -10,6 +10,7 @@ import { SocketProvider } from './context/SocketContext';
 import { ServiceProvider } from './context/ServiceContext';
 
 import ScrollToTop from './components/common/ScrollToTop';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 // Storefront Layout Components
 import Navbar from './components/common/Navbar';
@@ -126,7 +127,9 @@ export default function App() {
                 <CartProvider>
                   <WishlistProvider>
                     <ServiceProvider>
-                      <AppLayout />
+                      <ErrorBoundary>
+                        <AppLayout />
+                      </ErrorBoundary>
                     </ServiceProvider>
                   </WishlistProvider>
                 </CartProvider>

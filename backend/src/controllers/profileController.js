@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { User } from '../models/User.js';
 import { Address } from '../models/BookingOrderAddress.js';
 import { Product } from '../models/Product.js';
@@ -5,7 +6,23 @@ import { successResponse, errorResponse } from '../utils/responseHelper.js';
 
 export const getProfile = async (req, res, next) => {
   try {
-    let user = await User.findOne();
+    let user;
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.split(' ')[1];
+      try {
+        const decoded = jwt.decode(token);
+        if (decoded?.email) {
+          user = await User.findOne({ email: decoded.email.toLowerCase() });
+        } else if (decoded?.id) {
+          user = await User.findOne({ $or: [{ id: decoded.id }, { _id: decoded.id }] });
+        }
+      } catch (e) {}
+    }
+
+    if (!user) {
+      user = await User.findOne();
+    }
     if (!user) {
       user = await User.create({
         id: 'usr_amit_kumar',

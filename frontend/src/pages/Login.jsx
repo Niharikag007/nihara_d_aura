@@ -212,17 +212,17 @@ export default function Login() {
       setIsSubmitting(false);
 
       if (res && res.success) {
-        const verifiedUser = res.data?.user || {
+        const verifiedUser = res.user || res.data?.user || {
           id: 'usr_' + Date.now(),
-          name: cleanEmail.split('@')[0],
+          name: cleanEmail.split('@')[0] || 'Royal Patron',
           email: cleanEmail,
           role: 'user',
           tier: 'Royal Patron',
           rewardPoints: 100
         };
 
-        login(verifiedUser);
-        showToast(`Welcome back, ${verifiedUser.name}! Authentication verified.`, 'success');
+        login(verifiedUser, res.token);
+        showToast(`Welcome back, ${verifiedUser.name || 'Patron'}! Authentication verified.`, 'success');
         navigate(redirectParam && redirectParam !== '/admin' ? redirectParam : '/profile');
       } else {
         setErrorMessage(res?.message || 'Invalid or expired verification code.');
@@ -264,88 +264,67 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FAF8F5] via-[#F4EFE6] to-[#ECE5D8] flex items-center justify-center p-4 py-12 relative overflow-hidden">
-      {/* Ambient luxury luminous glowing orbs */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[720px] h-[360px] bg-gradient-to-b from-[#DFBC77]/30 via-[#DFBC77]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/4 -left-20 w-80 h-80 bg-[#C59B27]/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 -right-20 w-96 h-96 bg-[#855F14]/12 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center p-4 py-12 relative overflow-hidden selection:bg-[#C59B27] selection:text-white">
+      {/* Subtle soft warmth */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#DFBC77]/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Main Luxury Login Card */}
-      <div className="bg-white/95 backdrop-blur-xl rounded-[36px] border border-[#E5D2A8] p-7 sm:p-10 max-w-sm sm:max-w-md w-full shadow-[0_25px_60px_rgba(133,95,20,0.12),0_4px_16px_rgba(0,0,0,0.03)] space-y-6 relative z-10 ring-1 ring-[#DFBC77]/25 transition-all">
+      <div className="bg-white rounded-[32px] sm:rounded-[36px] border border-[#EBE5D8] p-7 sm:p-10 max-w-sm sm:max-w-md w-full shadow-[0_20px_50px_rgba(0,0,0,0.06)] space-y-6 relative z-10 text-center transition-all">
         
         {/* Top Branding Section */}
         <div className="text-center space-y-3.5">
-          {/* Prominent Large Logo Medallion with Ambient Gold Aura */}
-          <Link to="/" className="inline-block group" title="Return to Nihara D'Aura Home">
-            <div className="relative mx-auto flex items-center justify-center">
-              {/* Luminous Glow Halo */}
-              <div className="absolute -inset-3 bg-gradient-to-tr from-[#C59B27]/40 via-[#F5E6C4]/30 to-[#855F14]/40 rounded-full blur-xl group-hover:blur-2xl transition-all duration-300 opacity-80" />
-              
-              {/* Royal Medallion Gold Rim */}
-              <div className="relative p-1 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#FFF5D6] to-[#996515] shadow-[0_10px_28px_rgba(184,134,11,0.35)] transition-transform duration-300 group-hover:scale-105">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden bg-stone-950 p-1 flex items-center justify-center border border-[#DFBC77]/50">
-                  <Logo className="w-full h-full object-contain rounded-full scale-105 drop-shadow-[0_4px_12px_rgba(212,175,55,0.5)]" />
-                </div>
+          {/* Squircle Logo Container */}
+          <div className="flex justify-center">
+            <Link to="/" title="Return to Nihara D'Aura Home" className="group">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#FCFAF6] border border-[#DFBC77]/40 flex items-center justify-center p-2.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+                <Logo className="w-full h-full object-contain" alt="Nihara D'Aura" />
               </div>
-            </div>
-          </Link>
+            </Link>
+          </div>
 
-          {/* Unified Luxury Pill Badge: Jewellery • Makeup • Salon Sanctuary */}
-          <div className="flex justify-center pt-1">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 rounded-full border border-[#D4AF37]/70 bg-gradient-to-r from-[#FAF3E7] via-[#FFFBF2] to-[#FAF3E7] text-[#7A560E] text-[10px] sm:text-[11px] font-extrabold tracking-[0.14em] uppercase shadow-[0_2px_12px_rgba(212,175,55,0.18)]">
-              <Sparkles className="w-3.5 h-3.5 text-[#B8860B] shrink-0 animate-pulse" />
+          {/* Pill Badge */}
+          <div className="flex justify-center">
+            <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-[#DFBC77]/60 bg-[#FAF7F2] text-[#855F14] text-[10.5px] font-semibold tracking-wider uppercase shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#C59B27]" />
               <span>
                 {isAdminMode 
                   ? 'STAFF PORTAL ACCESS' 
                   : otpStep === 'enter_otp' 
-                    ? 'REAL-TIME OTP DISPATCHED' 
-                    : 'HAUTE JEWELLERY • BRIDAL MAKEUP • SALON SANCTUARY'}
+                    ? 'SECURITY VERIFICATION' 
+                    : 'PURE AYURVEDIC SWEETNESS'}
               </span>
             </div>
           </div>
 
-          {/* Brand Heading & Flourish */}
-          <div>
-            <h2 className="font-serif text-3xl sm:text-[34px] font-extrabold tracking-tight text-[#1A1815]">
-              Nihara <span className="bg-gradient-to-r from-[#C59B27] via-[#DFBC77] to-[#855F14] bg-clip-text text-transparent font-serif italic">D'Aura</span>
+          {/* Brand Name exactly like Kosmico Wellness */}
+          {!isAdminMode && otpStep !== 'enter_otp' && (
+            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">
+              Nihara D'Aura
             </h2>
-            <div className="flex items-center justify-center gap-2 mt-1">
-              <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-[#C59B27]/60" />
-              <span className="text-[9.5px] sm:text-[10.5px] font-bold uppercase tracking-[0.22em] text-[#8C733E]">
-                Haute Luxury & Bespoke Beauty
-              </span>
-              <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-[#C59B27]/60" />
-            </div>
-          </div>
+          )}
 
           {/* Screen Title & Subtitle */}
-          <div className="pt-1.5 space-y-1">
-            {!isAdminMode && otpStep === 'enter_identifier' && (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-[#FAF3E7] via-[#FFF8EC] to-[#FAF3E7] border border-[#D4AF37]/50 text-[#855F14] text-xs font-bold tracking-wide shadow-xs mb-1">
-                <Sparkles className="w-3.5 h-3.5 text-[#B8860B]" />
-                <span>Welcome to Nihara D'Aura</span>
-              </div>
-            )}
-            <h1 className="font-serif text-2xl sm:text-[28px] font-bold text-stone-900 tracking-tight">
+          <div className="space-y-1">
+            <h1 className="text-2xl sm:text-[26px] font-bold text-stone-900 tracking-tight">
               {isAdminMode 
                 ? 'Staff Portal' 
                 : otpStep === 'enter_otp' 
-                  ? 'Verify Security OTP' 
+                  ? 'Verify Security Code' 
                   : 'Welcome Back'}
             </h1>
-            <p className="text-xs sm:text-sm text-stone-500 font-normal mt-1 max-w-xs mx-auto">
+            <p className="text-sm text-stone-500 font-normal max-w-xs mx-auto leading-relaxed">
               {isAdminMode
                 ? 'Enter administrative credentials to access management console'
                 : otpStep === 'enter_otp'
-                  ? `Enter the 6-digit code sent to ${identifier}`
-                  : 'Welcome back! Enter your email or phone number to receive an instant secure OTP'}
+                  ? `Enter the 6-digit verification code dispatched to ${identifier}`
+                  : 'Enter your email or phone number to receive an OTP'}
             </p>
           </div>
         </div>
 
         {/* Error Alert */}
         {errorMessage && (
-          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-medium flex items-start gap-2.5 shadow-sm animate-shake">
+          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-medium flex items-start gap-2.5 shadow-xs animate-shake">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
             <span>{errorMessage}</span>
           </div>
@@ -355,12 +334,12 @@ export default function Login() {
         {isAdminMode ? (
           <form onSubmit={handleAdminPasswordLogin} className="space-y-4">
             <div>
-              <label className="text-[11px] font-bold uppercase tracking-wider text-stone-700 block mb-1.5">
+              <label className="text-xs sm:text-[13px] font-['Times_New_Roman',_Times,_serif] font-normal tracking-wide text-stone-700 block mb-2 text-left">
                 Admin Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#855F14]">
-                  <Mail className="w-4 h-4 text-[#855F14]" />
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
+                  <Mail className="w-4 h-4 text-[#C59B27]" />
                 </div>
                 <input
                   type="email"
@@ -368,18 +347,18 @@ export default function Login() {
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
                   placeholder="admin@niharadaura.com"
-                  className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#C59B27] bg-[#FCFBF8] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:border-[#855F14] focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-xs"
+                  className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#C59B27] hover:border-[#855F14] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="text-[11px] font-bold uppercase tracking-wider text-stone-700 block mb-1.5">
+              <label className="text-xs sm:text-[13px] font-['Times_New_Roman',_Times,_serif] font-normal tracking-wide text-stone-700 block mb-2 text-left">
                 Admin Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#855F14]">
-                  <Lock className="w-4 h-4 text-[#855F14]" />
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
+                  <Lock className="w-4 h-4 text-[#C59B27]" />
                 </div>
                 <input
                   type={showAdminPassword ? 'text' : 'password'}
@@ -387,7 +366,7 @@ export default function Login() {
                   value={adminPassword}
                   onChange={(e) => setAdminPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-11 py-3.5 rounded-2xl border-2 border-[#C59B27] bg-[#FCFBF8] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:border-[#855F14] focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-xs"
+                  className="w-full pl-10 pr-11 py-3.5 rounded-2xl border-2 border-[#C59B27] hover:border-[#855F14] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
                 />
                 <button
                   type="button"
@@ -403,7 +382,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 rounded-2xl font-bold text-sm tracking-wide text-white bg-gradient-to-r from-[#855F14] via-[#B8860B] to-[#75500A] hover:from-[#9E7318] hover:to-[#855F14] shadow-[0_12px_28px_rgba(133,95,20,0.28)] hover:shadow-[0_16px_36px_rgba(133,95,20,0.38)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
+              className="w-full py-4 rounded-2xl font-['Times_New_Roman',_Times,_serif] text-base tracking-wider text-white bg-gradient-to-r from-[#9E7318] via-[#C59B27] to-[#855F14] hover:from-[#B0831D] hover:via-[#D4AF37] hover:to-[#9E7318] shadow-[0_12px_28px_rgba(184,134,11,0.32)] hover:shadow-[0_16px_36px_rgba(184,134,11,0.42)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
             >
               <span>{isSubmitting ? 'Authenticating...' : 'Access Admin Console →'}</span>
             </button>
@@ -417,7 +396,7 @@ export default function Login() {
                   setAdminEmail('');
                   setAdminPassword('');
                 }}
-                className="text-xs text-[#855F14] font-semibold hover:underline cursor-pointer"
+                className="text-xs font-['Times_New_Roman',_Times,_serif] font-normal text-[#855F14] hover:underline cursor-pointer"
               >
                 ← Return to Patron Login
               </button>
@@ -425,23 +404,20 @@ export default function Login() {
           </form>
         ) : (
           /* -------------------- USER PASSWORDLESS OTP LOGIN -------------------- */
-          <div className="space-y-5">
+          <div className="space-y-4">
             {otpStep === 'enter_identifier' ? (
               /* Step 1: Identifier Input Form */
-              <form onSubmit={handleSendOtp} className="space-y-4 sm:space-y-5">
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-[11px] font-bold uppercase tracking-wider text-stone-700">
-                      EMAIL OR PHONE NUMBER
-                    </label>
-                    <span className="text-[10px] text-stone-400 font-medium">Small letters for email</span>
-                  </div>
+              <form onSubmit={handleSendOtp} className="space-y-4">
+                <div className="text-left">
+                  <label className="text-[11px] sm:text-xs font-bold text-stone-700 tracking-wider uppercase block mb-1.5">
+                    EMAIL OR PHONE NUMBER
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#855F14]">
                       {isPhoneInput ? (
-                        <Phone className="w-4 h-4 text-[#855F14]" />
+                        <Phone className="w-5 h-5 text-[#855F14]" />
                       ) : (
-                        <Mail className="w-4 h-4 text-[#855F14]" />
+                        <Mail className="w-5 h-5 text-[#855F14]" />
                       )}
                     </div>
                     <input
@@ -454,26 +430,25 @@ export default function Login() {
                         setIdentifier(cleaned);
                         if (errorMessage) setErrorMessage('');
                       }}
-                      placeholder="name@gmail.com or 10-digit phone"
-                      className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#C59B27] bg-[#FCFBF8] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:border-[#855F14] focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-xs"
+                      placeholder="Email or Phone Number"
+                      className="w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 border-[#855F14] bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs"
                     />
                   </div>
                 </div>
 
-                {/* Primary Royal Gold Button */}
+                {/* Primary Action Button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 rounded-2xl font-bold text-sm tracking-wide text-white bg-gradient-to-r from-[#855F14] via-[#B8860B] to-[#75500A] hover:from-[#9E7318] hover:to-[#855F14] shadow-[0_12px_28px_rgba(133,95,20,0.28)] hover:shadow-[0_16px_36px_rgba(133,95,20,0.38)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
+                  className="w-full py-4 rounded-2xl font-bold text-base text-white bg-[#855F14] hover:bg-[#6e4d0d] active:scale-[0.99] shadow-[0_8px_20px_rgba(133,95,20,0.25)] flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-70 mt-2"
                 >
                   <span>{isSubmitting ? 'Sending OTP Code...' : 'Login →'}</span>
-                  <ArrowRight className="w-4 h-4" />
                 </button>
               </form>
             ) : (
               /* Step 2: 6-Digit OTP Verification Form */
               <form onSubmit={handleVerifyOtp} className="space-y-5">
-                <div className="flex items-center justify-between text-xs text-stone-600 font-medium px-1 bg-[#FAF5EB] p-2 rounded-xl border border-[#E8D7B8]">
+                <div className="flex items-center justify-between text-xs text-stone-700 px-3 py-2.5 bg-[#FAF7F2] rounded-xl border border-[#E8DFC8]">
                   <span>Dispatched to: <b className="text-stone-900">{identifier}</b></span>
                   <button
                     type="button"
@@ -486,8 +461,8 @@ export default function Login() {
                 </div>
 
                 <div>
-                  <label className="text-[11px] font-bold uppercase tracking-wider text-stone-700 block mb-2.5 text-center">
-                    ENTER 6-DIGIT VERIFICATION CODE
+                  <label className="text-xs font-semibold text-stone-700 block mb-2 text-center uppercase tracking-wider">
+                    Enter 6-Digit Verification Code
                   </label>
                   <div className="flex items-center justify-center gap-2 sm:gap-2.5">
                     {otp.map((digit, idx) => (
@@ -500,13 +475,13 @@ export default function Login() {
                         value={digit}
                         onChange={(e) => handleOtpDigitChange(e.target.value, idx)}
                         onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-                        className="w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-stone-900 bg-white border-2 border-[#C59B27] rounded-xl focus:border-[#855F14] focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-xs"
+                        className="w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-stone-900 bg-[#FCFAF6] focus:bg-white border-2 border-[#855F14] rounded-xl focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs"
                       />
                     ))}
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-stone-500 pt-1 px-1">
+                <div className="flex items-center justify-between text-xs text-stone-600 pt-1 px-1">
                   <span>Didn't receive code?</span>
                   {resendTimer > 0 ? (
                     <span className="text-stone-400 font-medium">Resend in {resendTimer}s</span>
@@ -525,30 +500,26 @@ export default function Login() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-4 rounded-2xl font-bold text-sm tracking-wide text-white bg-gradient-to-r from-[#855F14] via-[#B8860B] to-[#75500A] hover:from-[#9E7318] hover:to-[#855F14] shadow-[0_12px_28px_rgba(133,95,20,0.28)] hover:shadow-[0_16px_36px_rgba(133,95,20,0.38)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
+                  className="w-full py-4 rounded-2xl font-bold text-base text-white bg-[#855F14] hover:bg-[#6e4d0d] active:scale-[0.99] shadow-[0_8px_20px_rgba(133,95,20,0.25)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
                 >
-                  <span>{isSubmitting ? 'Verifying Code...' : 'Verify & Enter Sanctuary →'}</span>
+                  <span>{isSubmitting ? 'Verifying Code...' : 'Verify & Enter →'}</span>
                 </button>
               </form>
             )}
 
-            {/* Beautified Security Indicators in Royal Gold */}
-            <div className="flex justify-center pt-1">
-              <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[#FAF5EB] border border-[#E8D7B8] text-xs text-stone-600 font-medium shadow-xs">
-                <span className="flex items-center gap-1.5 text-[#855F14]">
-                  <Lock className="w-3.5 h-3.5 text-[#855F14]" />
-                  <span className="text-stone-700 font-semibold">Passwordless</span>
-                </span>
-                <span className="text-stone-300">•</span>
-                <span className="flex items-center gap-1.5 text-[#855F14]">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#855F14]" />
-                  <span className="text-stone-700 font-semibold">256-Bit Encrypted</span>
-                </span>
-              </div>
+            {/* Passwordless & Encrypted Trust Row */}
+            <div className="flex items-center justify-center gap-4 pt-1 text-xs text-stone-500 font-medium">
+              <span className="flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-[#855F14]" /> Passwordless
+              </span>
+              <span className="text-stone-300">•</span>
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#855F14]" /> 256-Bit Encrypted
+              </span>
             </div>
 
             {/* Footer Navigation */}
-            <div className="text-center text-xs sm:text-sm text-stone-500 font-medium pt-2 border-t border-[#DFBC77]/25 space-y-1.5">
+            <div className="text-center text-xs sm:text-sm text-stone-600 font-medium pt-1 space-y-2">
               <div>
                 Don't have an account?{' '}
                 <Link to="/register" className="text-[#855F14] font-bold hover:underline ml-1">

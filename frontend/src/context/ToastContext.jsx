@@ -34,7 +34,11 @@ export function ToastProvider({ children }) {
               {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#DFBC77]" />}
               {toast.type === 'error' && <AlertCircle className="w-4 h-4 text-red-400" />}
               {toast.type === 'info' && <Info className="w-4 h-4 text-amber-300" />}
-              <span>{toast.message}</span>
+              <span>
+                {typeof toast.message === 'object' && toast.message !== null
+                  ? (toast.message.message || JSON.stringify(toast.message))
+                  : String(toast.message || '')}
+              </span>
             </div>
             <button
               onClick={() => removeToast(toast.id)}

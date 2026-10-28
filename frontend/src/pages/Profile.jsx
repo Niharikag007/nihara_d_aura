@@ -90,7 +90,7 @@ export default function Profile() {
     try {
       const localCoupons = JSON.parse(localStorage.getItem('nda_coupons') || 'null');
       const list = Array.isArray(localCoupons) && localCoupons.length > 0 ? localCoupons : (couponsData || []);
-      const active = list.filter(c => c.isActive !== false);
+      const active = (list || []).filter(c => c && c.isActive !== false);
       setCouponsCount(active.length);
       setAvailableCoupons(active);
     } catch (e) {
