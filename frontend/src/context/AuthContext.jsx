@@ -4,16 +4,16 @@ import { api } from '../services/api';
 const AuthContext = createContext();
 
 export const ADMIN_CREDENTIALS = {
-  email: 'admin@niharadaura.com',
+  email: 'amitkry5602@gmail.com',
   password: 'admin123'
 };
 
 export const ADMIN_USER = {
   id: "usr_admin_nihara",
-  name: "Nihara Administrator",
-  email: "admin@niharadaura.com",
-  phone: "+91 9999999999",
-  avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb",
+  name: "Amit Kumar",
+  email: "amitkry5602@gmail.com",
+  phone: "+918004116370",
+  avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d",
   role: "admin",
   tier: "Master Admin",
   rewardPoints: 9999
@@ -73,29 +73,22 @@ export function AuthProvider({ children }) {
 
   /**
    * Login with RBAC verification:
-   * - If attempting admin login, email & password MUST match admin credentials
+   * - If email matches admin email (amitkry5602@gmail.com), assign admin role
    * - Otherwise creates or logs in as regular customer (role: 'user')
    */
   const login = useCallback((credentials, authToken) => {
     const { email, password, role, ...extra } = credentials || {};
     const cleanEmail = (email || '').trim().toLowerCase();
 
-    // Check if user is attempting Admin login
-    if (role === 'admin' || cleanEmail === ADMIN_CREDENTIALS.email) {
-      if (cleanEmail === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
-        const admin = { ...ADMIN_USER, ...extra };
-        const adminToken = authToken || 'jwt_nihara_token_admin_active';
-        setUser(admin);
-        setIsAuthenticated(true);
-        setToken(adminToken);
-        saveState(admin, true, adminToken);
-        return { success: true, role: 'admin', user: admin };
-      } else {
-        return {
-          success: false,
-          message: 'Invalid Admin credentials. Access Denied to Admin Panel.'
-        };
-      }
+    // Check if user is admin (fixed email: amitkry5602@gmail.com) - override everything
+    if (cleanEmail === ADMIN_CREDENTIALS.email) {
+      const admin = { ...ADMIN_USER, ...extra, email: cleanEmail, role: 'admin' };
+      const adminToken = authToken || 'jwt_nihara_token_admin_active';
+      setUser(admin);
+      setIsAuthenticated(true);
+      setToken(adminToken);
+      saveState(admin, true, adminToken);
+      return { success: true, role: 'admin', user: admin };
     }
 
     // Customer Login (Read & Purchase privileges only)
@@ -122,7 +115,12 @@ export function AuthProvider({ children }) {
     if (token) {
       api.getProfile().then(res => {
         if (isMounted && res && res.user) {
-          setUser(prev => ({ ...prev, ...res.user }));
+          setUser(prev => ({
+            ...prev,
+            ...res.user,
+            // Preserve local avatar if it exists (don't overwrite with backend default)
+            avatar: prev.avatar || res.user.avatar
+          }));
         }
       }).catch(() => {});
     }

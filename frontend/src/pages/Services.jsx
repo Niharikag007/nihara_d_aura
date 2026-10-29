@@ -49,8 +49,8 @@ export default function Services() {
           <p className="text-stone-400">Hours: {salonInfo?.hours || '09:00 AM - 08:30 PM (Daily)'}</p>
           <p className="text-stone-300 flex items-center gap-1.5 pt-0.5">
             <Mail className="w-3.5 h-3.5 text-[#DFBC77] flex-shrink-0" />
-            <a href="mailto:niharikagautam007@gmail.com" className="hover:text-amber-200 transition-colors underline truncate">
-              {salonInfo?.email || 'niharikagautam007@gmail.com'}
+            <a href="mailto:support@niharadaura.com" className="hover:text-amber-200 transition-colors underline truncate">
+              {salonInfo?.email || 'support@niharadaura.com'}
             </a>
           </p>
           <Link

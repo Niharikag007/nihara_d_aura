@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProductProvider } from './context/ProductContext';
 import { OffersProvider } from './context/OffersContext';
 import { CartProvider } from './context/CartContext';
@@ -48,6 +48,21 @@ import AdminCustomers from './pages/admin/Customers';
 import AdminPlaybook from './pages/admin/Playbook';
 import AdminSettings from './pages/admin/Settings';
 
+// Protected Admin Route Component
+function ProtectedAdminRoute({ children }) {
+  const { isAuthenticated, isAdmin } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login?role=admin" replace />;
+  }
+
+  if (!isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+}
+
 function AppLayout() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith('/admin');
@@ -72,8 +87,12 @@ function AppLayout() {
           <Route path="/register" element={<Register />} />
           <Route path="/verify-otp" element={<VerifyOTP />} />
 
-          {/* ── Admin Console (Dedicated Luxury Layout with 9 Pages) ── */}
-          <Route path="/admin" element={<AdminLayout />}>
+          {/* ── Admin Console (Dedicated Luxury Layout with 9 Pages) - Protected Route */}
+          <Route path="/admin" element={
+            <ProtectedAdminRoute>
+              <AdminLayout />
+            </ProtectedAdminRoute>
+          }>
             <Route index element={<Overview />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="products" element={<AdminProducts />} />

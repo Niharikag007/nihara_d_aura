@@ -233,9 +233,9 @@ export default function Profile() {
     },
     {
       title: 'Help & Concierge Support',
-      subtitle: 'niharikagautam007@gmail.com • 24/7 Support',
+      subtitle: 'support@niharadaura.com • 24/7 Support',
       icon: HelpCircle,
-      onClick: () => showToast('Concierge: niharikagautam007@gmail.com | +91 92660 59846', 'info')
+      onClick: () => showToast('Concierge: support@niharadaura.com | +91 92660 59846', 'info')
     },
     {
       title: 'Settings',

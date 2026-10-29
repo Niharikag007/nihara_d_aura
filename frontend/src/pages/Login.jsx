@@ -115,15 +115,9 @@ export default function Login() {
       setIsSubmitting(false);
 
       if (res && res.success) {
-        setOtpStep('enter_otp');
-        setResendTimer(45);
-        setOtp(['', '', '', '', '', '']);
+        localStorage.setItem('pending_email', cleanInput);
         showToast(res.message || `Verification OTP sent to ${cleanInput}`, 'success');
-        setTimeout(() => {
-          if (otpInputsRef.current[0]) {
-            otpInputsRef.current[0].focus();
-          }
-        }, 150);
+        navigate('/verify-otp');
       } else {
         setErrorMessage(res?.message || 'Failed to dispatch OTP. Please check your email and try again.');
       }
@@ -221,9 +215,20 @@ export default function Login() {
           rewardPoints: 100
         };
 
+        // Force admin role if email matches
+        if (cleanEmail === 'amitkry5602@gmail.com') {
+          verifiedUser.role = 'admin';
+        }
+
         login(verifiedUser, res.token);
         showToast(`Welcome back, ${verifiedUser.name || 'Patron'}! Authentication verified.`, 'success');
-        navigate(redirectParam && redirectParam !== '/admin' ? redirectParam : '/profile');
+
+        // Redirect to admin dashboard if email is amitkry5602@gmail.com
+        if (cleanEmail === 'amitkry5602@gmail.com') {
+          navigate('/admin');
+        } else {
+          navigate(redirectParam && redirectParam !== '/admin' ? redirectParam : '/profile');
+        }
       } else {
         setErrorMessage(res?.message || 'Invalid or expired verification code.');
       }

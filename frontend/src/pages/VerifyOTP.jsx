@@ -1,35 +1,152 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { api } from '../services/api';
 import Logo from '../components/common/Logo';
 
 export default function VerifyOTP() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { login } = useAuth();
   const { showToast } = useToast();
-  const [otp, setOtp] = useState(['1', '2', '3', '4', '5', '6']);
+  const [otp, setOtp] = useState(['', '', '', '', '', '']);
+  const [email, setEmail] = useState('');
+  const [countdown, setCountdown] = useState(45);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // Get email from URL params or localStorage
+  useEffect(() => {
+    const emailParam = searchParams.get('email');
+    if (emailParam) {
+      setEmail(emailParam);
+    } else {
+      const storedEmail = localStorage.getItem('pending_email');
+      if (storedEmail) {
+        setEmail(storedEmail);
+      }
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
 
   const handleOtpChange = (val, idx) => {
     const next = [...otp];
     next[idx] = val.slice(-1);
     setOtp(next);
+
+    // Auto-focus next input
+    if (val && idx < 5) {
+      const nextInput = document.getElementById(`otp-${idx + 1}`);
+      if (nextInput) nextInput.focus();
+    }
   };
 
-  const handleVerify = (e) => {
-    e.preventDefault();
-    login({
-      id: 'usr_patron_' + Date.now(),
-      name: 'Nihara Patron',
-      email: 'patron@niharadaura.com',
-      phone: '+91 98765 43210',
-      avatar: '/hero-slide-1.jpg',
-      tier: 'Royal Patron',
-      rewardPoints: 500
-    });
-    showToast('OTP verified successfully! Welcome to Nihara.', 'success');
-    navigate('/profile');
+  const handleKeyDown = (e, idx) => {
+    // Handle backspace to go to previous input
+    if (e.key === 'Backspace' && !otp[idx] && idx > 0) {
+      const prevInput = document.getElementById(`otp-${idx - 1}`);
+      if (prevInput) prevInput.focus();
+    }
+  };
+
+  // Auto-verify when all digits are entered
+  useEffect(() => {
+    const isComplete = otp.every(digit => digit !== '');
+    if (isComplete && email) {
+      handleVerify();
+    }
+  }, [otp]);
+
+  const handleVerify = async () => {
+    const fullOtp = otp.join('').trim();
+    if (fullOtp.length < 6) {
+      setErrorMessage('Please enter the complete 6-digit verification code.');
+      return;
+    }
+
+    if (!email) {
+      setErrorMessage('Email not found. Please go back to login.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMessage('');
+
+    try {
+      const res = await api.verifyOtp(email, fullOtp);
+      setIsSubmitting(false);
+
+      if (res && res.success) {
+        const verifiedUser = res.user || res.data?.user || {
+          id: 'usr_' + Date.now(),
+          name: email.split('@')[0] || 'Royal Patron',
+          email: email,
+          role: 'user',
+          tier: 'Royal Patron',
+          rewardPoints: 100
+        };
+
+        // Force admin role if email matches
+        if (email === 'amitkry5602@gmail.com') {
+          verifiedUser.role = 'admin';
+        }
+
+        login(verifiedUser, res.token);
+        localStorage.removeItem('pending_email');
+        showToast(`Welcome to Nihara D'Aura, ${verifiedUser.name}!`, 'success');
+
+        // Redirect to admin dashboard if email is amitkry5602@gmail.com
+        if (email === 'amitkry5602@gmail.com') {
+          navigate('/admin');
+        } else {
+          navigate('/profile');
+        }
+      } else {
+        setErrorMessage(res?.message || 'Invalid or expired verification code.');
+      }
+    } catch (err) {
+      setIsSubmitting(false);
+      setErrorMessage(err.message || 'Verification error. Please try again.');
+    }
+  };
+
+  const handleResend = async () => {
+    if (countdown > 0) return;
+    if (!email) {
+      showToast('Email not found. Please go back to login.', 'error');
+      return;
+    }
+
+    setCountdown(45);
+    setOtp(['', '', '', '', '', '']);
+    setErrorMessage('');
+
+    try {
+      const res = await api.login(email);
+      if (res && res.success) {
+        showToast(`New OTP sent to ${email}`, 'success');
+      } else {
+        showToast(res?.message || 'Failed to resend OTP', 'error');
+      }
+    } catch (err) {
+      showToast('Error requesting fresh OTP', 'error');
+    }
+
+    const firstInput = document.getElementById('otp-0');
+    if (firstInput) firstInput.focus();
+  };
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -38,30 +155,31 @@ export default function VerifyOTP() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#DFBC77]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="bg-white rounded-[32px] sm:rounded-[36px] border border-[#EBE5D8] p-7 sm:p-10 max-w-sm sm:max-w-md w-full shadow-[0_20px_50px_rgba(0,0,0,0.06)] space-y-6 text-center relative z-10 transition-all">
-        
-        <div className="space-y-3.5">
-          {/* Squircle Logo Container */}
+
+        <div className="space-y-4">
+          {/* Logo */}
           <div className="flex justify-center">
             <Link to="/" title="Return to Nihara D'Aura Home" className="group">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#FCFAF6] border border-[#DFBC77]/40 flex items-center justify-center p-2.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
+              <div className="w-20 h-20 rounded-2xl bg-[#FCFAF6] border border-[#DFBC77]/40 flex items-center justify-center p-2.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
                 <Logo className="w-full h-full object-contain" alt="Nihara D'Aura" />
               </div>
             </Link>
           </div>
 
-          {/* Pill Badge */}
+          {/* Tagline */}
           <div className="flex justify-center">
             <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-[#DFBC77]/60 bg-[#FAF7F2] text-[#855F14] text-[10.5px] font-semibold tracking-wider uppercase shadow-xs">
-              <span>HAUTE JEWELLERY & BEAUTY</span>
+              <span>PURE AYURVEDIC SWEETNESS</span>
             </div>
           </div>
 
+          {/* Company Name */}
           <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">
             Nihara D'Aura
           </h2>
 
           {/* Back button */}
-          <div className="text-left -mb-1 pt-1">
+          <div className="text-left">
             <Link
               to="/login"
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-stone-600 hover:text-[#855F14] transition-colors cursor-pointer"
@@ -70,51 +188,69 @@ export default function VerifyOTP() {
             </Link>
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-2">
             <h1 className="text-2xl sm:text-[26px] font-bold text-stone-900 tracking-tight">
               Verify Code
             </h1>
-            <div className="space-y-1.5 pt-0.5">
+            <div className="space-y-1.5">
               <p className="text-sm text-stone-500 font-normal leading-relaxed">
                 Enter the 6-digit code sent to
               </p>
-              <div className="inline-block px-3 py-1 rounded-xl bg-[#FAF7F2] text-stone-800 text-xs font-semibold border border-[#E8DFC8] tracking-wide shadow-2xs">
-                patron@niharadaura.com
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-stone-800 text-sm font-semibold">{email || 'your email'}</span>
+                <Link
+                  to="/login"
+                  className="text-xs text-[#855F14] hover:text-[#523A0B] font-semibold underline cursor-pointer"
+                >
+                  Change
+                </Link>
               </div>
             </div>
           </div>
         </div>
 
-        <form onSubmit={handleVerify} className="space-y-6 pt-1">
+        {/* Error Alert */}
+        {errorMessage && (
+          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-medium flex items-start gap-2.5 shadow-xs">
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        <form className="space-y-6 pt-1">
           <div className="flex items-center justify-center gap-2 sm:gap-2.5">
             {otp.map((digit, i) => (
               <input
                 key={i}
+                id={`otp-${i}`}
                 type="text"
                 inputMode="numeric"
                 maxLength={1}
                 value={digit}
                 onChange={(e) => handleOtpChange(e.target.value, i)}
+                onKeyDown={(e) => handleKeyDown(e, i)}
+                disabled={isSubmitting}
                 className={`w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold rounded-2xl transition-all shadow-xs ${
                   digit || i === 0
                     ? 'border-2 border-[#855F14] bg-white text-stone-900 focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15'
                     : 'border border-stone-200 bg-[#FAF8F5] text-stone-900 focus:border-2 focus:border-[#855F14] focus:bg-white focus:outline-none'
-                }`}
+                } disabled:opacity-50`}
               />
             ))}
           </div>
 
           <button
-            type="submit"
-            className="w-full py-4 rounded-2xl font-bold text-base text-white bg-[#855F14] hover:bg-[#6e4d0d] active:scale-[0.99] shadow-[0_8px_20px_rgba(133,95,20,0.25)] flex items-center justify-center gap-2 transition-all cursor-pointer"
+            type="button"
+            onClick={handleVerify}
+            disabled={isSubmitting}
+            className="w-full py-4 rounded-2xl font-bold text-base text-white bg-[#855F14] hover:bg-[#6e4d0d] active:scale-[0.99] shadow-[0_8px_20px_rgba(133,95,20,0.25)] flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-70"
           >
-            <span>Verify & Access Account</span>
+            <span>{isSubmitting ? 'Verifying...' : 'Verify & Access Account'}</span>
           </button>
 
           <div className="text-center text-xs text-stone-500 font-medium space-y-1 pt-1">
             <p>Resend code available in</p>
             <p className="text-[#855F14] font-bold text-sm tracking-widest font-mono">
-              00:45
+              {formatTime(countdown)}
             </p>
           </div>
         </form>

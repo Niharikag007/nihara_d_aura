@@ -3274,7 +3274,7 @@ export const mockData = {
     "branch": "Bandra Flagship Salon, Mumbai",
     "address": "12 Bandra West, Mumbai, Maharashtra 400050",
     "phone": "+91 92660 59846",
-    "email": "niharikagautam007@gmail.com"
+    "email": "support@niharadaura.com"
   },
   "addresses": [
     {

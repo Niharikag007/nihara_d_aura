@@ -103,9 +103,9 @@ export default function Register() {
       setIsSubmitting(false);
 
       if (res && res.success) {
+        localStorage.setItem('pending_email', cleanIdentifier);
         showToast(res.message || `Verification OTP sent to ${cleanIdentifier}!`, 'success');
-        // Transition to verification on login screen with email prefilled
-        navigate(`/login?email=${encodeURIComponent(cleanIdentifier)}&verify=true`);
+        navigate('/verify-otp');
       } else {
         setErrorMessage(res?.message || 'Registration failed. Please check your details and try again.');
       }
