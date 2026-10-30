@@ -41,6 +41,9 @@ import AdminLayout from './components/admin/AdminLayout';
 import Overview from './pages/admin/Overview';
 import Analytics from './pages/admin/Analytics';
 import AdminProducts from './pages/admin/Products';
+import AdminCategories from './pages/admin/Categories';
+import AdminInventory from './pages/admin/Inventory';
+import AdminServices from './pages/admin/Services';
 import AdminOrders from './pages/admin/Orders';
 import AdminAppointments from './pages/admin/Appointments';
 import AdminCoupons from './pages/admin/Coupons';
@@ -99,6 +102,9 @@ function AppLayout() {
             <Route index element={<Overview />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="products" element={<AdminProducts />} />
+            <Route path="categories" element={<AdminCategories />} />
+            <Route path="inventory" element={<AdminInventory />} />
+            <Route path="services" element={<AdminServices />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="appointments" element={<AdminAppointments />} />
             <Route path="coupons" element={<AdminCoupons />} />

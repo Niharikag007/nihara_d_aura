@@ -1,6 +1,22 @@
 import express from 'express';
 import { protectAdmin } from '../middleware/authMiddleware.js';
 import {
+  getAdminServices,
+  createAdminService,
+  updateAdminService,
+  deleteAdminService
+} from '../controllers/adminServiceController.js';
+import {
+  getAdminCategories,
+  createAdminCategory,
+  updateAdminCategory,
+  deleteAdminCategory
+} from '../controllers/adminCategoryController.js';
+import {
+  getInventoryAdjustments,
+  adjustInventory
+} from '../controllers/adminInventoryController.js';
+import {
   getDashboardData,
   createAdminProduct,
   updateAdminProduct,
@@ -21,6 +37,16 @@ const router = express.Router();
 router.use(protectAdmin);
 router.get('/dashboard', getDashboardData);
 router.get('/analytics', getAdminAnalytics);
+router.get('/services', getAdminServices);
+router.post('/services', createAdminService);
+router.patch('/services/:id', updateAdminService);
+router.delete('/services/:id', deleteAdminService);
+router.get('/categories', getAdminCategories);
+router.post('/categories', createAdminCategory);
+router.patch('/categories/:id', updateAdminCategory);
+router.delete('/categories/:id', deleteAdminCategory);
+router.get('/inventory/adjustments', getInventoryAdjustments);
+router.post('/inventory/:id/adjustments', adjustInventory);
 router.post('/products', createAdminProduct);
 router.patch('/products/:id', updateAdminProduct);
 router.delete('/products/:id', deleteAdminProduct);

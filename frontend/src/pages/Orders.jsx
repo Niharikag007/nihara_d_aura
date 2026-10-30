@@ -140,6 +140,14 @@ export default function Orders() {
                 ))}
               </div>
 
+              {(order.carrier || order.trackingNumber || order.paymentStatus) && (
+                <div className="rounded-xl border border-[#DFBC77]/30 bg-[#FCF9F2] px-3 py-2 text-[11px] text-stone-600">
+                  {order.carrier && <p>Courier: <span className="font-semibold text-stone-800">{order.carrier}</span></p>}
+                  {order.trackingNumber && <p>Tracking reference: <span className="font-mono font-semibold text-stone-800">{order.trackingNumber}</span></p>}
+                  {order.paymentStatus && <p>Payment: <span className="font-semibold text-stone-800">{order.paymentStatus}</span></p>}
+                </div>
+              )}
+
               {/* Total Row */}
               <div className="flex items-center justify-between pt-2.5 border-t border-stone-100 text-xs">
                 <span className="font-semibold text-stone-600">Total Amount Paid</span>

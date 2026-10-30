@@ -15,7 +15,6 @@
 | :--- | :--- | :--- |
 | `Content-Type` | `application/json` | Har POST, PUT, PATCH request mein |
 | `Authorization` | `Bearer <JWT_TOKEN>` | Customer session ke liye |
-| `x-user-role` | `admin` | Admin wali RBAC operations ke liye |
 
 ---
 
@@ -75,6 +74,10 @@
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/api/services` | Salon, bridal aur spa ke saare packages ki list | Kuch nahi | `✅ 200 OK` | ~17ms |
 | `GET` | `/api/services/:id` | Kisi ek service ki duration, price aur details | Params: `:id` jaise `srv_bridal_glow` | `✅ 200 OK` | ~17ms |
+| `GET` | `/api/admin/services?category=Salon` | **Admin only:** Makeup ya Salon service catalogue dekhna; legacy Nails/Styling records Salon mein normalize hote hain | Valid admin Bearer token; optional `category=Makeup` or `Salon` | `200 OK` | — |
+| `POST` | `/api/admin/services` | **Admin only:** Nayi Makeup ya Salon service create karna | `{ name, category, price, durationMinutes, image, description, inclusions }` + admin Bearer token | `201 Created` | — |
+| `PATCH` | `/api/admin/services/:id` | **Admin only:** Service details update karna | Service ID, validated update fields + admin Bearer token | `200 OK` | — |
+| `DELETE` | `/api/admin/services/:id` | **Admin only:** Service ko public menu se delete karna; existing booking details stay saved | Service ID + admin Bearer token | `200 OK` | — |
 | `GET` | `/api/artists` | Expert makeup artists aur stylists ki profiles | Kuch nahi | `✅ 200 OK` | ~16ms |
 | `GET` | `/api/salon` | Flagship salon ka address, timings aur amenities | Kuch nahi | `✅ 200 OK` | ~17ms |
 

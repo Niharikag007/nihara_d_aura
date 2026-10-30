@@ -3122,7 +3122,7 @@ export const mockData = {
       "id": "srv_styling_consultation",
       "name": "Bridal Jewellery & Trousseau Styling Consultation",
       "slug": "bridal-jewellery-trousseau-styling-consultation",
-      "category": "Jewellery & Styling",
+      "category": "Salon",
       "price": 2500,
       "durationMinutes": 60,
       "rating": 4.8,
@@ -3133,6 +3133,60 @@ export const mockData = {
         "Virtual or In-Salon Fitting Session at Bandra Flagship",
         "Neckline & Trousseau Silhouette Harmony Analysis",
         "Personalized Jewellery & Hair Accessory Moodboard"
+      ]
+    },
+    {
+      "id": "srv_signature_spa_manicure",
+      "name": "Signature Spa Manicure",
+      "slug": "signature-spa-manicure",
+      "category": "Salon",
+      "price": 1200,
+      "durationMinutes": 60,
+      "rating": 4.9,
+      "reviewCount": 0,
+      "image": "/hero-slide-8.jpg",
+      "description": "A restorative manicure ritual with careful nail shaping, cuticle care, a nourishing hand treatment and a polished finish.",
+      "inclusions": [
+        "Nail shaping and cuticle care",
+        "Exfoliating hand treatment",
+        "Nourishing hand massage",
+        "Classic polish finish"
+      ]
+    },
+    {
+      "id": "srv_restorative_hair_spa",
+      "name": "Restorative Hair Spa & Blowout",
+      "slug": "restorative-hair-spa-blowout",
+      "category": "Salon",
+      "price": 2800,
+      "durationMinutes": 90,
+      "rating": 4.9,
+      "reviewCount": 0,
+      "image": "/hero-slide-3.jpg",
+      "description": "A tailored cleansing and conditioning ritual finished with a smooth, salon-styled blowout for soft, refreshed hair.",
+      "inclusions": [
+        "Hair and scalp consultation",
+        "Deep-conditioning hair mask",
+        "Relaxing scalp massage",
+        "Personalised blowout finish"
+      ]
+    },
+    {
+      "id": "srv_signature_salon_pedicure",
+      "name": "Signature Salon Pedicure",
+      "slug": "signature-salon-pedicure",
+      "category": "Salon",
+      "price": 1600,
+      "durationMinutes": 75,
+      "rating": 4.9,
+      "reviewCount": 0,
+      "image": "/hero-slide-5.jpg",
+      "description": "A considered foot-care service with a warm soak, gentle exfoliation, nail grooming and a choice of classic polish.",
+      "inclusions": [
+        "Warm aromatic foot soak",
+        "Gentle exfoliation and nail grooming",
+        "Moisturising foot massage",
+        "Classic polish finish"
       ]
     },
     {

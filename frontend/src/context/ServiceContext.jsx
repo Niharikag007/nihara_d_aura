@@ -4,6 +4,18 @@ import { useSocket } from './SocketContext';
 
 const ServiceContext = createContext();
 
+const normalizeServiceCategory = (category) => {
+  const value = typeof category === 'string' ? category.trim().toLowerCase() : '';
+  if (value === 'makeup') return 'Makeup';
+  if (['nails', 'jewellery & styling', 'jewelry & styling'].includes(value)) return 'Salon';
+  return category || 'Salon';
+};
+
+const normalizeServices = (services = []) => services.map((service) => ({
+  ...service,
+  category: normalizeServiceCategory(service.category)
+}));
+
 export function ServiceProvider({ children }) {
   const { socket } = useSocket();
   const [services, setServices] = useState([]);
@@ -21,7 +33,7 @@ export function ServiceProvider({ children }) {
         api.getCategories()
       ]);
 
-      if (servicesRes?.services) setServices(servicesRes.services);
+      if (servicesRes?.services) setServices(normalizeServices(servicesRes.services));
       if (artistsRes?.artists) setArtists(artistsRes.artists);
       if (salonRes?.salon) setSalonInfo(salonRes.salon);
       if (catRes?.categories) setCategories(catRes.categories);
@@ -47,11 +59,13 @@ export function ServiceProvider({ children }) {
     socket.on('booking:created', handleUpdate);
     socket.on('booking:cancelled', handleUpdate);
     socket.on('service:updated', handleUpdate);
+    socket.on('category:updated', handleUpdate);
 
     return () => {
       socket.off('booking:created', handleUpdate);
       socket.off('booking:cancelled', handleUpdate);
       socket.off('service:updated', handleUpdate);
+      socket.off('category:updated', handleUpdate);
     };
   }, [socket, fetchAllData]);
 

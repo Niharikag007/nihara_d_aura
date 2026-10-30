@@ -24,6 +24,18 @@ const ProductSchema = new mongoose.Schema({
   sizes: [{ type: String }],
   features: [{ type: String }],
   stock: { type: Number, default: 20 },
+  stockHistory: {
+    type: [{
+      delta: { type: Number, required: true },
+      previousStock: { type: Number, required: true },
+      newStock: { type: Number, required: true },
+      reason: { type: String, required: true },
+      adjustedBy: { type: String, default: '' },
+      adjustedAt: { type: Date, default: Date.now }
+    }],
+    default: [],
+    select: false
+  },
   isFeatured: { type: Boolean, default: false },
   isBestseller: { type: Boolean, default: false }
 }, {
@@ -33,6 +45,7 @@ const ProductSchema = new mongoose.Schema({
     virtuals: true,
     transform: (doc, ret) => {
       ret.id = ret.id || ret._id.toString();
+      delete ret.stockHistory;
       return ret;
     }
   }

@@ -141,7 +141,7 @@ Frontend runs by default at `http://localhost:5173`.
 
 ### Admin dashboard and live data
 
-The admin console reads and writes products, orders, appointments, coupons, and store settings through the authenticated `/api/admin` endpoints. MongoDB is the source of truth; Socket.IO notifies signed-in admin sessions after a successful database write. Do not use demo credentials or rely on browser storage for operational data.
+The admin console reads and writes products, categories, services, orders, appointments, coupons, and store settings through authenticated `/api/admin` endpoints. Category descriptions, banners, and subcategories feed the public categories page; category rename updates matching product category references, and a category with products cannot be deleted. Inventory changes require a reason and retain the latest 50 adjustment records per product. Orders support fulfillment status, carrier, tracking reference, and recorded payment status; recording a refund request does not issue a payment-gateway refund. Appointment create/reschedule requests reject overlapping active bookings for the same stylist. Services are managed under separate Makeup and Salon categories; legacy Nails and Jewellery & Styling service records display under Salon without being removed from MongoDB. MongoDB is the source of truth; Socket.IO notifies signed-in admin sessions and refreshes public catalog/service views after successful writes. On a populated database, the first startup runs a versioned, one-time migration that inserts the three new Salon offerings without overwriting existing records; its marker prevents deleted services from being reseeded later.
 
 Before starting the backend, configure `backend/.env` with:
 

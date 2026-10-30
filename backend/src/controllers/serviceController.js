@@ -1,10 +1,11 @@
 import { Service, Artist } from '../models/Service.js';
 import { successResponse, errorResponse } from '../utils/responseHelper.js';
+import { normalizeService } from '../utils/serviceUtils.js';
 import { initialData } from '../data/initialData.js';
 
 export const getServices = async (req, res, next) => {
   try {
-    const services = await Service.find().sort({ createdAt: -1 });
+    const services = (await Service.find().sort({ createdAt: -1 })).map(normalizeService);
     return successResponse(res, { services });
   } catch (err) {
     next(err);
@@ -22,7 +23,7 @@ export const getServiceById = async (req, res, next) => {
       service = await Service.findOne({ $or: [{ slug: id }, { id: id }] });
     }
     if (!service) return errorResponse(res, 'Service not found', 404);
-    return successResponse(res, { service });
+    return successResponse(res, { service: normalizeService(service) });
   } catch (err) {
     next(err);
   }

@@ -17,6 +17,7 @@ export default function Products() {
   const {
     darkMode,
     products,
+    categories,
     addProduct,
     updateProduct,
     deleteProduct,
@@ -54,6 +55,7 @@ export default function Products() {
     cost: '',
     price: '',
     stock: '',
+    stockReason: '',
     status: 'Live',
     image: '',
   });
@@ -83,10 +85,11 @@ export default function Products() {
     setEditingProduct(null);
     setFormData({
       name: '',
-      collection: 'Jewellery',
+      collection: categories[0]?.name || 'Jewellery',
       cost: '',
       price: '',
       stock: '10',
+      stockReason: '',
       status: 'Live',
       image: '',
     });
@@ -102,6 +105,7 @@ export default function Products() {
       cost: String(p.cost),
       price: String(p.price),
       stock: String(p.stock),
+      stockReason: '',
       status: p.status,
       image: p.image || '',
     });
@@ -112,10 +116,13 @@ export default function Products() {
   const handleSaveProduct = async (e) => {
     e.preventDefault();
     const errors = {};
+    const stockQuantity = Number(formData.stock);
     if (!formData.name.trim()) errors.name = 'Product name is required';
     if (!formData.cost || parseFloat(formData.cost) <= 0) errors.cost = 'Enter a valid cost (> 0)';
     if (!formData.price || parseFloat(formData.price) <= 0) errors.price = 'Enter a valid price (> 0)';
-    if (formData.stock === '' || parseInt(formData.stock, 10) < 0) errors.stock = 'Enter valid stock (≥ 0)';
+    if (formData.stock === '' || !Number.isInteger(stockQuantity) || stockQuantity < 0) errors.stock = 'Enter a whole stock quantity (≥ 0)';
+    const stockChanged = editingProduct && stockQuantity !== Number(editingProduct.stock);
+    if (stockChanged && !formData.stockReason.trim()) errors.stockReason = 'Add a reason for changing stock.';
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -127,9 +134,10 @@ export default function Products() {
       collection: formData.collection,
       cost: parseFloat(formData.cost),
       price: parseFloat(formData.price),
-      stock: parseInt(formData.stock, 10),
+      stock: stockQuantity,
       status: formData.status,
       image: formData.image.trim() || undefined,
+      ...(stockChanged && { stockAdjustmentReason: formData.stockReason.trim() }),
     };
 
     if (editingProduct) {
@@ -451,7 +459,7 @@ export default function Products() {
       <div className="flex flex-wrap items-center gap-2.5">
         {/* Collection Filter */}
         <div className="flex items-center gap-1.5 bg-white dark:bg-[#181416] p-1 rounded-xl border border-[#e9e3dd] dark:border-white/10 shadow-sm">
-          {['All', 'Jewellery', 'Makeup', 'Nails', 'Candles'].map(col => (
+          {['All', ...categories.map((category) => category.name)].map(col => (
             <button
               key={col}
               onClick={() => setCollectionFilter(col)}
@@ -603,10 +611,11 @@ export default function Products() {
                   darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
                 }`}
               >
-                <option value="Jewellery">Jewellery (Tgt 18%)</option>
-                <option value="Makeup">Makeup (Tgt 45%)</option>
-                <option value="Nails">Nails (Tgt 55%)</option>
-                <option value="Candles">Candles (Tgt 60%)</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name} (Tgt {targetMargins[category.name] || 25}%)
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -625,6 +634,24 @@ export default function Products() {
                 }`}
               />
               {formErrors.stock && <p className="text-[11px] text-rose-500 mt-1">{formErrors.stock}</p>}
+              {editingProduct && (
+                <div className="mt-2">
+                  <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                    Stock adjustment reason
+                  </label>
+                  <input
+                    type="text"
+                    maxLength={160}
+                    value={formData.stockReason}
+                    onChange={(e) => setFormData(p => ({ ...p, stockReason: e.target.value }))}
+                    placeholder="Required only when stock changes"
+                    className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                      darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                    }`}
+                  />
+                  {formErrors.stockReason && <p className="text-[11px] text-rose-500 mt-1">{formErrors.stockReason}</p>}
+                </div>
+              )}
             </div>
           </div>
 

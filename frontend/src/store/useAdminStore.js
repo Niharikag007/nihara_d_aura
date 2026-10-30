@@ -35,6 +35,9 @@ const useAdminStore = create((set, get) => ({
   appointments: [],
   coupons: [],
   customers: [],
+  services: [],
+  categories: [],
+  inventoryAdjustments: [],
   settings: DEFAULT_SETTINGS,
   checklist: { date: null, items: {} },
   toasts: [],
@@ -54,6 +57,8 @@ const useAdminStore = create((set, get) => ({
         appointments: data.appointments || [],
         coupons: data.coupons || [],
         customers: data.customers || [],
+        services: data.services || [],
+        categories: data.categories || [],
         settings: { ...DEFAULT_SETTINGS, ...data.settings },
         loading: false
       });
@@ -74,11 +79,75 @@ const useAdminStore = create((set, get) => ({
   addProduct: async (product) => perform(set, () => adminApi.createProduct(product), (result) => {
     set((state) => ({ products: [result.product, ...state.products] }));
   }),
-  updateProduct: async (id, patch) => perform(set, () => adminApi.updateProduct(id, patch), (result) => {
-    set((state) => ({ products: state.products.map((item) => item.id === id ? result.product : item) }));
-  }),
+  updateProduct: async (id, patch) => {
+    const previous = get().products.find((item) => item.id === id);
+    return perform(set, () => adminApi.updateProduct(id, patch), (result) => {
+      set((state) => ({
+        products: state.products.map((item) => item.id === id ? result.product : item),
+        ...(previous && Number(previous.stock) !== Number(result.product.stock) ? {
+          inventoryAdjustments: [{
+            productId: result.product.id,
+            productName: result.product.name,
+            delta: Number(result.product.stock) - Number(previous.stock),
+            previousStock: Number(previous.stock),
+            newStock: Number(result.product.stock),
+            reason: patch.stockAdjustmentReason,
+            adjustedAt: new Date().toISOString()
+          }, ...state.inventoryAdjustments].slice(0, 200)
+        } : {})
+      }));
+    });
+  },
   deleteProduct: async (id) => perform(set, () => adminApi.deleteProduct(id), () => {
     set((state) => ({ products: state.products.filter((item) => item.id !== id) }));
+  }),
+  addService: async (service) => perform(set, () => adminApi.createService(service), (result) => {
+    set((state) => ({ services: [result.service, ...state.services] }));
+  }),
+  updateService: async (id, patch) => perform(set, () => adminApi.updateService(id, patch), (result) => {
+    set((state) => ({ services: state.services.map((item) => item.id === id ? result.service : item) }));
+  }),
+  deleteService: async (id) => perform(set, () => adminApi.deleteService(id), () => {
+    set((state) => ({ services: state.services.filter((item) => item.id !== id) }));
+  }),
+  addCategory: async (category) => perform(set, () => adminApi.createCategory(category), (result) => {
+    set((state) => ({ categories: [...state.categories, result.category] }));
+  }),
+  updateCategory: async (id, patch) => {
+    const previous = get().categories.find((item) => item.id === id);
+    return perform(set, () => adminApi.updateCategory(id, patch), (result) => {
+      set((state) => ({
+        categories: state.categories.map((item) => item.id === id ? result.category : item),
+        products: state.products.map((product) => product.categorySlug === previous?.slug
+          ? {
+            ...product,
+            category: result.category.name,
+            categorySlug: result.category.slug,
+            collection: result.category.name
+          }
+          : product)
+      }));
+    });
+  },
+  deleteCategory: async (id) => perform(set, () => adminApi.deleteCategory(id), () => {
+    set((state) => ({ categories: state.categories.filter((item) => item.id !== id) }));
+  }),
+  loadInventoryAdjustments: async () => perform(set, () => adminApi.getInventoryAdjustments(), (data) => {
+    set({ inventoryAdjustments: data.adjustments || [] });
+  }),
+  adjustInventory: async (id, adjustment) => perform(set, () => adminApi.adjustInventory(id, adjustment), (result) => {
+    set((state) => ({
+      products: state.products.map((product) => product.id === result.product.id ? result.product : product),
+      inventoryAdjustments: [{
+        productId: result.product.id,
+        productName: result.product.name,
+        delta: adjustment.delta,
+        previousStock: result.product.stock - adjustment.delta,
+        newStock: result.product.stock,
+        reason: adjustment.reason,
+        adjustedAt: new Date().toISOString()
+      }, ...state.inventoryAdjustments].slice(0, 200)
+    }));
   }),
   bulkUpdateProducts: async (ids, patch) => perform(set, async () => {
     const results = await Promise.all(ids.map((id) => adminApi.updateProduct(id, patch)));
@@ -95,7 +164,10 @@ const useAdminStore = create((set, get) => ({
     set((state) => ({ products: state.products.filter((product) => !removed.has(product.id)) }));
   }),
 
-  updateOrderStatus: async (id, status) => perform(set, () => adminApi.updateOrderStatus(id, status), (result) => {
+  updateOrderStatus: async (id, status) => perform(set, () => adminApi.updateOrder(id, { status }), (result) => {
+    set((state) => ({ orders: state.orders.map((order) => order.id === id ? result.order : order) }));
+  }),
+  updateOrderDetails: async (id, patch) => perform(set, () => adminApi.updateOrder(id, patch), (result) => {
     set((state) => ({ orders: state.orders.map((order) => order.id === id ? result.order : order) }));
   }),
 

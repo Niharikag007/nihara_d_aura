@@ -9,7 +9,8 @@ import {
   X,
   Phone,
   Calendar,
-  ShieldCheck
+  ShieldCheck,
+  ChevronDown
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -27,11 +28,13 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [servicesMenuOpen, setServicesMenuOpen] = useState(false);
 
   // Auto-close search and mobile menu when navigating
   React.useEffect(() => {
     setIsSearchOpen(false);
     setMobileMenuOpen(false);
+    setServicesMenuOpen(false);
   }, [location.pathname]);
 
   // Handle escape key to close search
@@ -39,6 +42,7 @@ export default function Navbar() {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         setIsSearchOpen(false);
+        setServicesMenuOpen(false);
       }
     };
     if (isSearchOpen) {
@@ -72,10 +76,10 @@ export default function Navbar() {
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Shop', path: '/products' },
-    { label: 'Categories', path: '/categories' },
-    { label: 'Salon Services', path: '/services' },
-    { label: 'Book Appointment', path: '/book', highlight: true }
+    { label: 'Categories', path: '/categories' }
   ];
+  const bookingLink = { label: 'Book Appointment', path: '/book' };
+  const isServicesActive = location.pathname.startsWith('/services');
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-[#E8DFC8] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] transition-colors will-change-transform transform-gpu">
@@ -112,18 +116,6 @@ export default function Navbar() {
           <nav className="hidden lg:flex items-center gap-8 flex-shrink-0">
             {navLinks.map((item) => {
               const isActive = location.pathname === item.path;
-              if (item.highlight) {
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs tracking-wider font-semibold bg-gradient-to-r from-[#D4AF37] to-[#B3861B] text-white shadow-sm hover:shadow-md hover:scale-105 transition-all"
-                  >
-                    <Calendar className="w-3.5 h-3.5" />
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              }
               return (
                 <Link
                   key={item.path}
@@ -141,6 +133,44 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setServicesMenuOpen((open) => !open)}
+                aria-expanded={servicesMenuOpen}
+                aria-haspopup="true"
+                className={`flex items-center gap-1.5 py-1 text-sm font-medium tracking-wide transition-colors ${
+                  isServicesActive ? 'text-[#C59B27] font-semibold' : 'text-[#26221F] hover:text-[#C59B27]'
+                }`}
+              >
+                Services <ChevronDown className={`h-3.5 w-3.5 transition-transform ${servicesMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {servicesMenuOpen && (
+                <div className="absolute left-0 top-full z-50 mt-3 w-52 rounded-xl border border-[#E8DFC8] bg-[#fffdf8] p-1.5 shadow-xl">
+                  {[
+                    { label: 'All services', path: '/services' },
+                    { label: 'Makeup', path: '/services/makeup' },
+                    { label: 'Salon', path: '/services/salon' }
+                  ].map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      onClick={() => setServicesMenuOpen(false)}
+                      className="block rounded-lg px-3 py-2 text-sm text-[#3d3027] transition hover:bg-[#f7f0e2] hover:text-[#9b711e] focus:outline-none focus:ring-2 focus:ring-[#C59B27]"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+            <Link
+              to={bookingLink.path}
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs tracking-wider font-semibold bg-gradient-to-r from-[#D4AF37] to-[#B3861B] text-white shadow-sm hover:shadow-md hover:scale-105 transition-all"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>{bookingLink.label}</span>
+            </Link>
           </nav>
 
           {/* Right: Search, Wishlist, Cart & Profile Actions */}
@@ -300,6 +330,36 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+          <div className="rounded-xl border border-[#E8DFC8] bg-white/70 p-3">
+            <p className="px-1 pb-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#9b711e]">Services</p>
+            <div className="grid grid-cols-2 gap-1">
+              {[
+                { label: 'Makeup', path: '/services/makeup' },
+                { label: 'Salon', path: '/services/salon' }
+              ].map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    location.pathname === item.path ? 'bg-[#f3e7cb] text-[#815f19]' : 'text-[#26221F] hover:bg-[#F4ECE1]'
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+            <Link to="/services" onClick={() => setMobileMenuOpen(false)} className="mt-1 block rounded-lg px-3 py-1.5 text-xs text-stone-500 hover:text-[#9b711e]">
+              View all services
+            </Link>
+          </div>
+          <Link
+            to={bookingLink.path}
+            onClick={() => setMobileMenuOpen(false)}
+            className="block rounded-lg bg-gradient-to-r from-[#D4AF37] to-[#B3861B] px-3 py-2 text-sm font-semibold text-white shadow-sm"
+          >
+            Book Appointment
+          </Link>
           <div className="pt-2 border-t border-[#E8DFC8]/60 space-y-1">
             <Link
               to="/profile"

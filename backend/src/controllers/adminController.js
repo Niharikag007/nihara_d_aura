@@ -1,10 +1,14 @@
 import { Product } from '../models/Product.js';
+import { Category } from '../models/Category.js';
 import { Order, Booking } from '../models/BookingOrderAddress.js';
 import { Offer } from '../models/Offer.js';
 import { User } from '../models/User.js';
 import { StoreSetting } from '../models/StoreSetting.js';
+import { Service } from '../models/Service.js';
 import { successResponse, errorResponse } from '../utils/responseHelper.js';
 import { emitAdminEvent, emitRealtimeEvent } from '../socket.js';
+import { normalizeService } from '../utils/serviceUtils.js';
+import { hasScheduleConflict, timeToMinutes } from '../utils/bookingSchedule.js';
 
 const idFilter = (id) => {
   const filters = [{ id }, { slug: id }];
@@ -14,6 +18,7 @@ const idFilter = (id) => {
 
 const normalizeProduct = (doc) => {
   const product = doc.toObject ? doc.toObject() : doc;
+  delete product.stockHistory;
   return {
     ...product,
     id: product.id || product._id?.toString(),
@@ -76,20 +81,28 @@ const getSettings = async () => {
 
 export const getDashboardData = async (req, res, next) => {
   try {
-    const [products, orders, bookings, coupons, users, settings] = await Promise.all([
+    const [products, categories, orders, bookings, coupons, users, services, settings] = await Promise.all([
       Product.find().sort({ createdAt: -1 }).lean(),
+      Category.find().sort({ createdAt: 1 }).lean(),
       Order.find().sort({ createdAt: -1 }).lean(),
       Booking.find().sort({ createdAt: -1 }).lean(),
       Offer.find().sort({ createdAt: -1 }).lean(),
       User.find({ role: 'user' }).select('id name email phone tier rewardPoints createdAt').lean(),
+      Service.find().sort({ createdAt: -1 }).lean(),
       getSettings()
     ]);
     return successResponse(res, {
       products: products.map(normalizeProduct),
+      categories: categories.map((category) => ({
+        ...category,
+        id: category.id || category._id?.toString(),
+        itemCount: products.filter((product) => product.categorySlug === category.slug).length
+      })),
       orders: orders.map(normalizeOrder),
       appointments: bookings.map(normalizeBooking),
       coupons: coupons.map(normalizeCoupon),
       customers: users,
+      services: services.map(normalizeService),
       settings
     });
   } catch (err) {
@@ -109,7 +122,17 @@ export const createAdminProduct = async (req, res, next) => {
     payload.id = payload.id || `prod_${Date.now()}`;
     payload.images = payload.images?.length ? payload.images : (payload.image ? [payload.image] : []);
     payload.description = payload.description || payload.name;
-    const product = await Product.create(payload);
+    const openingStock = Number(payload.stock) || 0;
+    const product = await Product.create({
+      ...payload,
+      stockHistory: openingStock > 0 ? [{
+        delta: openingStock,
+        previousStock: 0,
+        newStock: openingStock,
+        reason: 'Opening stock',
+        adjustedBy: req.userEmail
+      }] : []
+    });
     const normalized = normalizeProduct(product);
     emitAdminEvent('product:created', normalized);
     emitRealtimeEvent('product:created', normalized);
@@ -121,16 +144,61 @@ export const createAdminProduct = async (req, res, next) => {
 
 export const updateAdminProduct = async (req, res, next) => {
   try {
-    const updates = { ...req.body };
+    const { stockAdjustmentReason, ...updates } = req.body;
     if (updates.collection) {
       updates.category = updates.collection;
       updates.categorySlug = updates.collection.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     }
     if (updates.image) updates.images = [updates.image];
-    const product = await Product.findOneAndUpdate(idFilter(req.params.id), updates, {
-      new: true,
-      runValidators: true
-    });
+    let product;
+    if (Object.hasOwn(updates, 'stock')) {
+      const newStock = Number(updates.stock);
+      if (!Number.isSafeInteger(newStock) || newStock < 0) {
+        return errorResponse(res, 'Stock must be a non-negative whole number', 400);
+      }
+      const current = await Product.findOne(idFilter(req.params.id)).select('stock');
+      if (!current) return errorResponse(res, 'Product not found', 404);
+      const previousStock = Number(current.stock) || 0;
+      if (newStock !== previousStock) {
+        if (typeof stockAdjustmentReason !== 'string' || !stockAdjustmentReason.trim()) {
+          return errorResponse(res, 'A reason is required when changing stock', 400);
+        }
+        if (stockAdjustmentReason.trim().length > 160) {
+          return errorResponse(res, 'Stock adjustment reason must be 160 characters or fewer', 400);
+        }
+        delete updates.stock;
+        product = await Product.findOneAndUpdate(
+          { $and: [idFilter(req.params.id), { stock: previousStock }] },
+          {
+            $set: { ...updates, stock: newStock },
+            $push: {
+              stockHistory: {
+                $each: [{
+                  delta: newStock - previousStock,
+                  previousStock,
+                  newStock,
+                  reason: stockAdjustmentReason.trim(),
+                  adjustedBy: req.userEmail
+                }],
+                $slice: -50
+              }
+            }
+          },
+          { new: true, runValidators: true }
+        );
+        if (!product) return errorResponse(res, 'Product stock changed during this edit. Refresh and try again.', 409);
+      } else {
+        delete updates.stock;
+        product = Object.keys(updates).length
+          ? await Product.findOneAndUpdate(idFilter(req.params.id), updates, { new: true, runValidators: true })
+          : await Product.findOne(idFilter(req.params.id));
+      }
+    } else {
+      product = await Product.findOneAndUpdate(idFilter(req.params.id), updates, {
+        new: true,
+        runValidators: true
+      });
+    }
     if (!product) return errorResponse(res, 'Product not found', 404);
     const normalized = normalizeProduct(product);
     emitAdminEvent('product:updated', normalized);
@@ -157,10 +225,42 @@ export const deleteAdminProduct = async (req, res, next) => {
 export const updateAdminOrder = async (req, res, next) => {
   try {
     const allowedStatuses = ['Processing', 'Packed', 'Shipped', 'Delivered', 'Cancelled'];
-    if (!allowedStatuses.includes(req.body.status)) {
-      return errorResponse(res, 'Invalid order status', 400);
+    const allowedPaymentStatuses = [
+      'Pending (COD)',
+      'Paid (Online Gateway)',
+      'Processing',
+      'Paid',
+      'Failed',
+      'Refund requested'
+    ];
+    const updates = {};
+    if (Object.hasOwn(req.body, 'status')) {
+      if (!allowedStatuses.includes(req.body.status)) {
+        return errorResponse(res, 'Invalid order status', 400);
+      }
+      updates.status = req.body.status;
+      if (req.body.status === 'Shipped') updates.shippedAt = new Date();
     }
-    const order = await Order.findOneAndUpdate(idFilter(req.params.id), { status: req.body.status }, {
+    if (Object.hasOwn(req.body, 'paymentStatus')) {
+      if (!allowedPaymentStatuses.includes(req.body.paymentStatus)) {
+        return errorResponse(res, 'Invalid payment status', 400);
+      }
+      updates.paymentStatus = req.body.paymentStatus;
+    }
+    for (const field of ['carrier', 'trackingNumber']) {
+      if (!Object.hasOwn(req.body, field)) continue;
+      if (typeof req.body[field] !== 'string' || req.body[field].trim().length > 120) {
+        return errorResponse(res, `${field} must be 120 characters or fewer`, 400);
+      }
+      updates[field] = req.body[field].trim();
+    }
+    if (!Object.keys(updates).length) {
+      return errorResponse(res, 'Provide order status, payment status, carrier, or tracking number', 400);
+    }
+    if (req.body.status === 'Shipped' && req.body.trackingNumber !== undefined && !req.body.trackingNumber.trim()) {
+      return errorResponse(res, 'Tracking number cannot be empty when supplied with shipment status', 400);
+    }
+    const order = await Order.findOneAndUpdate(idFilter(req.params.id), updates, {
       new: true,
       runValidators: true
     });
@@ -168,7 +268,13 @@ export const updateAdminOrder = async (req, res, next) => {
     const normalized = normalizeOrder(order);
     emitAdminEvent('order:updated', normalized);
     if (order.userId) {
-      emitRealtimeEvent('order:updated', { id: normalized.id, status: normalized.status }, `user:${order.userId}`);
+      emitRealtimeEvent('order:updated', {
+        id: normalized.id,
+        status: normalized.status,
+        trackingNumber: normalized.trackingNumber,
+        carrier: normalized.carrier,
+        paymentStatus: normalized.paymentStatus
+      }, `user:${order.userId}`);
     }
     return successResponse(res, { order: normalized });
   } catch (err) {
@@ -179,10 +285,29 @@ export const updateAdminOrder = async (req, res, next) => {
 export const createAdminAppointment = async (req, res, next) => {
   try {
     const { client, phone, service, price, date, time, duration, artist, location, notes, status } = req.body;
-    if (!client?.trim() || !service?.trim() || !date) {
-      return errorResponse(res, 'Client, service and date are required', 400);
+    if (!client?.trim() || !service?.trim() || !date || timeToMinutes(time) === null) {
+      return errorResponse(res, 'Client, service, date and a valid time are required', 400);
     }
-    const amount = Number(price) || 0;
+    const appointmentDate = new Date(date);
+    if (Number.isNaN(appointmentDate.getTime())) return errorResponse(res, 'Choose a valid appointment date', 400);
+    const normalizedDate = appointmentDate.toISOString().slice(0, 10);
+    const amount = Number(price);
+    if (!Number.isFinite(amount) || amount < 0) return errorResponse(res, 'Appointment price must be a non-negative number', 400);
+    const minutes = Number(duration) || 60;
+    if (!Number.isInteger(minutes) || minutes <= 0) return errorResponse(res, 'Duration must be a positive whole number of minutes', 400);
+    const assignedArtist = artist || 'Unassigned';
+    const sameDayBookings = await Booking.find({
+      date: { $regex: `^${normalizedDate}` },
+      status: { $ne: 'Cancelled' }
+    }).select('id date time timeSlot duration artist status');
+    if (hasScheduleConflict(sameDayBookings, {
+      date: normalizedDate,
+      time,
+      duration: minutes,
+      artist: assignedArtist
+    })) {
+      return errorResponse(res, 'That time overlaps with an existing appointment. Choose another time or stylist.', 409);
+    }
     const booking = await Booking.create({
       id: `APT-${Date.now()}`,
       bookingId: `APT-${Date.now()}`,
@@ -191,11 +316,11 @@ export const createAdminAppointment = async (req, res, next) => {
       phone: phone || '',
       service,
       price: amount,
-      date,
+      date: normalizedDate,
       time: time || '',
       timeSlot: time || '12:00',
-      duration: Number(duration) || 0,
-      artist: artist || 'Unassigned',
+      duration: minutes,
+      artist: assignedArtist,
       location: location || 'At salon',
       locationDetails: location || 'At salon',
       notes: notes || '',
@@ -217,14 +342,53 @@ export const createAdminAppointment = async (req, res, next) => {
 export const updateAdminAppointment = async (req, res, next) => {
   try {
     const allowedStatuses = ['Confirmed', 'Pending', 'Processing', 'Completed', 'Cancelled'];
-    const updates = { ...req.body };
+    const allowedFields = new Set(['status', 'client', 'phone', 'service', 'price', 'date', 'time', 'duration', 'artist', 'location', 'notes']);
+    const updates = Object.fromEntries(Object.entries(req.body || {}).filter(([field]) => allowedFields.has(field)));
+    if (!Object.keys(updates).length) return errorResponse(res, 'Provide appointment fields to update', 400);
     if (updates.status && !allowedStatuses.includes(updates.status)) {
       return errorResponse(res, 'Invalid appointment status', 400);
     }
+    const existing = await Booking.findOne(idFilter(req.params.id));
+    if (!existing) return errorResponse(res, 'Appointment not found', 404);
     if (updates.service) updates.title = updates.service;
     if (updates.price !== undefined) updates.totalAmount = Number(updates.price);
     if (updates.time) updates.timeSlot = updates.time;
     if (updates.location) updates.locationDetails = updates.location;
+    if (updates.date !== undefined) {
+      const appointmentDate = new Date(updates.date);
+      if (Number.isNaN(appointmentDate.getTime())) return errorResponse(res, 'Choose a valid appointment date', 400);
+      updates.date = appointmentDate.toISOString().slice(0, 10);
+    }
+    const candidate = { ...existing.toObject(), ...updates };
+    const candidateTime = updates.time !== undefined ? updates.time : (existing.time || existing.timeSlot);
+    if (updates.time !== undefined && timeToMinutes(candidateTime) === null) {
+      return errorResponse(res, 'Choose a valid appointment time', 400);
+    }
+    if (updates.duration !== undefined && (!Number.isInteger(Number(updates.duration)) || Number(updates.duration) <= 0)) {
+      return errorResponse(res, 'Duration must be a positive whole number of minutes', 400);
+    }
+    if (updates.price !== undefined && (!Number.isFinite(Number(updates.price)) || Number(updates.price) < 0)) {
+      return errorResponse(res, 'Price must be a non-negative number', 400);
+    }
+    const scheduleChanged = ['date', 'time', 'duration', 'artist'].some((field) => Object.hasOwn(updates, field));
+    const reactivating = updates.status && ['Confirmed', 'Pending', 'Processing'].includes(updates.status);
+    if (candidate.status !== 'Cancelled' && (scheduleChanged || reactivating)) {
+      const candidateDate = String(candidate.date || '').slice(0, 10);
+      if (timeToMinutes(candidateTime) === null) {
+        return errorResponse(res, 'Appointment needs a valid time before it can be scheduled', 400);
+      }
+      const sameDayBookings = await Booking.find({
+        date: { $regex: `^${candidateDate}` },
+        status: { $ne: 'Cancelled' }
+      }).select('id date time timeSlot duration artist status');
+      if (hasScheduleConflict(
+        sameDayBookings,
+        { ...candidate, time: candidateTime },
+        existing.id || existing._id.toString()
+      )) {
+        return errorResponse(res, 'That time overlaps with another appointment. Choose another time or stylist.', 409);
+      }
+    }
     const booking = await Booking.findOneAndUpdate(idFilter(req.params.id), updates, {
       new: true,
       runValidators: true

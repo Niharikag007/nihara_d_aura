@@ -4,8 +4,17 @@ import { successResponse, errorResponse } from '../utils/responseHelper.js';
 
 export const getCategories = async (req, res, next) => {
   try {
-    const categories = await Category.find().sort({ createdAt: 1 });
-    return successResponse(res, { categories });
+    const [categories, counts] = await Promise.all([
+      Category.find().sort({ createdAt: 1 }).lean(),
+      Product.aggregate([{ $group: { _id: '$categorySlug', count: { $sum: 1 } } }])
+    ]);
+    const countBySlug = new Map(counts.map((entry) => [entry._id, entry.count]));
+    const categoriesWithCounts = categories.map((category) => ({
+      ...category,
+      id: category.id || category._id?.toString(),
+      itemCount: countBySlug.get(category.slug) || 0
+    }));
+    return successResponse(res, { categories: categoriesWithCounts });
   } catch (err) {
     next(err);
   }

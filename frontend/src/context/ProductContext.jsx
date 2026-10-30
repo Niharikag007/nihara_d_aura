@@ -114,16 +114,22 @@ export function ProductProvider({ children }) {
       });
     };
 
+    const handleCategoryUpdate = () => {
+      fetchLiveProducts();
+    };
+
     socket.on('product:created', handleProductCreated);
     socket.on('product:updated', handleProductUpdated);
     socket.on('product:deleted', handleProductDeleted);
+    socket.on('category:updated', handleCategoryUpdate);
 
     return () => {
       socket.off('product:created', handleProductCreated);
       socket.off('product:updated', handleProductUpdated);
       socket.off('product:deleted', handleProductDeleted);
+      socket.off('category:updated', handleCategoryUpdate);
     };
-  }, [socket, saveToStorage]);
+  }, [socket, saveToStorage, fetchLiveProducts]);
 
   const addProduct = useCallback(async (productData) => {
     if (!productData.name || !productData.price) {

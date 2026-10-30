@@ -1,24 +1,38 @@
-import React, { useState, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Sparkles, Clock, Star, MapPin, CheckCircle2, ArrowRight, Loader2, Mail } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
 
 export default function Services() {
   const navigate = useNavigate();
+  const { id: categoryParam } = useParams();
   const { services, salonInfo, loading } = useServices();
-  const [activeFilter, setActiveFilter] = useState('All');
+  const categoryFromRoute = ['makeup', 'salon'].includes(categoryParam?.toLowerCase())
+    ? categoryParam[0].toUpperCase() + categoryParam.slice(1).toLowerCase()
+    : 'All';
+  const [activeFilter, setActiveFilter] = useState(categoryFromRoute);
 
-  const filterCategories = useMemo(() => {
-    if (!services || services.length === 0) return ['All', 'Makeup', 'Nails', 'Jewellery & Styling'];
-    const unique = Array.from(new Set(services.map(s => s.category).filter(Boolean)));
-    return ['All', ...unique];
-  }, [services]);
+  useEffect(() => {
+    setActiveFilter(categoryFromRoute);
+  }, [categoryFromRoute]);
+
+  const serviceCategory = (service) => {
+    const category = service.category?.trim().toLowerCase();
+    if (category === 'makeup') return 'Makeup';
+    if (['salon', 'nails', 'jewellery & styling', 'jewelry & styling'].includes(category)) return 'Salon';
+    return 'Salon';
+  };
 
   const filteredServices = useMemo(() => {
     if (!services) return [];
     if (activeFilter === 'All') return services;
-    return services.filter(s => s.category?.toLowerCase().includes(activeFilter.toLowerCase()));
+    return services.filter(s => serviceCategory(s) === activeFilter);
   }, [services, activeFilter]);
+
+  const chooseCategory = (category) => {
+    setActiveFilter(category);
+    navigate(category === 'All' ? '/services' : `/services/${category.toLowerCase()}`);
+  };
 
   return (
     <div className="min-h-screen bg-transparent py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -31,11 +45,11 @@ export default function Services() {
             HAUTE BEAUTY & SALON
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-white">
-            Signature Salon & <br className="hidden sm:inline" />
-            <span className="text-[#DFBC77] italic font-normal">At-Home Luxury Rituals</span>
+            Makeup & Salon <br className="hidden sm:inline" />
+            <span className="text-[#DFBC77] italic font-normal">Signature Beauty Rituals</span>
           </h1>
           <p className="text-xs sm:text-sm text-stone-300 font-light leading-relaxed">
-            Experience bespoke salon perfection at our NX One Tower Flagship Salon or indulge in private master therapist visits in the comfort of your sanctuary.
+            Explore makeup artistry and salon services at our NX One Tower flagship, with select beauty rituals available at home.
           </p>
         </div>
 
@@ -64,12 +78,12 @@ export default function Services() {
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
-        {filterCategories.map((cat) => {
+        {['All', 'Makeup', 'Salon'].map((cat) => {
           const isActive = activeFilter === cat;
           return (
             <button
               key={cat}
-              onClick={() => setActiveFilter(cat)}
+              onClick={() => chooseCategory(cat)}
               className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 isActive
                   ? 'bg-[#A67C37] text-white shadow-sm'
@@ -93,15 +107,32 @@ export default function Services() {
           <Sparkles className="w-8 h-8 text-[#DFBC77] mx-auto mb-3" />
           <p className="font-serif text-lg font-bold text-stone-800">No services found in this ritual</p>
           <button
-            onClick={() => setActiveFilter('All')}
+            onClick={() => chooseCategory('All')}
             className="mt-4 px-6 py-2 rounded-full btn-gold text-xs font-bold"
           >
             View All Services
           </button>
         </div>
       ) : (
-        <div className="space-y-6">
-          {filteredServices.map((service) => (
+        <div className="space-y-10">
+          {(activeFilter === 'All' ? ['Makeup', 'Salon'] : [activeFilter]).map((group) => {
+            const groupServices = filteredServices.filter((service) => serviceCategory(service) === group);
+            if (!groupServices.length) return null;
+            return (
+              <section key={group} id={group.toLowerCase()} className="scroll-mt-28">
+                {activeFilter === 'All' && (
+                  <div className="mb-4 flex items-end justify-between border-b border-[#DFBC77]/40 pb-3">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#A87D17]">Our collection</p>
+                      <h2 className="mt-1 font-serif text-2xl font-bold text-[#1C1917]">{group}</h2>
+                    </div>
+                    <button onClick={() => chooseCategory(group)} className="text-xs font-semibold text-[#9b711e] hover:underline">
+                      Explore {group}
+                    </button>
+                  </div>
+                )}
+                <div className="space-y-6">
+          {groupServices.map((service) => (
             <div
               key={service.id}
               className="bg-white rounded-3xl border border-[#DFBC77]/40 p-5 sm:p-8 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6"
@@ -129,7 +160,7 @@ export default function Services() {
               <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#A87D17] bg-[#FCF9F2] px-2.5 py-0.5 rounded-full border border-[#DFBC77]/40">
-                    {service.category}
+                    {serviceCategory(service)}
                   </span>
                   <div className="flex items-center text-xs font-semibold text-stone-700">
                     <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 mr-1" />
@@ -180,10 +211,13 @@ export default function Services() {
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
-
+            </div>
+          ))}
+                  </div>
+                </section>
+              );
+            })}
           </div>
-        ))}
-      </div>
       )}
 
     </div>

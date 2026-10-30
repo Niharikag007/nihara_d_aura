@@ -1,7 +1,7 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import {
-  LayoutDashboard, BarChart3, Package, ShoppingBag, CalendarDays,
+  LayoutDashboard, BarChart3, Package, ShoppingBag, CalendarDays, Scissors, Layers, Boxes,
   Tag, Users, BookOpen, Settings, Moon, Sun, ChevronLeft, Sparkles
 } from 'lucide-react';
 import useAdminStore from '../../store/useAdminStore';
@@ -18,6 +18,9 @@ const navGroups = [
     label: 'Manage',
     items: [
       { to: '/admin/products', icon: Package, label: 'Products', badgeKey: 'products' },
+      { to: '/admin/categories', icon: Layers, label: 'Categories', badgeKey: 'categories' },
+      { to: '/admin/inventory', icon: Boxes, label: 'Inventory', badgeKey: 'lowStock' },
+      { to: '/admin/services', icon: Scissors, label: 'Services', badgeKey: 'services' },
       { to: '/admin/orders', icon: ShoppingBag, label: 'Orders', badgeKey: 'ordersToShip' },
       { to: '/admin/appointments', icon: CalendarDays, label: 'Appointments', badgeKey: 'upcoming' },
       { to: '/admin/coupons', icon: Tag, label: 'Coupons', badgeKey: 'activeCoupons' },
@@ -34,10 +37,13 @@ const navGroups = [
 ];
 
 export default function Sidebar({ collapsed, onCollapse }) {
-  const { darkMode, toggleDark, products, orders, appointments, coupons } = useAdminStore();
+  const { darkMode, toggleDark, products, categories, services, orders, appointments, coupons, settings } = useAdminStore();
 
   const badges = {
     products: products.length,
+    categories: categories.length,
+    lowStock: products.filter((product) => product.stock <= (settings.lowStockThreshold || 5)).length,
+    services: services.length,
     ordersToShip: orders.filter(o => o.status === 'Processing').length,
     upcoming: appointments.filter(a => a.status === 'Confirmed' || a.status === 'Pending').length,
     activeCoupons: coupons.filter(c => c.isActive).length,

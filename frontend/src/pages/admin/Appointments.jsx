@@ -22,6 +22,7 @@ export default function Appointments() {
 
   const [statusFilter, setStatusFilter] = useState('All');
   const [modalOpen, setModalOpen] = useState(false);
+  const [editingAppointment, setEditingAppointment] = useState(null);
   const [formData, setFormData] = useState({
     client: '',
     phone: '',
@@ -82,24 +83,61 @@ export default function Appointments() {
     if (!formData.client.trim()) newErrors.client = 'Client name is required';
     if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
     if (!formData.date) newErrors.date = 'Date is required';
+    if (!formData.time) newErrors.time = 'Choose an appointment time';
+    if (!Number.isInteger(Number(formData.duration)) || Number(formData.duration) <= 0) {
+      newErrors.duration = 'Duration must be a positive number of minutes';
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    const saved = await addAppointment({
+    const payload = {
       ...formData,
       price: parseFloat(formData.price) || 0,
       duration: parseInt(formData.duration, 10) || 60,
-    });
+    };
+    const saved = editingAppointment
+      ? await updateAppointment(editingAppointment.id, payload)
+      : await addAppointment(payload);
     if (!saved) return;
 
     addToast({
       type: 'success',
-      message: `Booked appointment for ${formData.client}`,
+      message: editingAppointment
+        ? `Updated appointment for ${formData.client}`
+        : `Booked appointment for ${formData.client}`,
     });
     setModalOpen(false);
+    setEditingAppointment(null);
+  };
+
+  const openEditAppointment = (appointment) => {
+    const time = appointment.time || appointment.timeSlot || '12:00';
+    const timeMatch = time.match(/^(1[0-2]|0?[1-9]):([0-5]\d)\s*(AM|PM)$/i);
+    let timeInput = time;
+    if (timeMatch) {
+      let hours = Number(timeMatch[1]) % 12;
+      if (timeMatch[3].toUpperCase() === 'PM') hours += 12;
+      timeInput = `${String(hours).padStart(2, '0')}:${timeMatch[2]}`;
+    }
+    setEditingAppointment(appointment);
+    setFormData({
+      client: appointment.client || '',
+      phone: appointment.phone || '',
+      service: appointment.service || services[0].name,
+      price: appointment.price || 0,
+      date: String(appointment.date || new Date().toISOString()).slice(0, 10),
+      time: timeInput,
+      duration: appointment.duration || services[0].duration,
+      artist: appointment.artist || artists[0],
+      location: appointment.location || appointment.locationDetails || 'At salon',
+      notes: appointment.notes || '',
+      status: appointment.status || 'Confirmed'
+    });
+    setErrors({});
+    setModalOpen(true);
   };
 
   const columns = [
@@ -186,14 +224,24 @@ export default function Appointments() {
       key: 'actions',
       header: '',
       render: (_, row) => (
-        <button
-          type="button"
-          aria-label={`Delete booking for ${row.client}`}
-          onClick={() => handleDeleteWithUndo(row)}
-          className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            aria-label={`Edit booking for ${row.client}`}
+            onClick={() => openEditAppointment(row)}
+            className="rounded-lg p-1.5 text-stone-400 transition-colors hover:bg-stone-100 hover:text-[#b58a2a] dark:hover:bg-white/5"
+          >
+            <Edit3 className="h-3.5 w-3.5" />
+          </button>
+          <button
+            type="button"
+            aria-label={`Delete booking for ${row.client}`}
+            onClick={() => handleDeleteWithUndo(row)}
+            className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
       ),
     },
   ];
@@ -217,6 +265,7 @@ export default function Appointments() {
         </div>
         <button
           onClick={() => {
+            setEditingAppointment(null);
             setFormData({
               client: '',
               phone: '',
@@ -274,9 +323,9 @@ export default function Appointments() {
       {/* ── Add Booking Modal ── */}
       <Modal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title="Schedule salon appointment"
-        subtitle="Book a luxury makeup, hair, or nail session with automated pricing"
+        onClose={() => { setModalOpen(false); setEditingAppointment(null); }}
+        title={editingAppointment ? 'Update appointment schedule' : 'Schedule salon appointment'}
+        subtitle="Manage service, date, time and stylist while checking availability conflicts."
       >
         <form onSubmit={handleSaveBooking} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -324,6 +373,9 @@ export default function Appointments() {
                 darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
               }`}
             >
+              {!services.some((serviceOption) => serviceOption.name === formData.service) && (
+                <option value={formData.service}>{formData.service}</option>
+              )}
               {services.map(s => (
                 <option key={s.id} value={s.name}>
                   {s.name} — ₹{s.price.toLocaleString('en-IN')} ({s.duration} mins)
@@ -371,10 +423,11 @@ export default function Appointments() {
                   darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
                 }`}
               />
+              {errors.time && <p className="text-[11px] text-rose-500 mt-1">{errors.time}</p>}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
                 Assigned lead stylist
@@ -389,7 +442,24 @@ export default function Appointments() {
                 {artists.map(a => (
                   <option key={a} value={a}>{a}</option>
                 ))}
+                {!artists.includes(formData.artist) && <option value={formData.artist}>{formData.artist}</option>}
               </select>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                Duration (minutes)
+              </label>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                value={formData.duration}
+                onChange={(e) => setFormData(p => ({ ...p, duration: e.target.value }))}
+                className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                  darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                }`}
+              />
+              {errors.duration && <p className="text-[11px] text-rose-500 mt-1">{errors.duration}</p>}
             </div>
             <div>
               <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
@@ -420,7 +490,7 @@ export default function Appointments() {
               className="px-5 py-2 rounded-xl text-xs font-semibold text-white shadow-sm hover:opacity-90 transition-opacity"
               style={{ background: 'linear-gradient(135deg, #d9b45b, #b58a2a)' }}
             >
-              Confirm booking
+              {editingAppointment ? 'Save schedule' : 'Confirm booking'}
             </button>
           </div>
         </form>

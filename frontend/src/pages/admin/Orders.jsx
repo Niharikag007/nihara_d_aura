@@ -10,15 +10,17 @@ import Modal from '../../components/admin/Modal';
 import StatusPill from '../../components/admin/StatusPill';
 import { formatINR } from '../../utils/adminUtils';
 
-const ORDER_STATUSES = ['All', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
+const ORDER_STATUSES = ['All', 'Processing', 'Packed', 'Shipped', 'Delivered', 'Cancelled'];
 
 export default function Orders() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { darkMode, orders, updateOrderStatus, addToast } = useAdminStore();
+  const { darkMode, orders, updateOrderStatus, updateOrderDetails, addToast } = useAdminStore();
 
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [fulfillmentForm, setFulfillmentForm] = useState({ carrier: '', trackingNumber: '', paymentStatus: '' });
+  const [savingFulfillment, setSavingFulfillment] = useState(false);
 
   // Read URL query params (e.g. from Overview to-do link)
   useEffect(() => {
@@ -48,6 +50,7 @@ export default function Orders() {
   const handleStatusChange = async (orderId, newStatus) => {
     const updated = await updateOrderStatus(orderId, newStatus);
     if (updated) {
+      if (selectedOrder?.id === orderId) setSelectedOrder(updated.order);
       addToast({
         type: 'success',
         message: `Order ${orderId} status changed to ${newStatus}`,
@@ -57,7 +60,21 @@ export default function Orders() {
 
   const openOrderDetails = (order) => {
     setSelectedOrder(order);
+    setFulfillmentForm({
+      carrier: order.carrier || '',
+      trackingNumber: order.trackingNumber || '',
+      paymentStatus: order.paymentStatus || 'Processing'
+    });
     setDetailsModalOpen(true);
+  };
+
+  const saveFulfillment = async () => {
+    setSavingFulfillment(true);
+    const updated = await updateOrderDetails(selectedOrder.id, fulfillmentForm);
+    setSavingFulfillment(false);
+    if (!updated) return;
+    setSelectedOrder(updated.order);
+    addToast({ type: 'success', message: `Fulfillment details saved for ${selectedOrder.orderId || selectedOrder.id}` });
   };
 
   const columns = [
@@ -141,6 +158,7 @@ export default function Orders() {
             }`}
           >
             <option value="Processing">Processing</option>
+            <option value="Packed">Packed</option>
             <option value="Shipped">Shipped</option>
             <option value="Delivered">Delivered</option>
             <option value="Cancelled">Cancelled</option>
@@ -273,6 +291,14 @@ export default function Orders() {
                   <CreditCard className="w-3.5 h-3.5" />
                   Payment: {selectedOrder.paymentMethod || 'UPI / NetBanking'}
                 </div>
+                <div className="mt-1 text-[11px] text-stone-500">
+                Payment status: {selectedOrder.paymentStatus || 'Not recorded'}
+                </div>
+                {selectedOrder.trackingNumber && (
+                <div className="mt-1 text-[11px] text-stone-500">
+                  Tracking: {selectedOrder.carrier ? `${selectedOrder.carrier} · ` : ''}{selectedOrder.trackingNumber}
+                </div>
+                )}
               </div>
             </div>
 
@@ -303,6 +329,36 @@ export default function Orders() {
               </div>
             </div>
 
+            <section className={`space-y-3 rounded-xl border p-4 ${darkMode ? 'border-white/10 bg-[#121010]' : 'border-stone-200 bg-stone-50'}`}>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-stone-500">Shipment & payment controls</h4>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <label className="text-xs font-semibold">
+                  <span className="mb-1 block">Carrier</span>
+                  <input value={fulfillmentForm.carrier} maxLength={120} onChange={(event) => setFulfillmentForm((form) => ({ ...form, carrier: event.target.value }))} placeholder="Courier partner" className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs dark:border-white/10 dark:bg-[#181416] dark:text-white" />
+                </label>
+                <label className="text-xs font-semibold">
+                  <span className="mb-1 block">Tracking number</span>
+                  <input value={fulfillmentForm.trackingNumber} maxLength={120} onChange={(event) => setFulfillmentForm((form) => ({ ...form, trackingNumber: event.target.value }))} placeholder="Shipment reference" className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs dark:border-white/10 dark:bg-[#181416] dark:text-white" />
+                </label>
+                <label className="text-xs font-semibold">
+                  <span className="mb-1 block">Payment status</span>
+                  <select value={fulfillmentForm.paymentStatus} onChange={(event) => setFulfillmentForm((form) => ({ ...form, paymentStatus: event.target.value }))} className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs dark:border-white/10 dark:bg-[#181416] dark:text-white">
+                    <option value="Processing">Processing</option>
+                    <option value="Pending (COD)">Pending (COD)</option>
+                    <option value="Paid (Online Gateway)">Paid (Online Gateway)</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Failed">Failed</option>
+                    <option value="Refund requested">Refund requested</option>
+                  </select>
+                </label>
+              </div>
+              <div className="flex justify-end">
+                <button type="button" onClick={saveFulfillment} disabled={savingFulfillment} className="rounded-lg bg-[#b58a2a] px-4 py-2 text-xs font-semibold text-white disabled:opacity-60">
+                  {savingFulfillment ? 'Saving…' : 'Save fulfillment details'}
+                </button>
+              </div>
+            </section>
+
             {/* Total breakdown */}
             <div className="pt-3 border-t border-inherit flex flex-col items-end gap-1 text-xs">
               <div className="flex justify-between w-48 text-stone-500">
@@ -327,11 +383,11 @@ export default function Orders() {
                   value={selectedOrder.status}
                   onChange={(e) => {
                     handleStatusChange(selectedOrder.id, e.target.value);
-                    setSelectedOrder(prev => ({ ...prev, status: e.target.value }));
                   }}
                   className="text-xs font-semibold py-1.5 px-3 rounded-lg border bg-stone-100 dark:bg-stone-800"
                 >
                   <option value="Processing">Processing</option>
+                  <option value="Packed">Packed</option>
                   <option value="Shipped">Shipped</option>
                   <option value="Delivered">Delivered</option>
                   <option value="Cancelled">Cancelled</option>

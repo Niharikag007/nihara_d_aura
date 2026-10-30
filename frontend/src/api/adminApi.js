@@ -46,8 +46,8 @@ export const adminApi = {
   async deleteProduct(id) {
     return request(`/products/${encodeURIComponent(id)}`, { method: 'DELETE' });
   },
-  async updateOrderStatus(id, status) {
-    return request(`/orders/${encodeURIComponent(id)}`, json('PATCH', { status }));
+  async updateOrder(id, patch) {
+    return request(`/orders/${encodeURIComponent(id)}`, json('PATCH', patch));
   },
   async createAppointment(appointment) {
     return request('/appointments', json('POST', appointment));
@@ -72,6 +72,37 @@ export const adminApi = {
   },
   async getAnalytics(days = 30) {
     return request(`/analytics?days=${days}`);
+  },
+  async getServices(category) {
+    const query = category ? `?category=${encodeURIComponent(category)}` : '';
+    return request(`/services${query}`);
+  },
+  async getCategories() {
+    return request('/categories');
+  },
+  async createCategory(category) {
+    return request('/categories', json('POST', category));
+  },
+  async updateCategory(id, patch) {
+    return request(`/categories/${encodeURIComponent(id)}`, json('PATCH', patch));
+  },
+  async deleteCategory(id) {
+    return request(`/categories/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  },
+  async getInventoryAdjustments() {
+    return request('/inventory/adjustments');
+  },
+  async adjustInventory(id, adjustment) {
+    return request(`/inventory/${encodeURIComponent(id)}/adjustments`, json('POST', adjustment));
+  },
+  async createService(service) {
+    return request('/services', json('POST', service));
+  },
+  async updateService(id, patch) {
+    return request(`/services/${encodeURIComponent(id)}`, json('PATCH', patch));
+  },
+  async deleteService(id) {
+    return request(`/services/${encodeURIComponent(id)}`, { method: 'DELETE' });
   }
 };
 

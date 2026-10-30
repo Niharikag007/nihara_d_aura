@@ -2,16 +2,16 @@ import mongoose from 'mongoose';
 
 const ServiceSchema = new mongoose.Schema({
   id: { type: String },
-  name: { type: String, required: true },
-  slug: { type: String, required: true },
-  category: { type: String, required: true },
-  price: { type: Number, required: true },
-  durationMinutes: { type: Number, required: true },
-  rating: { type: Number, default: 4.9 },
-  reviewCount: { type: Number, default: 0 },
+  name: { type: String, required: true, trim: true, maxlength: 120 },
+  slug: { type: String, required: true, trim: true },
+  category: { type: String, required: true, enum: ['Makeup', 'Salon', 'Nails', 'Jewellery & Styling', 'Jewelry & Styling'] },
+  price: { type: Number, required: true, min: 1 },
+  durationMinutes: { type: Number, required: true, min: 1 },
+  rating: { type: Number, default: 4.9, min: 0, max: 5 },
+  reviewCount: { type: Number, default: 0, min: 0 },
   image: { type: String, required: true },
-  description: { type: String, required: true },
-  inclusions: [{ type: String }]
+  description: { type: String, required: true, trim: true, maxlength: 1200 },
+  inclusions: [{ type: String, trim: true, maxlength: 160 }]
 }, {
   timestamps: true,
   toJSON: {

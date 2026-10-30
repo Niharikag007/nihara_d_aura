@@ -2223,7 +2223,7 @@ export const initialData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1200&q=85"
+        "https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=1200&q=85"
       ],
       "description": "Comforting notes of freshly crushed cardamom, ginger, clove, and rich vanilla custard in snap-bar form.",
       "variants": [
@@ -3009,6 +3009,60 @@ export const initialData = {
         "Virtual or In-Salon Fitting Session at Bandra Flagship",
         "Neckline & Trousseau Silhouette Harmony Analysis",
         "Personalized Jewellery & Hair Accessory Moodboard"
+      ]
+    },
+    {
+      "id": "srv_signature_spa_manicure",
+      "name": "Signature Spa Manicure",
+      "slug": "signature-spa-manicure",
+      "category": "Salon",
+      "price": 1200,
+      "durationMinutes": 60,
+      "rating": 4.9,
+      "reviewCount": 0,
+      "image": "/hero-slide-8.jpg",
+      "description": "A restorative manicure ritual with careful nail shaping, cuticle care, a nourishing hand treatment and a polished finish.",
+      "inclusions": [
+        "Nail shaping and cuticle care",
+        "Exfoliating hand treatment",
+        "Nourishing hand massage",
+        "Classic polish finish"
+      ]
+    },
+    {
+      "id": "srv_restorative_hair_spa",
+      "name": "Restorative Hair Spa & Blowout",
+      "slug": "restorative-hair-spa-blowout",
+      "category": "Salon",
+      "price": 2800,
+      "durationMinutes": 90,
+      "rating": 4.9,
+      "reviewCount": 0,
+      "image": "/hero-slide-3.jpg",
+      "description": "A tailored cleansing and conditioning ritual finished with a smooth, salon-styled blowout for soft, refreshed hair.",
+      "inclusions": [
+        "Hair and scalp consultation",
+        "Deep-conditioning hair mask",
+        "Relaxing scalp massage",
+        "Personalised blowout finish"
+      ]
+    },
+    {
+      "id": "srv_signature_salon_pedicure",
+      "name": "Signature Salon Pedicure",
+      "slug": "signature-salon-pedicure",
+      "category": "Salon",
+      "price": 1600,
+      "durationMinutes": 75,
+      "rating": 4.9,
+      "reviewCount": 0,
+      "image": "/hero-slide-5.jpg",
+      "description": "A considered foot-care service with a warm soak, gentle exfoliation, nail grooming and a choice of classic polish.",
+      "inclusions": [
+        "Warm aromatic foot soak",
+        "Gentle exfoliation and nail grooming",
+        "Moisturising foot massage",
+        "Classic polish finish"
       ]
     }
   ],

@@ -322,6 +322,27 @@
 
 ## 👑 14. ADMIN PANEL OPERATIONS (एडमिन के काम)
 
+### 📌 Admin Services Management
+- **Method:** `GET`
+- **Endpoint:** `/api/admin/services?category=Makeup|Salon`
+- **Kiske liye use hota hai:** Admin ke liye service catalogue dekhna; purane Nails aur Jewellery & Styling records Salon ke roop mein dikhte hain.
+- **Kya bhejna hota hai:** Valid admin Bearer token; category optional hai.
+
+- **Method:** `POST`
+- **Endpoint:** `/api/admin/services`
+- **Kiske liye use hota hai:** Makeup ya Salon catalogue mein nayi service create karna.
+- **Kya bhejna hota hai:** `name`, `category`, positive `price`, whole-minute `durationMinutes`, `image`, `description`, optional `inclusions`.
+
+- **Method:** `PATCH`
+- **Endpoint:** `/api/admin/services/:id`
+- **Kiske liye use hota hai:** Service details ya category update karna.
+- **Kya bhejna hota hai:** Valid admin Bearer token aur update fields.
+
+- **Method:** `DELETE`
+- **Endpoint:** `/api/admin/services/:id`
+- **Kiske liye use hota hai:** Service ko future public menu aur bookings se remove karna; existing booking snapshots preserve rehte hain.
+- **Kya bhejna hota hai:** Valid admin Bearer token aur URL me Service ID.
+
 ### 📌 37. Naya Product Catalog Me Add Karna
 - **Method:** `POST`
 - **Endpoint:** `/api/products`

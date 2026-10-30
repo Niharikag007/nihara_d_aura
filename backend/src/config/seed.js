@@ -4,6 +4,7 @@ import { Category } from '../models/Category.js';
 import { User } from '../models/User.js';
 import { Address } from '../models/BookingOrderAddress.js';
 import { Offer } from '../models/Offer.js';
+import { ServiceCatalogMigration } from '../models/ServiceCatalogMigration.js';
 import { initialData } from '../data/initialData.js';
 
 export const seedDatabaseIfEmpty = async () => {
@@ -28,11 +29,38 @@ export const seedDatabaseIfEmpty = async () => {
     }
 
     // 3. Check & Seed Services
-    const serviceCount = await Service.countDocuments();
-    if (serviceCount === 0 && Array.isArray(initialData.services) && initialData.services.length > 0) {
-      console.log(`[Seed] Seeding ${initialData.services.length} services to MongoDB...`);
-      await Service.insertMany(initialData.services);
-      console.log(`[Seed] Services seeded successfully.`);
+    if (Array.isArray(initialData.services) && initialData.services.length > 0) {
+      const serviceCount = await Service.countDocuments();
+      const serviceCatalogMigrationKey = 'services-makeup-salon-categories-v1';
+      const migrationApplied = await ServiceCatalogMigration.exists({ key: serviceCatalogMigrationKey });
+
+      if (!migrationApplied) {
+        if (serviceCount === 0) {
+          await Service.insertMany(initialData.services);
+          console.log(`[Seed] Seeded ${initialData.services.length} services.`);
+        } else {
+          const newSalonServices = initialData.services.filter((service) => [
+            'srv_signature_spa_manicure',
+            'srv_restorative_hair_spa',
+            'srv_signature_salon_pedicure'
+          ].includes(service.id));
+          const serviceSeedResult = await Service.bulkWrite(newSalonServices.map((service) => ({
+            updateOne: {
+              filter: { id: service.id },
+              update: { $setOnInsert: service },
+              upsert: true
+            }
+          })), { ordered: false });
+          if (serviceSeedResult.upsertedCount) {
+            console.log(`[Seed] Added ${serviceSeedResult.upsertedCount} Salon services to the existing catalog; existing service records were preserved.`);
+          }
+        }
+        await ServiceCatalogMigration.updateOne(
+          { key: serviceCatalogMigrationKey },
+          { $setOnInsert: { key: serviceCatalogMigrationKey } },
+          { upsert: true }
+        );
+      }
     }
 
     // 4. Check & Seed Artists
