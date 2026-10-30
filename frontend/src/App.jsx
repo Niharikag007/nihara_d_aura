@@ -50,13 +50,16 @@ import AdminSettings from './pages/admin/Settings';
 
 // Protected Admin Route Component
 function ProtectedAdminRoute({ children }) {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAuthenticated, isAdmin, user } = useAuth();
+
+  console.log('ProtectedAdminRoute check:', { isAuthenticated, isAdmin, userEmail: user?.email });
 
   if (!isAuthenticated) {
     return <Navigate to="/login?role=admin" replace />;
   }
 
   if (!isAdmin) {
+    console.log('Not admin, redirecting to home');
     return <Navigate to="/" replace />;
   }
 

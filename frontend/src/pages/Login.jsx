@@ -218,13 +218,16 @@ export default function Login() {
         // Force admin role if email matches
         if (cleanEmail === 'amitkry5602@gmail.com') {
           verifiedUser.role = 'admin';
+          console.log('Forcing admin role for:', cleanEmail, verifiedUser);
         }
 
-        login(verifiedUser, res.token);
+        const loginResult = login(verifiedUser, res.token);
+        console.log('Login result:', loginResult);
         showToast(`Welcome back, ${verifiedUser.name || 'Patron'}! Authentication verified.`, 'success');
 
         // Redirect to admin dashboard if email is amitkry5602@gmail.com
         if (cleanEmail === 'amitkry5602@gmail.com') {
+          console.log('Redirecting to admin dashboard');
           navigate('/admin');
         } else {
           navigate(redirectParam && redirectParam !== '/admin' ? redirectParam : '/profile');
