@@ -1,94 +1,78 @@
-// API abstraction layer for Nihara D'Aura Admin Dashboard
-// Allows swapping mock data layer with a real backend (e.g. Express / NestJS / Supabase)
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
-import productsData from '../data/products';
-import ordersData from '../data/orders';
-import appointmentsData from '../data/appointments';
-import couponsData from '../data/coupons';
-import { generateDailyRevenue, revenueByCollection, topSellers, trafficSources, funnelData } from '../data/analytics';
+async function request(path, options = {}) {
+  let session;
+  try {
+    session = JSON.parse(localStorage.getItem('nihara_auth') || 'null');
+  } catch {
+    throw new Error('Saved sign-in data is invalid');
+  }
+  if (!session?.token || session.user?.role !== 'admin') {
+    throw new Error('Please sign in with an administrator account');
+  }
 
-const simulateLatency = (ms = 80) => new Promise(res => setTimeout(res, ms));
+  const response = await fetch(`${API_BASE}/admin${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${session.token}`,
+      ...options.headers
+    }
+  });
+  let result;
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error(`Admin API returned an invalid response (${response.status})`);
+  }
+  if (!response.ok || result.success === false) {
+    throw new Error(result.message || `Admin request failed (${response.status})`);
+  }
+  return result;
+}
+
+const json = (method, body) => ({ method, body: JSON.stringify(body) });
 
 export const adminApi = {
-  // ── Products ──
-  async getProducts() {
-    await simulateLatency();
-    const stored = localStorage.getItem('nda_products');
-    return stored ? JSON.parse(stored) : productsData;
+  async getDashboard() {
+    return request('/dashboard');
   },
   async createProduct(product) {
-    await simulateLatency();
-    return product;
+    return request('/products', json('POST', product));
   },
   async updateProduct(id, patch) {
-    await simulateLatency();
-    return { id, ...patch };
+    return request(`/products/${encodeURIComponent(id)}`, json('PATCH', patch));
   },
   async deleteProduct(id) {
-    await simulateLatency();
-    return { success: true, id };
-  },
-
-  // ── Orders ──
-  async getOrders() {
-    await simulateLatency();
-    const stored = localStorage.getItem('nda_orders');
-    return stored ? JSON.parse(stored) : ordersData;
+    return request(`/products/${encodeURIComponent(id)}`, { method: 'DELETE' });
   },
   async updateOrderStatus(id, status) {
-    await simulateLatency();
-    return { id, status };
-  },
-
-  // ── Appointments ──
-  async getAppointments() {
-    await simulateLatency();
-    const stored = localStorage.getItem('nda_appointments');
-    return stored ? JSON.parse(stored) : appointmentsData;
+    return request(`/orders/${encodeURIComponent(id)}`, json('PATCH', { status }));
   },
   async createAppointment(appointment) {
-    await simulateLatency();
-    return appointment;
+    return request('/appointments', json('POST', appointment));
   },
   async updateAppointment(id, patch) {
-    await simulateLatency();
-    return { id, ...patch };
+    return request(`/appointments/${encodeURIComponent(id)}`, json('PATCH', patch));
   },
   async deleteAppointment(id) {
-    await simulateLatency();
-    return { success: true, id };
-  },
-
-  // ── Coupons ──
-  async getCoupons() {
-    await simulateLatency();
-    const stored = localStorage.getItem('nda_coupons');
-    return stored ? JSON.parse(stored) : couponsData;
+    return request(`/appointments/${encodeURIComponent(id)}`, { method: 'DELETE' });
   },
   async createCoupon(coupon) {
-    await simulateLatency();
-    return coupon;
+    return request('/coupons', json('POST', coupon));
   },
-  async toggleCoupon(id) {
-    await simulateLatency();
-    return { id };
+  async updateCoupon(id, patch) {
+    return request(`/coupons/${encodeURIComponent(id)}`, json('PATCH', patch));
   },
   async deleteCoupon(id) {
-    await simulateLatency();
-    return { success: true, id };
+    return request(`/coupons/${encodeURIComponent(id)}`, { method: 'DELETE' });
   },
-
-  // ── Analytics ──
+  async updateSettings(settings) {
+    return request('/settings', json('PUT', settings));
+  },
   async getAnalytics(days = 30) {
-    await simulateLatency();
-    return {
-      dailyRevenue: generateDailyRevenue(days),
-      revenueByCollection,
-      topSellers,
-      trafficSources,
-      funnelData,
-    };
-  },
+    return request(`/analytics?days=${days}`);
+  }
 };
 
 export default adminApi;

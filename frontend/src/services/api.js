@@ -21,10 +21,12 @@ const getAuthHeaders = () => {
 // Safe request wrapper that tries the Express server first and falls back to mockData
 async function request(endpoint, options = {}) {
   try {
+    const authHeaders = getAuthHeaders();
+    delete authHeaders['x-user-role'];
     const res = await fetch(`${API_BASE}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeaders(),
+        ...authHeaders,
         ...(options.headers || {})
       },
       ...options
@@ -132,23 +134,7 @@ export const api = {
     });
     if (serverRes && serverRes.booking) return serverRes;
 
-    const ref = 'BK-' + Math.floor(100000 + Math.random() * 900000);
-    const newBooking = {
-      id: `bk_${Date.now()}`,
-      bookingId: ref,
-      title: 'Luxury Beauty Appointment',
-      services: [],
-      date: bookingData.date || 'Fri, Oct 16, 2026',
-      timeSlot: bookingData.timeSlot || '01:00 PM',
-      location: bookingData.locationType === 'home' ? 'At Home Service' : 'At Salon - Bandra Flagship Salon',
-      address: bookingData.serviceAddress?.streetAddress || 'Flat 302, Royal Palms, Jubilee Hills, Hyderabad',
-      artist: bookingData.artistName || 'Any Senior Specialist',
-      totalAmount: 25500,
-      status: 'Confirmed',
-      canCancel: true
-    };
-    mockData.bookings.unshift(newBooking);
-    return { success: true, booking: newBooking };
+    return serverRes || { success: false, message: 'Appointment could not be saved. Check your sign-in and backend connection.' };
   },
 
   async cancelBooking(bookingId) {
@@ -242,21 +228,7 @@ export const api = {
     });
     if (serverRes && serverRes.order) return serverRes;
 
-    const ref = 'NIH-' + Math.floor(100000 + Math.random() * 900000);
-    const newOrder = {
-      id: `ord_${Date.now()}`,
-      orderId: ref,
-      placedDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      status: 'Processing',
-      totalAmount: orderData.totalAmount || 2499,
-      paymentMethod: orderData.paymentMethod || 'UPI / GPay / PhonePe',
-      transactionId: orderData.transactionId || null,
-      paymentStatus: orderData.paymentStatus || (orderData.paymentMethod === 'Cash on Delivery' ? 'Pending (COD)' : 'Paid (Online Gateway)'),
-      items: orderData.items || [],
-      shippingAddress: typeof orderData.shippingAddress === 'string' ? orderData.shippingAddress : 'Flat 402, Rosewood Villa, Worli, Mumbai'
-    };
-    mockData.orders.unshift(newOrder);
-    return { success: true, order: newOrder };
+    return serverRes || { success: false, message: 'Order could not be saved. Check your sign-in and backend connection.' };
   },
 
   // Profile & Addresses
@@ -264,6 +236,16 @@ export const api = {
     const serverRes = await request('/profile');
     if (serverRes && serverRes.user) return serverRes;
     return { success: true, user: mockData.users[0] };
+  },
+
+  async getCurrentUser() {
+    const stored = JSON.parse(localStorage.getItem('nihara_auth') || 'null');
+    const response = await fetch(`${API_BASE}/auth/me`, {
+      headers: stored?.token ? { Authorization: `Bearer ${stored.token}` } : {}
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || 'Session validation failed');
+    return result;
   },
 
   async updateProfile(data) {
@@ -362,4 +344,3 @@ export const api = {
     }
   }
 };
-

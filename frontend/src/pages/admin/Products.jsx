@@ -109,7 +109,7 @@ export default function Products() {
     setEditModalOpen(true);
   };
 
-  const handleSaveProduct = (e) => {
+  const handleSaveProduct = async (e) => {
     e.preventDefault();
     const errors = {};
     if (!formData.name.trim()) errors.name = 'Product name is required';
@@ -133,10 +133,12 @@ export default function Products() {
     };
 
     if (editingProduct) {
-      updateProduct(editingProduct.id, payload);
+      const updated = await updateProduct(editingProduct.id, payload);
+      if (!updated) return;
       addToast({ type: 'success', message: `Updated "${payload.name}" successfully` });
     } else {
-      addProduct(payload);
+      const added = await addProduct(payload);
+      if (!added) return;
       addToast({ type: 'success', message: `Added "${payload.name}" to catalog` });
     }
 
@@ -144,40 +146,42 @@ export default function Products() {
   };
 
   // Single delete with 8-second undo toast
-  const handleDeleteWithUndo = (product) => {
-    deleteProduct(product.id);
+  const handleDeleteWithUndo = async (product) => {
+    const deleted = await deleteProduct(product.id);
+    if (!deleted) return;
     addToast({
       type: 'info',
       message: `Deleted "${product.name}"`,
       duration: 8000,
-      undoAction: () => {
-        addProduct(product);
-        addToast({ type: 'success', message: `Restored "${product.name}"` });
+      undoAction: async () => {
+        const restored = await addProduct(product);
+        if (restored) addToast({ type: 'success', message: `Restored "${product.name}"` });
       },
     });
   };
 
   // Bulk actions
-  const handleBulkStatus = (newStatus) => {
+  const handleBulkStatus = async (newStatus) => {
     if (selectedIds.length === 0) return;
-    bulkUpdateProducts(selectedIds, { status: newStatus });
+    const updated = await bulkUpdateProducts(selectedIds, { status: newStatus });
+    if (!updated) return;
     addToast({ type: 'success', message: `Updated ${selectedIds.length} products to ${newStatus}` });
     setSelectedIds([]);
   };
 
-  const handleApplyBulkPrice = () => {
+  const handleApplyBulkPrice = async () => {
     const pct = parseFloat(bulkPricePercent);
     if (isNaN(pct) || pct === 0) {
       addToast({ type: 'error', message: 'Please enter a valid non-zero percentage' });
       return;
     }
     const factor = 1 + (pct / 100);
-    products.forEach(p => {
-      if (selectedIds.includes(p.id)) {
-        const newPrice = Math.max(1, Math.round(p.price * factor));
-        updateProduct(p.id, { price: newPrice });
-      }
+    const updates = products.filter(p => selectedIds.includes(p.id)).map(p => {
+      const newPrice = Math.max(1, Math.round(p.price * factor));
+      return updateProduct(p.id, { price: newPrice });
     });
+    const results = await Promise.all(updates);
+    if (results.some(result => !result)) return;
     addToast({
       type: 'success',
       message: `Updated prices for ${selectedIds.length} products (${pct > 0 ? `+${pct}%` : `${pct}%`})`,
@@ -187,8 +191,9 @@ export default function Products() {
     setBulkPricePercent('');
   };
 
-  const handleExecuteBulkDelete = () => {
-    bulkDeleteProducts(selectedIds);
+  const handleExecuteBulkDelete = async () => {
+    const deleted = await bulkDeleteProducts(selectedIds);
+    if (!deleted) return;
     addToast({ type: 'success', message: `Deleted ${selectedIds.length} products` });
     setSelectedIds([]);
   };

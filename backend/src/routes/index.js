@@ -10,6 +10,7 @@ import profileRoutes from './profileRoutes.js';
 import paymentRoutes from './paymentRoutes.js';
 import offerRoutes from './offerRoutes.js';
 import { getArtists, getSalon } from '../controllers/serviceController.js';
+import adminRoutes from './adminRoutes.js';
 
 const router = express.Router();
 
@@ -23,6 +24,7 @@ router.use('/cart', cartRoutes);
 router.use('/profile', profileRoutes);
 router.use('/payment', paymentRoutes);
 router.use('/offers', offerRoutes);
+router.use('/admin', adminRoutes);
 
 
 // Direct top-level helper endpoints

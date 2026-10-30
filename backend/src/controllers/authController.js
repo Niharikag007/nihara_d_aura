@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { timingSafeEqual } from 'crypto';
 import { User } from '../models/User.js';
 import { Otp } from '../models/Otp.js';
 import { sendOtpEmail } from '../services/emailService.js';
@@ -11,6 +12,20 @@ const generate6DigitOtp = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
+const credentialsMatch = (provided, configured) => {
+  if (!provided || !configured) return false;
+  const providedBuffer = Buffer.from(provided);
+  const configuredBuffer = Buffer.from(configured);
+  return providedBuffer.length === configuredBuffer.length
+    && timingSafeEqual(providedBuffer, configuredBuffer);
+};
+
+const signToken = (user) => jwt.sign(
+  { id: user.id || user._id.toString(), email: user.email, role: user.role },
+  process.env.JWT_SECRET,
+  { expiresIn: '7d' }
+);
+
 /**
  * POST /api/auth/login
  * Patron enters email -> receives 6-digit OTP
@@ -21,33 +36,36 @@ export const login = async (req, res, next) => {
     const { email, password, role } = req.body || {};
     const cleanEmail = (email || '').trim().toLowerCase();
 
-    // Check if logging in as Admin
-    if (role === 'admin' || cleanEmail === 'admin@niharadaura.com') {
-      if (cleanEmail === 'admin@niharadaura.com' && password === 'admin123') {
-        let adminUser = await User.findOne({ email: 'admin@niharadaura.com' });
-        if (!adminUser) {
-          adminUser = await User.create({
-            id: 'usr_admin_nihara',
-            name: 'Nihara Administrator',
-            email: 'admin@niharadaura.com',
-            phone: '+91 9999999999',
-            role: 'admin',
-            tier: 'Master Admin',
-            rewardPoints: 9999
-          });
-        }
-        const token = jwt.sign(
-          { id: adminUser.id || adminUser._id, email: adminUser.email, role: 'admin' },
-          process.env.JWT_SECRET || 'Nihara_Aura_999',
-          { expiresIn: '7d' }
-        );
-        return successResponse(res, {
-          token,
-          user: adminUser
-        }, 'Welcome Administrator to Nihara Management Portal');
-      } else {
-        return errorResponse(res, 'Invalid admin credentials. Access Denied.', 401);
+    if (role === 'admin') {
+      const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+      const adminPassword = process.env.ADMIN_PASSWORD || '';
+      if (!adminEmail || !adminPassword) {
+        return errorResponse(res, 'Admin login is not configured on the server', 503);
       }
+      if (cleanEmail !== adminEmail || !credentialsMatch(password || '', adminPassword)) {
+        return errorResponse(res, 'Invalid admin credentials', 401);
+      }
+
+      const adminUser = await User.findOneAndUpdate(
+        { email: adminEmail },
+        {
+          $set: { role: 'admin', tier: 'Master Admin' },
+          $setOnInsert: {
+            id: `usr_admin_${Date.now()}`,
+            name: 'Store Administrator'
+          }
+        },
+        { new: true, upsert: true, runValidators: true }
+      );
+      return successResponse(res, {
+        token: signToken(adminUser),
+        user: adminUser
+      }, 'Welcome to the Nihara D’Aura management portal');
+    }
+
+    const configuredAdminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+    if (configuredAdminEmail && cleanEmail === configuredAdminEmail) {
+      return errorResponse(res, 'Use the administrator sign-in form for this email address', 403);
     }
 
     // Standard Email format validation
@@ -58,6 +76,9 @@ export const login = async (req, res, next) => {
 
     // Check if user exists (optional info)
     const existingUser = await User.findOne({ email: cleanEmail });
+    if (existingUser?.role === 'admin') {
+      return errorResponse(res, 'Admin accounts must use the configured administrator sign-in', 403);
+    }
 
     // Generate real 6-digit OTP
     const otpCode = generate6DigitOtp();
@@ -162,9 +183,7 @@ export const verifyOtp = async (req, res, next) => {
 
     // Check in Otp collection or fallback to dev master code '123456'
     const storedOtp = await Otp.findOne({ email: cleanEmail, otp: cleanOtp });
-    const isDevMasterCode = cleanOtp === '123456' || cleanOtp === '2026';
-
-    if (!storedOtp && !isDevMasterCode) {
+    if (!storedOtp) {
       return errorResponse(res, 'Invalid or expired verification code. Please request a new OTP.', 400);
     }
 
@@ -175,6 +194,9 @@ export const verifyOtp = async (req, res, next) => {
 
     // Check if user already exists in DB
     let user = await User.findOne({ email: cleanEmail });
+    if (user?.role === 'admin') {
+      return errorResponse(res, 'Admin accounts must use the configured administrator sign-in', 403);
+    }
 
     // If user does not exist (Registration flow), create user record in MongoDB
     if (!user) {
@@ -192,8 +214,8 @@ export const verifyOtp = async (req, res, next) => {
 
     // Issue JWT token
     const token = jwt.sign(
-      { id: user.id || user._id, email: user.email, role: user.role },
-      process.env.JWT_SECRET || 'Nihara_Aura_999',
+      { id: user.id || user._id.toString(), email: user.email, role: user.role },
+      process.env.JWT_SECRET,
       { expiresIn: '30d' }
     );
 
@@ -208,7 +230,10 @@ export const verifyOtp = async (req, res, next) => {
 
 export const getCurrentUser = async (req, res, next) => {
   try {
-    let user = await User.findOne();
+    const user = await User.findOne({
+      $or: [{ id: req.userId }, ...(req.userId.match(/^[0-9a-fA-F]{24}$/) ? [{ _id: req.userId }] : [])]
+    });
+    if (!user) return errorResponse(res, 'User not found', 404);
     return successResponse(res, { user });
   } catch (err) {
     next(err);

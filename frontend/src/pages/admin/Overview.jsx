@@ -12,8 +12,7 @@ import {
 import useAdminStore from '../../store/useAdminStore';
 import StatCard from '../../components/admin/StatCard';
 import ChartCard from '../../components/admin/ChartCard';
-import { formatINR, calcMargin, formatDelta } from '../../utils/adminUtils';
-import { generateDailyRevenue, recentActivities } from '../../data/analytics';
+import { formatINR, calcMargin } from '../../utils/adminUtils';
 
 const COLLECTION_COLORS = {
   Jewellery: '#b58a2a',
@@ -26,12 +25,70 @@ export default function Overview() {
   const navigate = useNavigate();
   const { darkMode, products, orders, appointments, settings } = useAdminStore();
 
-  // 30-day revenue data
-  const revenueData = useMemo(() => generateDailyRevenue(30), []);
+  const { revenueData, totalRevenue30d, previousRevenue30d, revenueDelta } = useMemo(() => {
+    const now = new Date();
+    const today = new Date(now);
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(today);
+    start.setDate(start.getDate() - 29);
+    const previousStart = new Date(start);
+    previousStart.setDate(previousStart.getDate() - 30);
+    const revenueByDate = new Map();
+    let total = 0;
+    let previous = 0;
 
-  const totalRevenue30d = useMemo(() => {
-    return revenueData.reduce((acc, curr) => acc + curr.revenue, 0);
-  }, [revenueData]);
+    orders.forEach((order) => {
+      if (order.status === 'Cancelled') return;
+      const orderDate = new Date(order.createdAt || order.date || order.placedDate);
+      if (Number.isNaN(orderDate.getTime())) return;
+      const amount = Number(order.total ?? order.totalAmount) || 0;
+      if (orderDate >= start && orderDate <= now) {
+        const key = orderDate.toISOString().slice(0, 10);
+        revenueByDate.set(key, (revenueByDate.get(key) || 0) + amount);
+        total += amount;
+      } else if (orderDate >= previousStart && orderDate < start) {
+        previous += amount;
+      }
+    });
+
+    const chart = Array.from({ length: 30 }, (_, index) => {
+      const date = new Date(start);
+      date.setDate(start.getDate() + index);
+      const key = date.toISOString().slice(0, 10);
+      return {
+        date: key,
+        revenue: revenueByDate.get(key) || 0,
+        orders: orders.filter((order) => {
+          if (order.status === 'Cancelled') return false;
+          const orderDate = new Date(order.createdAt || order.date || order.placedDate);
+          return !Number.isNaN(orderDate.getTime()) && orderDate.toISOString().slice(0, 10) === key;
+        }).length
+      };
+    });
+    return {
+      revenueData: chart,
+      totalRevenue30d: total,
+      previousRevenue30d: previous,
+      revenueDelta: previous ? ((total - previous) / previous) * 100 : null
+    };
+  }, [orders]);
+
+  const recentActivities = useMemo(() => [
+    ...orders.slice(0, 5).map((order) => ({
+      id: `order-${order.id}`,
+      type: 'order',
+      title: `Order ${order.orderId || order.id}`,
+      subtitle: `${order.customer || 'Customer'} • ${formatINR(order.total ?? order.totalAmount ?? 0)}`,
+      time: order.placedDate || order.date || ''
+    })),
+    ...appointments.slice(0, 5).map((appointment) => ({
+      id: `appointment-${appointment.id}`,
+      type: 'booking',
+      title: `Appointment ${appointment.bookingId || appointment.id}`,
+      subtitle: `${appointment.client || 'Customer'} • ${appointment.service || appointment.title || 'Salon service'}`,
+      time: appointment.date || ''
+    }))
+  ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 5), [orders, appointments]);
 
   // Inventory value
   const totalInventoryVal = useMemo(() => {
@@ -79,10 +136,17 @@ export default function Overview() {
     }
 
     // 2. Bookings today/tomorrow
-    const todayStr = '2026-10-14';
-    const tomorrowStr = '2026-10-15';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
     const upcomingBookings = appointments.filter(
-      a => (a.date === todayStr || a.date === tomorrowStr) && a.status !== 'Cancelled'
+      (appointment) => {
+        const date = new Date(appointment.date);
+        if (Number.isNaN(date.getTime()) || appointment.status === 'Cancelled') return false;
+        date.setHours(0, 0, 0, 0);
+        return date.getTime() === today.getTime() || date.getTime() === tomorrow.getTime();
+      }
     );
     if (upcomingBookings.length > 0) {
       list.push({
@@ -229,12 +293,14 @@ export default function Overview() {
             <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80">
               <span className="inline-flex items-center font-semibold text-emerald-400">
                 <TrendingUp className="w-4 h-4 mr-1" />
-                +18.4%
+                {revenueDelta === null ? '—' : `${revenueDelta >= 0 ? '+' : ''}${revenueDelta.toFixed(1)}%`}
               </span>
-              <span>vs previous 30 days (₹19,45,000)</span>
+              <span>
+                vs previous 30 days ({formatINR(previousRevenue30d, { compact: false })})
+              </span>
             </div>
             <p className="text-xs text-white/50 mt-3">
-              Combined online jewellery & makeup orders plus salon bridal suite reservations.
+              Revenue from non-cancelled orders stored in MongoDB.
             </p>
           </div>
 
@@ -503,7 +569,9 @@ export default function Overview() {
             subtitle="Live feed of orders, bookings, and updates"
           >
             <div className="space-y-3.5">
-              {recentActivities.slice(0, 5).map((act) => (
+              {recentActivities.length === 0 ? (
+                <p className="text-xs text-stone-400">No recent orders or appointments in the database.</p>
+              ) : recentActivities.map((act) => (
                 <div key={act.id} className="flex items-start gap-3 text-xs">
                   <div
                     className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"

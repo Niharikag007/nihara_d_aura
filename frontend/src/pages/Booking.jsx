@@ -48,8 +48,8 @@ export default function Booking() {
   }, [services, preselectedServiceId, selectedServiceIds.length]);
 
   // Step 2: Dynamic Calendar & Time Slot State
-  const [currentCalDate, setCurrentCalDate] = useState(new Date(2026, 9, 1)); // October 2026
-  const [selectedDate, setSelectedDate] = useState(new Date(2026, 9, 16));
+  const [currentCalDate, setCurrentCalDate] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
   const [selectedTimePeriod, setSelectedTimePeriod] = useState('all'); // 'all', 'morning', 'afternoon', 'evening'
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('01:00 PM');
 
@@ -76,6 +76,7 @@ export default function Booking() {
   const [isConfirmedModalOpen, setIsConfirmedModalOpen] = useState(false);
   const [confirmedBookingRef, setConfirmedBookingRef] = useState('BK-126697');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookingError, setBookingError] = useState('');
 
   // Auto-scroll to top on step change
   useEffect(() => {
@@ -123,7 +124,7 @@ export default function Booking() {
   };
 
   const handleJumpToCurrent = () => {
-    const target = new Date(2026, 9, 16);
+    const target = new Date();
     setCurrentCalDate(new Date(target.getFullYear(), target.getMonth(), 1));
     setSelectedDate(target);
   };
@@ -174,9 +175,12 @@ export default function Booking() {
   // Final booking submission
   const handleConfirmBooking = async () => {
     setIsSubmitting(true);
+    setBookingError('');
     const bookingPayload = {
       serviceIds: selectedServiceIds,
-      date: formatSelectedDateShort(selectedDate),
+      date: selectedDate
+        ? `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`
+        : '',
       timeSlot: selectedTimeSlot,
       locationType,
       serviceAddress: { streetAddress: serviceAddress },
@@ -184,11 +188,18 @@ export default function Booking() {
       artistName: selectedArtist.name
     };
 
-    const res = await api.createBooking(bookingPayload);
-    setIsSubmitting(false);
-    if (res && res.booking) {
-      setConfirmedBookingRef(res.booking.bookingId);
-      setIsConfirmedModalOpen(true);
+    try {
+      const res = await api.createBooking(bookingPayload);
+      if (res && res.booking) {
+        setConfirmedBookingRef(res.booking.bookingId);
+        setIsConfirmedModalOpen(true);
+      } else {
+        setBookingError(res?.message || 'Booking could not be saved. Please try again when the server is available.');
+      }
+    } catch (error) {
+      setBookingError(error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -196,6 +207,11 @@ export default function Booking() {
     <div className="min-h-screen bg-transparent py-8 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
       
       {/* Top Header & Step Tracker */}
+      {bookingError && (
+        <div role="alert" className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+          {bookingError}
+        </div>
+      )}
       <div className="text-center mb-8">
         <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#1C1917]">
           Book Services

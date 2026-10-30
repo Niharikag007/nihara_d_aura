@@ -1,11 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
-  Settings as SettingsIcon, Save, RotateCcw, Download, Upload,
-  ShieldAlert, Sparkles, CheckCircle2, AlertTriangle, Moon, Sun
+  Save, Download, Upload, Moon, Sun
 } from 'lucide-react';
 import useAdminStore from '../../store/useAdminStore';
 import ChartCard from '../../components/admin/ChartCard';
-import ConfirmDialog from '../../components/admin/ConfirmDialog';
 
 export default function Settings() {
   const {
@@ -13,10 +11,8 @@ export default function Settings() {
     toggleDark,
     settings,
     updateSettings,
-    resetSettings,
     exportData,
     importData,
-    resetAllData,
     addToast,
   } = useAdminStore();
 
@@ -29,11 +25,15 @@ export default function Settings() {
     settings.targetMargins || { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 }
   );
 
-  const [confirmResetOpen, setConfirmResetOpen] = useState(false);
+  useEffect(() => {
+    setStoreName(settings.storeName || "Nihara D'Aura");
+    setLowStockThreshold(settings.lowStockThreshold || 5);
+    setTargetMargins(settings.targetMargins || { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 });
+  }, [settings]);
 
-  const handleSaveSettings = (e) => {
+  const handleSaveSettings = async (e) => {
     e.preventDefault();
-    updateSettings({
+    const updated = await updateSettings({
       storeName: storeName.trim() || "Nihara D'Aura",
       lowStockThreshold: parseInt(lowStockThreshold, 10) || 5,
       targetMargins: {
@@ -43,7 +43,7 @@ export default function Settings() {
         Candles: parseFloat(targetMargins.Candles) || 60,
       },
     });
-    addToast({ type: 'success', message: 'Settings saved successfully' });
+    if (updated) addToast({ type: 'success', message: 'Settings saved successfully' });
   };
 
   const handleExportBackup = () => {
@@ -68,29 +68,17 @@ export default function Settings() {
     reader.onload = (event) => {
       const content = event.target?.result;
       if (typeof content === 'string') {
-        const success = importData(content);
+        importData(content).then((success) => {
         if (success) {
-          addToast({ type: 'success', message: 'Backup restored successfully' });
-          // refresh local state from restored settings
-          const s = JSON.parse(localStorage.getItem('nda_settings') || '{}');
-          if (s.storeName) setStoreName(s.storeName);
-          if (s.lowStockThreshold) setLowStockThreshold(s.lowStockThreshold);
-          if (s.targetMargins) setTargetMargins(s.targetMargins);
+          addToast({ type: 'success', message: 'Store settings restored successfully' });
         } else {
-          addToast({ type: 'error', message: 'Invalid backup file format' });
+          addToast({ type: 'error', message: 'Backup must contain valid store settings' });
         }
+        });
       }
     };
     reader.readAsText(file);
     e.target.value = '';
-  };
-
-  const handleExecuteResetAll = () => {
-    resetAllData();
-    setStoreName("Nihara D'Aura");
-    setLowStockThreshold(5);
-    setTargetMargins({ Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 });
-    addToast({ type: 'info', message: 'Reset all data back to factory demo state' });
   };
 
   return (
@@ -236,7 +224,7 @@ export default function Settings() {
           {/* Backup & Restore */}
           <ChartCard
             title="Backup & restore"
-            subtitle="Export full catalog, orders, and salon appointments as JSON"
+            subtitle="Download a read-only snapshot of current database records"
           >
             <div className="space-y-4">
               <div
@@ -263,7 +251,7 @@ export default function Settings() {
                 }`}
               >
                 <p className="text-stone-600 dark:text-stone-400 mb-3">
-                  Restore your admin console from a previously exported backup file.
+                  Restore settings only from a prior dashboard export. Product, order, and appointment records are never overwritten here.
                 </p>
                 <input
                   type="file"
@@ -280,51 +268,15 @@ export default function Settings() {
                   }`}
                 >
                   <Upload className="w-4 h-4" />
-                  Import JSON backup
+                  Restore settings from JSON
                 </button>
               </div>
             </div>
           </ChartCard>
 
-          {/* Reset Demo Data */}
-          <div
-            className={`rounded-[18px] border p-5 transition-all shadow-sm ${
-              darkMode ? 'bg-[#181416] border-rose-500/20' : 'bg-white border-rose-200'
-            }`}
-          >
-            <div className="flex items-center gap-2 text-rose-600 mb-2">
-              <ShieldAlert className="w-5 h-5" />
-              <h3
-                className="text-lg font-bold"
-                style={{ fontFamily: '"Cormorant Garamond", serif' }}
-              >
-                Reset demo data
-              </h3>
-            </div>
-            <p className="text-xs text-stone-600 dark:text-stone-400 mb-4">
-              Restores initial products, default orders, salon appointments, and promo vouchers. All custom items will be replaced.
-            </p>
-            <button
-              type="button"
-              onClick={() => setConfirmResetOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:text-white bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-600 dark:hover:bg-rose-600 border border-rose-200 dark:border-rose-900 transition-colors"
-            >
-              <RotateCcw className="w-4 h-4" />
-              Reset demo catalog & data
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* ── Confirm Reset Dialog ── */}
-      <ConfirmDialog
-        open={confirmResetOpen}
-        onClose={() => setConfirmResetOpen(false)}
-        onConfirm={handleExecuteResetAll}
-        title="Reset all store data?"
-        message="This will overwrite current products, orders, and salon appointments with the original Nihara D'Aura factory dataset. Are you sure you want to proceed?"
-        confirmText="Yes, reset everything"
-      />
     </div>
   );
 }

@@ -13,7 +13,7 @@ import {
   RefreshCw,
   Edit3
 } from 'lucide-react';
-import { useAuth, ADMIN_CREDENTIALS } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { api } from '../services/api';
 import Logo from '../components/common/Logo';
@@ -215,19 +215,14 @@ export default function Login() {
           rewardPoints: 100
         };
 
-        // Force admin role if email matches
-        if (cleanEmail === 'amitkry5602@gmail.com') {
-          verifiedUser.role = 'admin';
-          console.log('Forcing admin role for:', cleanEmail, verifiedUser);
-        }
-
         const loginResult = login(verifiedUser, res.token);
-        console.log('Login result:', loginResult);
+        if (!loginResult.success) {
+          setErrorMessage(loginResult.message);
+          return;
+        }
         showToast(`Welcome back, ${verifiedUser.name || 'Patron'}! Authentication verified.`, 'success');
 
-        // Redirect to admin dashboard if email is amitkry5602@gmail.com
-        if (cleanEmail === 'amitkry5602@gmail.com') {
-          console.log('Redirecting to admin dashboard');
+        if (verifiedUser.role === 'admin') {
           navigate('/admin');
         } else {
           navigate(redirectParam && redirectParam !== '/admin' ? redirectParam : '/profile');
@@ -242,32 +237,29 @@ export default function Login() {
   };
 
   // Submit Admin Password Login (Staff only)
-  const handleAdminPasswordLogin = (e) => {
+  const handleAdminPasswordLogin = async (e) => {
     e.preventDefault();
     setErrorMessage('');
     setIsSubmitting(true);
 
     const cleanEmail = adminEmail.trim().toLowerCase();
-
-    if (cleanEmail !== ADMIN_CREDENTIALS.email || adminPassword !== ADMIN_CREDENTIALS.password) {
-      setIsSubmitting(false);
-      setErrorMessage('Invalid Administrator Credentials. Access restricted to authorized personnel.');
-      showToast('Access Denied: Invalid Admin Credentials', 'error');
-      return;
-    }
-
-    const res = login({
-      email: cleanEmail,
-      password: adminPassword,
-      role: 'admin'
-    });
-
-    setIsSubmitting(false);
-    if (res?.success) {
-      showToast('Welcome, Administrator. Admin Portal Access Granted.', 'success');
+    try {
+      const response = await api.login(cleanEmail, adminPassword, 'admin');
+      if (!response?.success || !response.token || response.user?.role !== 'admin') {
+        setErrorMessage(response?.message || 'Administrator authentication failed.');
+        return;
+      }
+      const result = login(response.user, response.token);
+      if (!result.success) {
+        setErrorMessage(result.message);
+        return;
+      }
+      showToast('Administrator sign-in successful.', 'success');
       navigate(redirectParam || '/admin');
-    } else {
-      setErrorMessage(res?.message || 'Administrator authentication failed.');
+    } catch (error) {
+      setErrorMessage(error.message || 'Administrator authentication failed.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

@@ -5,7 +5,7 @@ import { api } from '../services/api';
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const { validateCoupon } = useOffers();
+  const { offers, validateCoupon } = useOffers();
 
   // Load saved cart from localStorage or start with empty bag
   const [items, setItems] = useState(() => {
@@ -21,7 +21,7 @@ export function CartProvider({ children }) {
     return [];
   });
 
-  const [coupon, setCoupon] = useState(null);
+  const [couponCode, setCouponCode] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Sync to storage & backend whenever cart items change
@@ -48,8 +48,27 @@ export function CartProvider({ children }) {
     return items.reduce((acc, item) => acc + ((item.product?.price || 0) * item.quantity), 0);
   }, [items]);
 
+  const coupon = useMemo(() => {
+    if (!couponCode) return null;
+    const offer = offers.find((item) => item.code.toUpperCase() === couponCode);
+    if (!offer) return null;
+    return {
+      ...offer,
+      type: offer.type || 'percent',
+      value: Number(offer.value ?? offer.discountPercent) || 0,
+      discountPercent: Number(offer.discountPercent) || 0,
+      name: offer.name || offer.description
+    };
+  }, [couponCode, offers]);
+
   const discount = useMemo(() => {
-    return coupon ? Math.round((subtotal * coupon.discountPercent) / 100) : 0;
+    if (!coupon || !coupon.isActive) return 0;
+    if (coupon.usageLimit > 0 && coupon.usedCount >= coupon.usageLimit) return 0;
+    if (coupon.minOrder && subtotal < coupon.minOrder) return 0;
+    const amount = coupon.type === 'flat'
+      ? Number(coupon.value) || 0
+      : Math.round((subtotal * (Number(coupon.value) || 0)) / 100);
+    return Math.min(subtotal, amount);
   }, [subtotal, coupon]);
 
   const deliveryFee = 0; // Complimentary luxury delivery
@@ -96,24 +115,20 @@ export function CartProvider({ children }) {
   const applyCoupon = useCallback((code) => {
     const res = validateCoupon(code, subtotal);
     if (res.success) {
-      setCoupon({
-        code: res.offer.code,
-        discountPercent: res.offer.discountPercent,
-        name: res.offer.name
-      });
+      setCouponCode(res.offer.code);
       return { success: true, message: res.message };
     }
     return { success: false, message: res.message };
-  }, [validateCoupon, subtotal]);
+  }, [setCouponCode, validateCoupon, subtotal]);
 
   const removeCoupon = useCallback(() => {
-    setCoupon(null);
-  }, []);
+    setCouponCode(null);
+  }, [setCouponCode]);
 
   const clearCart = useCallback(() => {
     setItems([]);
-    setCoupon(null);
-  }, []);
+    setCouponCode(null);
+  }, [setCouponCode]);
 
   const contextValue = useMemo(() => ({
     items,

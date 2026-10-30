@@ -45,12 +45,14 @@ export default function Orders() {
     return orders.filter(o => o.status === statusFilter);
   }, [orders, statusFilter]);
 
-  const handleStatusChange = (orderId, newStatus) => {
-    updateOrderStatus(orderId, newStatus);
-    addToast({
-      type: 'success',
-      message: `Order ${orderId} status changed to ${newStatus}`,
-    });
+  const handleStatusChange = async (orderId, newStatus) => {
+    const updated = await updateOrderStatus(orderId, newStatus);
+    if (updated) {
+      addToast({
+        type: 'success',
+        message: `Order ${orderId} status changed to ${newStatus}`,
+      });
+    }
   };
 
   const openOrderDetails = (order) => {

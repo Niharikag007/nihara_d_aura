@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useToast } from './ToastContext';
+import { useAuth } from './AuthContext';
 
 const SocketContext = createContext();
 
@@ -16,6 +17,7 @@ export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const { showToast } = useToast();
+  const { token, isAdmin } = useAuth();
 
   const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000';
 
@@ -24,7 +26,8 @@ export function SocketProvider({ children }) {
     const socketInstance = io(SOCKET_URL, {
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 5,
-      reconnectionDelay: 2000
+      reconnectionDelay: 2000,
+      auth: token ? { token } : {}
     });
 
     socketInstance.on('connect', () => {
@@ -34,6 +37,10 @@ export function SocketProvider({ children }) {
 
     socketInstance.on('disconnect', () => {
       console.log('[Socket.io Client] Disconnected from server');
+      setIsConnected(false);
+    });
+    socketInstance.on('connect_error', (error) => {
+      console.error('[Socket.io Client] Connection failed:', error.message);
       setIsConnected(false);
     });
 
@@ -55,7 +62,7 @@ export function SocketProvider({ children }) {
     return () => {
       socketInstance.disconnect();
     };
-  }, []);
+  }, [SOCKET_URL, token, isAdmin, showToast]);
 
   const joinRoom = React.useCallback((roomId) => {
     if (socket && isConnected) {

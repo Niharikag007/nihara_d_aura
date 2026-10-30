@@ -27,8 +27,10 @@ export default function Orders() {
   useEffect(() => {
     if (!socket) return;
     socket.on('order:created', fetchOrders);
+    socket.on('order:updated', fetchOrders);
     return () => {
       socket.off('order:created', fetchOrders);
+      socket.off('order:updated', fetchOrders);
     };
   }, [socket, fetchOrders]);
 

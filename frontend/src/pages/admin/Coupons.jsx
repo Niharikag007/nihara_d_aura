@@ -40,20 +40,22 @@ export default function Coupons() {
     setTimeout(() => setCopiedCode(null), 2000);
   };
 
-  const handleToggle = (id, code, currentActive) => {
-    toggleCoupon(id);
+  const handleToggle = async (id, code, currentActive) => {
+    const updated = await toggleCoupon(id);
+    if (!updated) return;
     addToast({
       type: 'info',
       message: `Coupon "${code}" marked as ${!currentActive ? 'Active' : 'Inactive'}`,
     });
   };
 
-  const handleDelete = (id, code) => {
-    deleteCoupon(id);
+  const handleDelete = async (id, code) => {
+    const deleted = await deleteCoupon(id);
+    if (!deleted) return;
     addToast({ type: 'success', message: `Deleted coupon "${code}"` });
   };
 
-  const handleCreateCoupon = (e) => {
+  const handleCreateCoupon = async (e) => {
     e.preventDefault();
     const newErrors = {};
     const cleanCode = formData.code.trim().toUpperCase();
@@ -74,7 +76,7 @@ export default function Coupons() {
       return;
     }
 
-    addCoupon({
+    const created = await addCoupon({
       code: cleanCode,
       description: formData.description.trim(),
       type: formData.type,
@@ -84,6 +86,7 @@ export default function Coupons() {
       validTill: formData.validTill,
       isActive: formData.isActive,
     });
+    if (!created) return;
 
     addToast({ type: 'success', message: `Created VIP coupon "${cleanCode}"` });
     setModalOpen(false);

@@ -129,7 +129,7 @@ npm install
 # Set your environment variables in .env (reference .env.example)
 npm run dev
 ```
-Backend runs by default at `http://localhost:5000`.
+Backend uses `PORT` from `backend/.env` (default `5000`). The frontend API and socket URLs default to port `3000`, so configure `PORT=3000` locally or point the frontend variables at the backend port.
 
 #### Step 2: Start Frontend Application
 ```bash
@@ -138,6 +138,20 @@ npm install
 npm run dev
 ```
 Frontend runs by default at `http://localhost:5173`.
+
+### Admin dashboard and live data
+
+The admin console reads and writes products, orders, appointments, coupons, and store settings through the authenticated `/api/admin` endpoints. MongoDB is the source of truth; Socket.IO notifies signed-in admin sessions after a successful database write. Do not use demo credentials or rely on browser storage for operational data.
+
+Before starting the backend, configure `backend/.env` with:
+
+- `MONGO_URI` (or `MONGODB_URI`) pointing to your database
+- `JWT_SECRET` containing a unique random secret of at least 32 characters
+- `ADMIN_EMAIL` and `ADMIN_PASSWORD` for the administrator sign-in (keep these private and out of Git)
+- `CORS_ORIGINS` listing the exact frontend origins, comma-separated
+- `PORT=3000` to match the local frontend API/socket defaults, or set `VITE_API_BASE_URL` (include `/api`) and `VITE_SOCKET_URL` to match another port
+
+Only the email configured in `ADMIN_EMAIL` can authenticate as an administrator; admin sign-in also requires the matching private `ADMIN_PASSWORD`. Admin tokens for other email addresses are rejected by protected APIs and the admin Socket.IO room. The values in `.env.example` are placeholders.
 
 #### Step 3: Production Build
 ```bash

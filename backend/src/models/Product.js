@@ -6,6 +6,12 @@ const ProductSchema = new mongoose.Schema({
   slug: { type: String, required: true },
   category: { type: String, required: true },
   categorySlug: { type: String, required: true },
+  collection: { type: String },
+  sku: { type: String, trim: true },
+  cost: { type: Number, min: 0, default: 0 },
+  status: { type: String, enum: ['Live', 'Draft'], default: 'Live' },
+  soldLast30: { type: Number, min: 0, default: 0 },
+  image: { type: String },
   subcategory: { type: String },
   price: { type: Number, required: true },
   originalPrice: { type: Number },
@@ -22,6 +28,7 @@ const ProductSchema = new mongoose.Schema({
   isBestseller: { type: Boolean, default: false }
 }, {
   timestamps: true,
+  suppressReservedKeysWarning: true,
   toJSON: {
     virtuals: true,
     transform: (doc, ret) => {

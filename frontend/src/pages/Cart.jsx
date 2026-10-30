@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShoppingBag, ArrowRight, X, Sparkles, Tag, ArrowLeft } from 'lucide-react';
+import { ShoppingBag, ArrowRight, X, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useOffers } from '../context/OffersContext';
 
@@ -165,9 +165,9 @@ export default function Cart() {
                   setCouponMessage(res.message);
                 }}
                 className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#E8F5E9] border border-[#0A6847]/20 text-[#0A6847] hover:bg-[#D4EDDA] transition-colors"
-                title={`Click to apply ${o.discountPercent}% OFF (Min ₹${o.minOrder})`}
+                title={`Click to apply ${o.type === 'flat' ? `₹${Number(o.value).toLocaleString('en-IN')}` : `${o.value ?? o.discountPercent}%`} OFF (Min ₹${o.minOrder})`}
               >
-                {o.code} ({o.discountPercent}% OFF)
+                {o.code} ({o.type === 'flat' ? `₹${Number(o.value).toLocaleString('en-IN')}` : `${o.value ?? o.discountPercent}%`} OFF)
               </button>
             ))}
           </div>
@@ -177,7 +177,7 @@ export default function Cart() {
           )}
           {coupon && (
             <div className="flex items-center justify-between bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 text-xs text-emerald-900 mt-2">
-              <span>Applied: <strong>{coupon.code}</strong> ({coupon.discountPercent}% OFF - {coupon.name})</span>
+              <span>Applied: <strong>{coupon.code}</strong> ({coupon.type === 'flat' ? `₹${Number(coupon.value).toLocaleString('en-IN')}` : `${coupon.value}%`} OFF - {coupon.name})</span>
               <button type="button" onClick={removeCoupon} className="text-stone-400 hover:text-stone-700 text-xs font-semibold">Remove</button>
             </div>
           )}

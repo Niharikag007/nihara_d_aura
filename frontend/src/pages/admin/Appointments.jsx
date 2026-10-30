@@ -57,25 +57,26 @@ export default function Appointments() {
     }
   };
 
-  const handleStatusChange = (id, newStatus) => {
-    updateAppointment(id, { status: newStatus });
-    addToast({ type: 'success', message: `Booking ${id} set to ${newStatus}` });
+  const handleStatusChange = async (id, newStatus) => {
+    const updated = await updateAppointment(id, { status: newStatus });
+    if (updated) addToast({ type: 'success', message: `Booking ${id} set to ${newStatus}` });
   };
 
-  const handleDeleteWithUndo = (apt) => {
-    deleteAppointment(apt.id);
+  const handleDeleteWithUndo = async (apt) => {
+    const deleted = await deleteAppointment(apt.id);
+    if (!deleted) return;
     addToast({
       type: 'info',
       message: `Deleted booking for ${apt.client}`,
       duration: 8000,
-      undoAction: () => {
-        addAppointment(apt);
-        addToast({ type: 'success', message: `Restored booking for ${apt.client}` });
+      undoAction: async () => {
+        const restored = await addAppointment(apt);
+        if (restored) addToast({ type: 'success', message: `Restored booking for ${apt.client}` });
       },
     });
   };
 
-  const handleSaveBooking = (e) => {
+  const handleSaveBooking = async (e) => {
     e.preventDefault();
     const newErrors = {};
     if (!formData.client.trim()) newErrors.client = 'Client name is required';
@@ -87,11 +88,12 @@ export default function Appointments() {
       return;
     }
 
-    addAppointment({
+    const saved = await addAppointment({
       ...formData,
       price: parseFloat(formData.price) || 0,
       duration: parseInt(formData.duration, 10) || 60,
     });
+    if (!saved) return;
 
     addToast({
       type: 'success',

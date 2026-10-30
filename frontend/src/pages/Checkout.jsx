@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, CheckCircle2, ShoppingBag, ShieldCheck, ChevronRight, Lock, Truck, CreditCard, Smartphone } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import PaymentGatewayModal from '../components/common/PaymentGatewayModal';
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { items, totalAmount, clearCart } = useCart();
+  const { items, totalAmount, coupon, clearCart } = useCart();
+  const { user } = useAuth();
 
   // Delivery Address form / state matching APK
   const [deliveryAddress, setDeliveryAddress] = useState({
@@ -24,6 +26,7 @@ export default function Checkout() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [createdOrderDetails, setCreatedOrderDetails] = useState(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [orderError, setOrderError] = useState('');
 
   const paymentOptions = [
     { label: 'UPI / GPay / PhonePe', type: 'Online Instant', icon: Smartphone },
@@ -44,23 +47,30 @@ export default function Checkout() {
 
     const orderPayload = {
       items: items.map(i => ({
-        name: `${i.quantity}x ${i.product?.name}`,
+        productId: i.product?.id || i.product?._id,
+        name: i.product?.name || 'Product',
+        qty: i.quantity,
         variant: i.variant,
         size: i.size,
         price: (i.product?.price || 0) * i.quantity,
         image: i.product?.images?.[0]
       })),
       shippingAddress: `${deliveryAddress.fullName}, ${deliveryAddress.streetAddress}`,
+      customer: user?.name,
+      email: user?.email,
+      phone: deliveryAddress.phone || user?.phone,
       paymentMethod: paymentResult.paymentMethod || paymentMethod,
       transactionId: paymentResult.transactionId || null,
       paymentStatus: paymentResult.paymentStatus || 'Processing',
-      totalAmount
+      totalAmount,
+      couponCode: coupon?.code || null
     };
 
     const res = await api.createOrder(orderPayload);
     setIsPlacingOrder(false);
 
     if (res && res.order) {
+      setOrderError('');
       setCreatedOrderDetails({
         ...res.order,
         transactionId: paymentResult.transactionId,
@@ -68,6 +78,8 @@ export default function Checkout() {
       });
       setIsSuccessModalOpen(true);
       clearCart();
+    } else {
+      setOrderError(res?.message || 'Order could not be saved. Please try again when the server is available.');
     }
   };
 
@@ -91,6 +103,11 @@ export default function Checkout() {
       </div>
 
       <div className="space-y-6">
+        {orderError && (
+          <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+            {orderError}
+          </div>
+        )}
         
         {/* 1. Delivery Address Card matching APK */}
         <div className="bg-white rounded-2xl p-5 border border-[#DFBC77]/40 shadow-sm space-y-4">

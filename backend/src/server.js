@@ -10,18 +10,15 @@ import { initSocket } from './socket.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173')
+  .split(',')
+  .map((origin) => origin.trim());
 
 // Create HTTP server for Express + Socket.io
 const server = http.createServer(app);
 
-// Initialize Socket.io Real-time server
-initSocket(server);
-
-// Initialize Database connection
-connectDB();
-
 // Global Middleware
-app.use(cors());
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 app.use('/images', express.static('public/images'));
 app.use(requestLogger);
@@ -43,7 +40,18 @@ app.use('/api', apiRoutes);
 // Centralized error handling
 app.use(errorHandler);
 
-// Start server listening with Socket.io enabled
-server.listen(PORT, () => {
-  console.log(`[Server] Nihara D Aura Realtime MVC Server (Socket.io) running on port ${PORT}`);
+const startServer = async () => {
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+    throw new Error('JWT_SECRET must be configured with at least 32 characters');
+  }
+  await connectDB();
+  initSocket(server);
+  server.listen(PORT, () => {
+    console.log(`[Server] Nihara D Aura Realtime MVC Server (Socket.io) running on port ${PORT}`);
+  });
+};
+
+startServer().catch((err) => {
+  console.error(`[Server] Startup failed: ${err.message}`);
+  process.exitCode = 1;
 });

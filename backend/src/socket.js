@@ -1,23 +1,35 @@
 import { Server } from 'socket.io';
+import jwt from 'jsonwebtoken';
 
 let io = null;
 
 export const initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: '*',
-      methods: ['GET', 'POST', 'PUT', 'DELETE']
+      origin: (process.env.CORS_ORIGINS || 'http://localhost:5173,http://127.0.0.1:5173').split(',').map((value) => value.trim()),
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+    }
+  });
+
+  io.use((socket, next) => {
+    const token = socket.handshake.auth?.token;
+    if (!token) return next();
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      socket.data.userRole = decoded.role;
+      socket.data.userId = decoded.id;
+      socket.data.userEmail = typeof decoded.email === 'string' ? decoded.email.trim().toLowerCase() : '';
+      return next();
+    } catch (error) {
+      return next(new Error('Invalid authentication token'));
     }
   });
 
   io.on('connection', (socket) => {
     console.log(`[Socket.io] Client connected: ${socket.id}`);
-
-    // Join room based on user ID or order ID
-    socket.on('join_room', (roomId) => {
-      socket.join(roomId);
-      console.log(`[Socket.io] Socket ${socket.id} joined room: ${roomId}`);
-    });
+    const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+    if (socket.data.userRole === 'admin' && socket.data.userEmail === adminEmail && adminEmail) socket.join('admin');
+    else if (socket.data.userId) socket.join(`user:${socket.data.userId}`);
 
     // Handle client ping/pong
     socket.on('ping_server', () => {
@@ -47,4 +59,8 @@ export const emitRealtimeEvent = (eventName, data, roomId = null) => {
   } else {
     io.emit(eventName, data);
   }
+};
+
+export const emitAdminEvent = (eventName, data) => {
+  if (io) io.to('admin').emit('admin:data:changed', { type: eventName, data });
 };

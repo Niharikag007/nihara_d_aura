@@ -1,216 +1,150 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import adminApi from '../api/adminApi';
+import { useSocket } from './SocketContext';
+import { useToast } from './ToastContext';
 
 const OffersContext = createContext();
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
 
-const DEFAULT_OFFERS = [
-  {
-    id: "off_1",
-    code: "NIHARA10",
-    name: "Royal 10% Welcome Offer",
-    discountPercent: 10,
-    minOrder: 1999,
-    validTill: "2026-12-31",
-    isActive: true
-  },
-  {
-    id: "off_2",
-    code: "GLOW20",
-    name: "Festive Glow 20% Offer",
-    discountPercent: 20,
-    minOrder: 3999,
-    validTill: "2026-11-30",
-    isActive: true
-  },
-  {
-    id: "off_3",
-    code: "AURA30",
-    name: "Haute Luxury VIP Offer",
-    discountPercent: 30,
-    minOrder: 9999,
-    validTill: "2026-12-31",
-    isActive: true
-  },
-  {
-    id: "off_4",
-    code: "BRIDAL15",
-    name: "Bridal Suite Special Offer",
-    discountPercent: 15,
-    minOrder: 4999,
-    validTill: "2026-12-31",
-    isActive: true
-  }
-];
-
 export function OffersProvider({ children }) {
-  const [offers, setOffers] = useState(() => {
+  const [offers, setOffers] = useState([]);
+  const { socket } = useSocket();
+  const { showToast } = useToast();
+
+  const fetchOffers = useCallback(async () => {
+    const response = await fetch(`${API_BASE}/offers`);
+    let data;
     try {
-      const saved = localStorage.getItem('nihara_offers');
-      return saved ? JSON.parse(saved) : DEFAULT_OFFERS;
+      data = await response.json();
     } catch {
-      return DEFAULT_OFFERS;
+      throw new Error(`Offers API returned an invalid response (${response.status})`);
     }
-  });
-
-  const saveToStorage = useCallback((offerList) => {
-    try {
-      localStorage.setItem('nihara_offers', JSON.stringify(offerList));
-    } catch (e) {
-      console.warn('Failed to save offers to localStorage', e);
+    if (!response.ok || data.success === false) {
+      throw new Error(data.message || `Could not load offers (${response.status})`);
     }
+    if (!Array.isArray(data.offers)) {
+      throw new Error('Offers API returned an invalid offers list');
+    }
+    return data.offers;
   }, []);
 
-  // Sync with backend API if reachable
   useEffect(() => {
-    let isMounted = true;
-    fetch(`${API_BASE}/offers`)
-      .then(res => res.json())
-      .then(data => {
-        if (!isMounted) return;
-        const backendOffers = data.data?.offers || data.offers;
-        if (Array.isArray(backendOffers) && backendOffers.length > 0) {
-          setOffers(prev => {
-            const map = new Map();
-            backendOffers.forEach(o => map.set(o.code.toUpperCase(), o));
-            prev.forEach(o => map.set(o.code.toUpperCase(), o));
-            return Array.from(map.values());
-          });
-        }
-      })
-      .catch(() => {
-        // Fallback silently to client state
+    let active = true;
+    const loadOffers = async () => {
+      try {
+        const currentOffers = await fetchOffers();
+        if (active) setOffers(currentOffers);
+      } catch (error) {
+        if (active) showToast(`Could not load live offers: ${error.message}`, 'error');
+      }
+    };
+    loadOffers();
+    return () => { active = false; };
+  }, [fetchOffers, showToast]);
+
+  useEffect(() => {
+    if (!socket) return undefined;
+    const refresh = () => {
+      fetchOffers().then(setOffers).catch((error) => {
+        showToast(`Could not refresh live offers: ${error.message}`, 'error');
       });
-    return () => { isMounted = false; };
-  }, []);
+    };
+    socket.on('offer:created', refresh);
+    socket.on('offer:updated', refresh);
+    socket.on('offer:deleted', refresh);
+    return () => {
+      socket.off('offer:created', refresh);
+      socket.off('offer:updated', refresh);
+      socket.off('offer:deleted', refresh);
+    };
+  }, [socket, fetchOffers, showToast]);
 
   const addOffer = useCallback(async (offerData) => {
-    const cleanCode = (offerData.code || '').trim().toUpperCase();
-    if (!cleanCode) return { success: false, message: 'Coupon code is required' };
-    
-    // Check duplicate
-    if (offers.some(o => o.code.toUpperCase() === cleanCode)) {
-      return { success: false, message: `Offer with code "${cleanCode}" already exists` };
+    const code = (offerData.code || '').trim().toUpperCase();
+    if (!code) return { success: false, message: 'Coupon code is required' };
+    if (offers.some((offer) => offer.code.toUpperCase() === code)) {
+      return { success: false, message: `Offer with code "${code}" already exists` };
     }
-
-    const newOffer = {
-      id: `off_${Date.now()}`,
-      code: cleanCode,
-      name: offerData.name || `${cleanCode} Special Discount`,
-      discountPercent: Number(offerData.discountPercent) || 10,
-      minOrder: Number(offerData.minOrder) || 0,
-      validTill: offerData.validTill || '2026-12-31',
-      isActive: offerData.isActive !== false,
-      createdAt: new Date().toISOString()
-    };
-
-    setOffers(prev => {
-      const next = [newOffer, ...prev];
-      saveToStorage(next);
-      return next;
-    });
-
-const getAuthHeaders = () => {
-  try {
-    const stored = localStorage.getItem('nihara_auth');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (parsed?.token) {
-        return {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${parsed.token}`,
-          'x-user-role': parsed.user?.role || 'user'
-        };
-      }
-    }
-  } catch (e) {}
-  return { 'Content-Type': 'application/json' };
-};
-
-    // Send to backend API
     try {
-      fetch(`${API_BASE}/offers`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify(newOffer)
-      }).catch(() => {});
-    } catch (e) {}
-
-    return { success: true, message: `Offer "${cleanCode}" added successfully!`, offer: newOffer };
-  }, [offers, saveToStorage]);
+      const result = await adminApi.createCoupon({
+        code,
+        description: offerData.description || offerData.name || `${code} Special Discount`,
+        type: offerData.type || 'percent',
+        value: offerData.value ?? offerData.discountPercent ?? 10,
+        minOrder: offerData.minOrder || 0,
+        usageLimit: offerData.usageLimit || 0,
+        validTill: offerData.validTill,
+        isActive: offerData.isActive !== false
+      });
+      setOffers((current) => [result.coupon, ...current]);
+      return { success: true, offer: result.coupon };
+    } catch (error) {
+      showToast(`Could not create offer: ${error.message}`, 'error');
+      return { success: false, message: error.message };
+    }
+  }, [offers, showToast]);
 
   const deleteOffer = useCallback(async (idOrCode) => {
-    const target = offers.find(o => o.id === idOrCode || o.code.toUpperCase() === idOrCode.toUpperCase());
+    const target = offers.find((offer) =>
+      offer.id === idOrCode || offer.code.toUpperCase() === String(idOrCode).toUpperCase()
+    );
     if (!target) return { success: false, message: 'Offer not found' };
-
-    setOffers(prev => {
-      const next = prev.filter(o => o.id !== target.id && o.code.toUpperCase() !== target.code.toUpperCase());
-      saveToStorage(next);
-      return next;
-    });
-
-    // Send to backend API
     try {
-      fetch(`${API_BASE}/offers/${target.id}`, { 
-        method: 'DELETE',
-        headers: getAuthHeaders()
-      }).catch(() => {});
-    } catch (e) {}
-
-    return { success: true, message: `Offer "${target.code}" removed successfully!` };
-  }, [offers, saveToStorage]);
+      await adminApi.deleteCoupon(target.id);
+      setOffers((current) => current.filter((offer) => offer.id !== target.id));
+      return { success: true, message: `Offer "${target.code}" removed successfully` };
+    } catch (error) {
+      showToast(`Could not delete offer: ${error.message}`, 'error');
+      return { success: false, message: error.message };
+    }
+  }, [offers, showToast]);
 
   const toggleOffer = useCallback(async (idOrCode) => {
-    let updatedOffer = null;
-    setOffers(prev => {
-      const next = prev.map(o => {
-        if (o.id === idOrCode || o.code.toUpperCase() === idOrCode.toUpperCase()) {
-          updatedOffer = { ...o, isActive: !o.isActive };
-          return updatedOffer;
-        }
-        return o;
-      });
-      if (updatedOffer) saveToStorage(next);
-      return next;
-    });
-
-    if (updatedOffer) {
-      try {
-        fetch(`${API_BASE}/offers/${updatedOffer.id}/toggle`, { 
-          method: 'PATCH',
-          headers: getAuthHeaders()
-        }).catch(() => {});
-      } catch (e) {}
+    const target = offers.find((offer) =>
+      offer.id === idOrCode || offer.code.toUpperCase() === String(idOrCode).toUpperCase()
+    );
+    if (!target) return { success: false, message: 'Offer not found' };
+    try {
+      const result = await adminApi.updateCoupon(target.id, { isActive: !target.isActive });
+      setOffers((current) => current.map((offer) =>
+        offer.id === target.id ? result.coupon : offer
+      ));
+      return { success: true, offer: result.coupon };
+    } catch (error) {
+      showToast(`Could not update offer: ${error.message}`, 'error');
+      return { success: false, message: error.message };
     }
-
-    return { 
-      success: !!updatedOffer, 
-      message: updatedOffer ? `Offer "${updatedOffer.code}" is now ${updatedOffer.isActive ? 'Active' : 'Inactive'}` : 'Offer not found' 
-    };
-  }, [saveToStorage]);
+  }, [offers, showToast]);
 
   const validateCoupon = useCallback((code, cartSubtotal = 0) => {
     if (!code) return { success: false, message: 'Please enter a coupon code.' };
     const clean = code.trim().toUpperCase();
-    const offer = offers.find(o => o.code.toUpperCase() === clean);
+    const offer = offers.find((item) => item.code.toUpperCase() === clean);
 
     if (!offer) {
       return { success: false, message: `Invalid coupon code "${clean}".` };
     }
-
     if (!offer.isActive) {
-      return { success: false, message: `Coupon code "${clean}" is currently expired or inactive.` };
+      return { success: false, message: `Coupon code "${clean}" is inactive.` };
     }
-
+    if (offer.validTill && new Date(`${offer.validTill}T23:59:59`).getTime() < Date.now()) {
+      return { success: false, message: `Coupon code "${clean}" has expired.` };
+    }
+    if (offer.usageLimit > 0 && offer.usedCount >= offer.usageLimit) {
+      return { success: false, message: `Coupon code "${clean}" has reached its usage limit.` };
+    }
     if (offer.minOrder && cartSubtotal < offer.minOrder) {
-      return { 
-        success: false, 
-        message: `Coupon "${clean}" requires a minimum purchase of ₹${offer.minOrder.toLocaleString('en-IN')}. (Current: ₹${cartSubtotal.toLocaleString('en-IN')})` 
+      return {
+        success: false,
+        message: `Coupon "${clean}" requires a minimum purchase of ₹${offer.minOrder.toLocaleString('en-IN')}. (Current: ₹${cartSubtotal.toLocaleString('en-IN')})`
       };
     }
 
+    const value = Number(offer.value ?? offer.discountPercent) || 0;
+    const discount = offer.type === 'flat' ? `₹${value.toLocaleString('en-IN')}` : `${value}%`;
     return {
       success: true,
-      message: `Coupon ${clean} applied (${offer.discountPercent}% OFF)!`,
+      message: `Coupon ${clean} applied (${discount} OFF)!`,
       offer
     };
   }, [offers]);

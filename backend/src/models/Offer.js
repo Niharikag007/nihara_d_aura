@@ -5,7 +5,12 @@ const OfferSchema = new mongoose.Schema({
   code: { type: String, required: true, uppercase: true, trim: true },
   name: { type: String, required: true },
   discountPercent: { type: Number, required: true },
+  description: { type: String, default: '' },
+  type: { type: String, enum: ['percent', 'flat'], default: 'percent' },
+  value: { type: Number, min: 0 },
   minOrder: { type: Number, default: 0 },
+  usageLimit: { type: Number, default: 0 },
+  usedCount: { type: Number, default: 0 },
   validTill: { type: String, default: '2026-12-31' },
   isActive: { type: Boolean, default: true }
 }, {

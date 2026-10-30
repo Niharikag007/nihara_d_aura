@@ -5,7 +5,7 @@ import { emitRealtimeEvent } from '../socket.js';
 export const getProducts = async (req, res, next) => {
   try {
     const { category, subcategory, search, sort, minPrice, maxPrice } = req.query;
-    const filter = {};
+    const filter = { status: { $ne: 'Draft' } };
 
     if (category && category.toLowerCase() !== 'all') {
       filter.$or = [
@@ -57,6 +57,7 @@ export const getProductById = async (req, res, next) => {
       product = await Product.findOne({ $or: [{ slug: id }, { id: id }] });
     }
     if (!product) return errorResponse(res, 'Product not found', 404);
+    if (product.status === 'Draft') return errorResponse(res, 'Product not found', 404);
 
     const related = await Product.find({
       _id: { $ne: product._id },

@@ -1,4 +1,5 @@
 import express from 'express';
+import { protect } from '../middleware/authMiddleware.js';
 import { 
   getProfile, 
   updateProfile, 
@@ -12,6 +13,7 @@ import {
 
 const router = express.Router();
 
+router.use(protect);
 router.get('/', getProfile);
 router.put('/update', updateProfile);
 

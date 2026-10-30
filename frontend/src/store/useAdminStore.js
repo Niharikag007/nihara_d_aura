@@ -1,17 +1,5 @@
 import { create } from 'zustand';
-import productsData from '../data/products';
-import ordersData from '../data/orders';
-import appointmentsData from '../data/appointments';
-import couponsData from '../data/coupons';
-
-// ── Helpers ──
-const load = (key, fallback) => {
-  try {
-    const v = localStorage.getItem(key);
-    return v ? JSON.parse(v) : fallback;
-  } catch { return fallback; }
-};
-const save = (key, val) => { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} };
+import adminApi from '../api/adminApi';
 
 const DEFAULT_SETTINGS = {
   storeName: "Nihara D'Aura",
@@ -19,167 +7,150 @@ const DEFAULT_SETTINGS = {
   targetMargins: { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 },
 };
 
+const showFailure = (set, error) => {
+  set((state) => ({
+    error: error.message,
+    toasts: [...state.toasts, { id: Date.now(), type: 'error', message: error.message }]
+  }));
+  return null;
+};
+
+const perform = async (set, request, onSuccess) => {
+  try {
+    const result = await request();
+    onSuccess(result);
+    set({ error: null });
+    return result;
+  } catch (error) {
+    return showFailure(set, error);
+  }
+};
+
 const useAdminStore = create((set, get) => ({
-  // ── Theme ──
-  darkMode: load('nda_dark', false),
-  toggleDark: () => set(s => {
-    const next = !s.darkMode;
-    save('nda_dark', next);
-    return { darkMode: next };
-  }),
-
-  // ── Settings ──
-  settings: load('nda_settings', DEFAULT_SETTINGS),
-  updateSettings: (patch) => set(s => {
-    const next = { ...s.settings, ...patch };
-    save('nda_settings', next);
-    return { settings: next };
-  }),
-  resetSettings: () => {
-    save('nda_settings', DEFAULT_SETTINGS);
-    set({ settings: DEFAULT_SETTINGS });
-  },
-
-  // ── Products ──
-  products: load('nda_products', productsData),
-  setProducts: (products) => { save('nda_products', products); set({ products }); },
-  addProduct: (p) => set(s => {
-    const id = `PRD-${String(s.products.length + 1).padStart(3, '0')}`;
-    const next = [{ ...p, id, createdAt: new Date().toISOString().split('T')[0], soldLast30: 0 }, ...s.products];
-    save('nda_products', next);
-    return { products: next };
-  }),
-  updateProduct: (id, patch) => set(s => {
-    const next = s.products.map(p => p.id === id ? { ...p, ...patch } : p);
-    save('nda_products', next);
-    return { products: next };
-  }),
-  deleteProduct: (id) => set(s => {
-    const next = s.products.filter(p => p.id !== id);
-    save('nda_products', next);
-    return { products: next };
-  }),
-  bulkUpdateProducts: (ids, patch) => set(s => {
-    const next = s.products.map(p => ids.includes(p.id) ? { ...p, ...patch } : p);
-    save('nda_products', next);
-    return { products: next };
-  }),
-  bulkDeleteProducts: (ids) => set(s => {
-    const next = s.products.filter(p => !ids.includes(p.id));
-    save('nda_products', next);
-    return { products: next };
-  }),
-
-  // ── Orders ──
-  orders: load('nda_orders', ordersData),
-  setOrders: (orders) => { save('nda_orders', orders); set({ orders }); },
-  updateOrderStatus: (id, status) => set(s => {
-    const next = s.orders.map(o => o.id === id ? { ...o, status } : o);
-    save('nda_orders', next);
-    return { orders: next };
-  }),
-
-  // ── Appointments ──
-  appointments: load('nda_appointments', appointmentsData),
-  setAppointments: (appointments) => { save('nda_appointments', appointments); set({ appointments }); },
-  addAppointment: (a) => set(s => {
-    const id = `APT-${500 + s.appointments.length + 1}`;
-    const next = [{ ...a, id }, ...s.appointments];
-    save('nda_appointments', next);
-    return { appointments: next };
-  }),
-  updateAppointment: (id, patch) => set(s => {
-    const next = s.appointments.map(a => a.id === id ? { ...a, ...patch } : a);
-    save('nda_appointments', next);
-    return { appointments: next };
-  }),
-  deleteAppointment: (id) => set(s => {
-    const next = s.appointments.filter(a => a.id !== id);
-    save('nda_appointments', next);
-    return { appointments: next };
-  }),
-
-  // ── Coupons ──
-  coupons: load('nda_coupons', couponsData),
-  setCoupons: (coupons) => { save('nda_coupons', coupons); set({ coupons }); },
-  addCoupon: (c) => set(s => {
-    const id = `CPN-${String(s.coupons.length + 1).padStart(2, '0')}`;
-    const next = [{ ...c, id, usedCount: 0, createdAt: new Date().toISOString().split('T')[0] }, ...s.coupons];
-    save('nda_coupons', next);
-    return { coupons: next };
-  }),
-  toggleCoupon: (id) => set(s => {
-    const next = s.coupons.map(c => c.id === id ? { ...c, isActive: !c.isActive } : c);
-    save('nda_coupons', next);
-    return { coupons: next };
-  }),
-  deleteCoupon: (id) => set(s => {
-    const next = s.coupons.filter(c => c.id !== id);
-    save('nda_coupons', next);
-    return { coupons: next };
-  }),
-
-  // ── Playbook checklist ──
-  checklist: load('nda_checklist', { date: null, items: {} }),
-  toggleChecklistItem: (key) => set(s => {
-    const today = new Date().toISOString().split('T')[0];
-    let items = s.checklist.date === today ? { ...s.checklist.items } : {};
-    items[key] = !items[key];
-    const next = { date: today, items };
-    save('nda_checklist', next);
-    return { checklist: next };
-  }),
-
-  // ── Toasts ──
+  darkMode: localStorage.getItem('nda_dark') === 'true',
+  loading: false,
+  error: null,
+  products: [],
+  orders: [],
+  appointments: [],
+  coupons: [],
+  customers: [],
+  settings: DEFAULT_SETTINGS,
+  checklist: { date: null, items: {} },
   toasts: [],
-  addToast: (toast) => set(s => ({
-    toasts: [...s.toasts, { id: Date.now(), ...toast }],
-  })),
-  removeToast: (id) => set(s => ({
-    toasts: s.toasts.filter(t => t.id !== id),
-  })),
 
-  // ── Reset all demo data ──
-  resetAllData: () => {
-    ['nda_products', 'nda_orders', 'nda_appointments', 'nda_coupons', 'nda_settings', 'nda_checklist'].forEach(k => localStorage.removeItem(k));
-    set({
-      products: productsData,
-      orders: ordersData,
-      appointments: appointmentsData,
-      coupons: couponsData,
-      settings: DEFAULT_SETTINGS,
-      checklist: { date: null, items: {} },
+  toggleDark: () => set((state) => {
+    const darkMode = !state.darkMode;
+    localStorage.setItem('nda_dark', String(darkMode));
+    return { darkMode };
+  }),
+
+  loadDashboard: async () => {
+    set({ loading: true });
+    return perform(set, () => adminApi.getDashboard(), (data) => {
+      set({
+        products: data.products || [],
+        orders: data.orders || [],
+        appointments: data.appointments || [],
+        coupons: data.coupons || [],
+        customers: data.customers || [],
+        settings: { ...DEFAULT_SETTINGS, ...data.settings },
+        loading: false
+      });
+    }).then((result) => {
+      if (!result) set({ loading: false });
+      return result;
     });
   },
 
-  // ── Backup / Restore ──
-  exportData: () => {
-    const s = get();
-    return JSON.stringify({
-      products: s.products,
-      orders: s.orders,
-      appointments: s.appointments,
-      coupons: s.coupons,
-      settings: s.settings,
-    }, null, 2);
+  updateSettings: async (patch) => perform(set, () => adminApi.updateSettings(patch), (result) => {
+    set((state) => ({ settings: { ...state.settings, ...result.settings } }));
+  }),
+  resetSettings: async () => {
+    const defaults = { ...DEFAULT_SETTINGS };
+    return get().updateSettings(defaults);
   },
-  importData: (json) => {
+
+  addProduct: async (product) => perform(set, () => adminApi.createProduct(product), (result) => {
+    set((state) => ({ products: [result.product, ...state.products] }));
+  }),
+  updateProduct: async (id, patch) => perform(set, () => adminApi.updateProduct(id, patch), (result) => {
+    set((state) => ({ products: state.products.map((item) => item.id === id ? result.product : item) }));
+  }),
+  deleteProduct: async (id) => perform(set, () => adminApi.deleteProduct(id), () => {
+    set((state) => ({ products: state.products.filter((item) => item.id !== id) }));
+  }),
+  bulkUpdateProducts: async (ids, patch) => perform(set, async () => {
+    const results = await Promise.all(ids.map((id) => adminApi.updateProduct(id, patch)));
+    return results.map((result) => result.product);
+  }, (products) => {
+    const updates = new Map(products.map((product) => [product.id, product]));
+    set((state) => ({ products: state.products.map((product) => updates.get(product.id) || product) }));
+  }),
+  bulkDeleteProducts: async (ids) => perform(set, async () => {
+    await Promise.all(ids.map((id) => adminApi.deleteProduct(id)));
+    return ids;
+  }, (deletedIds) => {
+    const removed = new Set(deletedIds);
+    set((state) => ({ products: state.products.filter((product) => !removed.has(product.id)) }));
+  }),
+
+  updateOrderStatus: async (id, status) => perform(set, () => adminApi.updateOrderStatus(id, status), (result) => {
+    set((state) => ({ orders: state.orders.map((order) => order.id === id ? result.order : order) }));
+  }),
+
+  addAppointment: async (appointment) => perform(set, () => adminApi.createAppointment(appointment), (result) => {
+    set((state) => ({ appointments: [result.appointment, ...state.appointments] }));
+  }),
+  updateAppointment: async (id, patch) => perform(set, () => adminApi.updateAppointment(id, patch), (result) => {
+    set((state) => ({ appointments: state.appointments.map((item) => item.id === id ? result.appointment : item) }));
+  }),
+  deleteAppointment: async (id) => perform(set, () => adminApi.deleteAppointment(id), () => {
+    set((state) => ({ appointments: state.appointments.filter((item) => item.id !== id) }));
+  }),
+
+  addCoupon: async (coupon) => perform(set, () => adminApi.createCoupon(coupon), (result) => {
+    set((state) => ({ coupons: [result.coupon, ...state.coupons] }));
+  }),
+  toggleCoupon: async (id) => {
+    const coupon = get().coupons.find((item) => item.id === id);
+    if (!coupon) return showFailure(set, new Error('Coupon not found'));
+    return perform(set, () => adminApi.updateCoupon(id, { isActive: !coupon.isActive }), (result) => {
+      set((state) => ({ coupons: state.coupons.map((item) => item.id === id ? result.coupon : item) }));
+    });
+  },
+  deleteCoupon: async (id) => perform(set, () => adminApi.deleteCoupon(id), () => {
+    set((state) => ({ coupons: state.coupons.filter((item) => item.id !== id) }));
+  }),
+
+  toggleChecklistItem: (key) => set((state) => {
+    const today = new Date().toISOString().split('T')[0];
+    const items = state.checklist.date === today ? { ...state.checklist.items } : {};
+    items[key] = !items[key];
+    return { checklist: { date: today, items } };
+  }),
+
+  addToast: (toast) => set((state) => ({
+    toasts: [...state.toasts, { id: Date.now(), ...toast }],
+  })),
+  removeToast: (id) => set((state) => ({
+    toasts: state.toasts.filter((toast) => toast.id !== id),
+  })),
+
+  exportData: () => {
+    const { products, orders, appointments, coupons, settings } = get();
+    return JSON.stringify({ products, orders, appointments, coupons, settings }, null, 2);
+  },
+  importData: async (json) => {
     try {
-      const d = JSON.parse(json);
-      if (d.products) { save('nda_products', d.products); }
-      if (d.orders) { save('nda_orders', d.orders); }
-      if (d.appointments) { save('nda_appointments', d.appointments); }
-      if (d.coupons) { save('nda_coupons', d.coupons); }
-      if (d.settings) { save('nda_settings', d.settings); }
-      set({
-        ...(d.products && { products: d.products }),
-        ...(d.orders && { orders: d.orders }),
-        ...(d.appointments && { appointments: d.appointments }),
-        ...(d.coupons && { coupons: d.coupons }),
-        ...(d.settings && { settings: d.settings }),
-      });
-      return true;
-    } catch { return false; }
+      const data = JSON.parse(json);
+      if (!data || typeof data !== 'object' || !data.settings || Array.isArray(data)) return false;
+      const result = await get().updateSettings(data.settings);
+      return Boolean(result);
+    } catch (error) {
+      showFailure(set, error);
+      return false;
+    }
   },
 }));
 

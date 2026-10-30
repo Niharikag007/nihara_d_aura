@@ -1,26 +1,29 @@
 import jwt from 'jsonwebtoken';
 import { errorResponse } from '../utils/responseHelper.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'nihara_luxury_secret_key_2026';
+const getBearerToken = (req) => {
+  const authorization = req.headers.authorization || '';
+  return authorization.startsWith('Bearer ') ? authorization.slice(7).trim() : null;
+};
 
 export const protect = (req, res, next) => {
-  let token;
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-  }
-
-  // Allow active session or dev token
-  if (!token || token === 'jwt_token_sample' || token.startsWith('jwt_nihara')) {
-    req.userId = token?.includes('admin') ? 'usr_admin_nihara' : 'usr_amit_kumar';
-    req.userRole = token?.includes('admin') ? 'admin' : 'user';
-    return next();
-  }
+  const token = getBearerToken(req);
+  if (!token) return errorResponse(res, 'Authentication required', 401);
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded.id || !decoded.role) {
+      return errorResponse(res, 'Invalid authentication token', 401);
+    }
+    const userEmail = typeof decoded.email === 'string' ? decoded.email.trim().toLowerCase() : '';
+    const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+    if (decoded.role === 'admin' && (!adminEmail || userEmail !== adminEmail)) {
+      return errorResponse(res, 'Admin access is not enabled for this account', 403);
+    }
     req.userId = decoded.id;
     req.userRole = decoded.role || 'user';
-    next();
+    req.userEmail = userEmail;
+    return next();
   } catch (err) {
     return errorResponse(res, 'Not authorized to access this resource', 401);
   }
@@ -30,43 +33,12 @@ export const protect = (req, res, next) => {
  * RBAC: Restrict route strictly to Administrator role
  */
 export const protectAdmin = (req, res, next) => {
-  let token = null;
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-  }
-
-  const roleHeader = req.headers['x-user-role'];
-
-  // Check admin token or role header
-  const isAdmin = 
-    token === 'jwt_nihara_token_admin_active' ||
-    (token && token.includes('admin')) ||
-    roleHeader === 'admin';
-
-  if (isAdmin) {
-    req.userId = 'usr_admin_nihara';
-    req.userRole = 'admin';
-    return next();
-  }
-
-  // If JWT token provided, verify role
-  if (token && !token.startsWith('jwt_nihara') && token !== 'jwt_token_sample') {
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      if (decoded.role === 'admin') {
-        req.userId = decoded.id;
-        req.userRole = 'admin';
-        return next();
-      }
-    } catch (err) {
-      // Fall through to 403
+  return protect(req, res, () => {
+    const adminEmail = (process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+    if (!adminEmail) return errorResponse(res, 'Admin email is not configured on the server', 503);
+    if (req.userRole !== 'admin' || req.userEmail !== adminEmail) {
+      return errorResponse(res, 'Admin authorization required', 403);
     }
-  }
-
-  return errorResponse(
-    res, 
-    'Access Denied: Admin authorization required. Customers can only browse and purchase.', 
-    403
-  );
+    return next();
+  });
 };
-
