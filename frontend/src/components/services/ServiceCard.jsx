@@ -40,7 +40,7 @@ export default function ServiceCard({ service }) {
       ];
 
   return (
-    <div className="group bg-white rounded-3xl border border-[#DFBC77]/45 overflow-hidden shadow-sm hover:shadow-2xl hover:border-[#C59B27] transition-all duration-500 flex flex-col will-change-transform transform-gpu hover:-translate-y-1.5">
+    <div className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-[#DFBC77]/45 bg-white shadow-[0_18px_34px_-24px_rgba(88,64,22,0.5)] transition-all duration-500 hover:-translate-y-1.5 hover:border-[#C59B27]/80 hover:shadow-[0_26px_48px_-24px_rgba(88,64,22,0.6)] will-change-transform transform-gpu">
       
       {/* 1. Real Cinematic High-Res Image Banner */}
       <div className="relative aspect-[16/11] w-full overflow-hidden bg-stone-900">
@@ -118,7 +118,7 @@ export default function ServiceCard({ service }) {
 
           <button
             onClick={handleBookNow}
-            className="btn-gold px-4 sm:px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md hover:shadow-xl active:scale-95 transition-all"
+            className="btn-gold px-4 sm:px-5 py-2.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] flex items-center gap-1.5 shadow-md hover:shadow-xl active:scale-95 transition-all"
           >
             <span>Book Now</span>
             <ArrowRight className="w-3.5 h-3.5" />

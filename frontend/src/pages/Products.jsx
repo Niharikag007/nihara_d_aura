@@ -3,6 +3,11 @@ import { useSearchParams } from 'react-router-dom';
 import { Search, Filter, ArrowUpDown, Sparkles, X } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 import ProductCard from '../components/products/ProductCard';
+import {
+  ARTIFICIAL_JEWELLERY,
+  isArtificialJewellery,
+  matchesJewellerySubcategory
+} from '../data/jewelleryCategories';
 
 export default function Products() {
   const { products } = useProducts();
@@ -33,36 +38,30 @@ export default function Products() {
     if (searchParam) setSearchQuery(searchParam);
   }, [searchParam]);
 
-  const categories = ['All', 'Jewellery', 'Makeup', 'Nails', 'Candles'];
+  const categories = ['All', ARTIFICIAL_JEWELLERY.name, 'Makeup', 'Nails', 'Candles'];
 
   const subcategoriesMap = {
-    Jewellery: [
-      'All Jewellery',
-      'Royal Kundan Haar',
-      'Temple Gold Jhumkas',
-      'Nakshi Temple Kada',
-      'Lakshmi Gold Locket',
-      'Gold Ganesha Pendant',
-      'Evil Eye Pendant',
-      'Sacred Om Locket',
-      'Kundan Chandbalis'
-    ],
+    [ARTIFICIAL_JEWELLERY.name]: [`All ${ARTIFICIAL_JEWELLERY.name}`, ...ARTIFICIAL_JEWELLERY.subcategories],
     Makeup: ['All Makeup', 'Face Foundations', 'Lipsticks & Gloss', 'Eyeshadow Palettes', 'Blushes & Highlighters'],
     Nails: ['All Nails', 'Press-On Kits', 'Gel Lacquer', 'Chrome Nail Art', 'Cuticle Elixirs'],
     Candles: ['All Candles', 'Soy Wax Jar Candles', 'Reed Diffusers', 'Aroma Room Sprays', 'Wax Melts']
   };
 
   // Determine subcategories for currently active category
-  const availableSubcategories = activeCategory === 'All'
+  const availableSubcategories = activeCategory.toLowerCase() === 'all'
     ? []
-    : (subcategoriesMap[Object.keys(subcategoriesMap).find(k => k.toLowerCase() === activeCategory.toLowerCase())] || []);
+    : isArtificialJewellery(activeCategory)
+      ? subcategoriesMap[ARTIFICIAL_JEWELLERY.name]
+      : (subcategoriesMap[Object.keys(subcategoriesMap).find(k => k.toLowerCase() === activeCategory.toLowerCase())] || []);
 
   // Filtering & Sorting
   let filtered = products.filter((p) => {
     // Category filter
-    if (activeCategory.toLowerCase() !== 'all' && 
-        p.category.toLowerCase() !== activeCategory.toLowerCase() &&
-        p.categorySlug.toLowerCase() !== activeCategory.toLowerCase()) {
+    if (activeCategory.toLowerCase() !== 'all' &&
+        (isArtificialJewellery(activeCategory)
+          ? !isArtificialJewellery(p)
+          : (p.category || '').toLowerCase() !== activeCategory.toLowerCase() &&
+            (p.categorySlug || '').toLowerCase() !== activeCategory.toLowerCase())) {
       return false;
     }
     // Subcategory filter
@@ -71,16 +70,20 @@ export default function Products() {
       const active = activeSubcategory.toLowerCase().trim();
       const pSub = (p.subcategory || '').toLowerCase().trim();
       const pName = (p.name || '').toLowerCase();
-      const isMatch = pSub === active || pSub.includes(active) || active.includes(pSub) || pName.includes(active);
+      const isMatch = isArtificialJewellery(activeCategory) &&
+          ARTIFICIAL_JEWELLERY.subcategories.includes(activeSubcategory)
+        ? matchesJewellerySubcategory(p, activeSubcategory)
+        : pSub === active || pSub.includes(active) || active.includes(pSub) || pName.includes(active);
       if (!isMatch) return false;
     }
     // Search query filter
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
-      const matchName = p.name.toLowerCase().includes(q);
-      const matchCat = p.category.toLowerCase().includes(q);
+      const matchName = (p.name || '').toLowerCase().includes(q);
+      const matchCat = (p.category || '').toLowerCase().includes(q)
+        || (isArtificialJewellery(p) && ARTIFICIAL_JEWELLERY.name.toLowerCase().includes(q));
       const matchSub = p.subcategory?.toLowerCase().includes(q);
-      const matchDesc = p.description.toLowerCase().includes(q);
+      const matchDesc = (p.description || '').toLowerCase().includes(q);
       if (!matchName && !matchCat && !matchSub && !matchDesc) return false;
     }
     // Price filters
@@ -141,7 +144,7 @@ export default function Products() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#1C1917]">
-            {activeCategory === 'All' ? 'All Products' : `${activeCategory} Collection`}
+            {activeCategory.toLowerCase() === 'all' ? 'All Products' : `${isArtificialJewellery(activeCategory) ? ARTIFICIAL_JEWELLERY.name : activeCategory} Collection`}
           </h1>
           <p className="text-xs text-stone-500 mt-0.5">
             {filtered.length} Items Found {activeSubcategory && !activeSubcategory.startsWith('All') ? `in "${activeSubcategory}"` : ''}

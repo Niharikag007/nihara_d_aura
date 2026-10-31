@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProductProvider } from './context/ProductContext';
@@ -17,39 +17,40 @@ import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import MobileBottomNav from './components/common/MobileBottomNav';
 import CartDrawer from './components/cart/CartDrawer';
+import WhatsAppButton from './components/common/WhatsAppButton';
 
 // Storefront Pages
-import Home from './pages/Home';
-import Products from './pages/Products';
-import ProductDetails from './pages/ProductDetails';
-import Categories from './pages/Categories';
-import Services from './pages/Services';
-import Booking from './pages/Booking';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout';
-import Wishlist from './pages/Wishlist';
-import Profile from './pages/Profile';
-import Orders from './pages/Orders';
-import Bookings from './pages/Bookings';
-import Addresses from './pages/Addresses';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import VerifyOTP from './pages/VerifyOTP';
+const Home = lazy(() => import('./pages/Home'));
+const Products = lazy(() => import('./pages/Products'));
+const ProductDetails = lazy(() => import('./pages/ProductDetails'));
+const Categories = lazy(() => import('./pages/Categories'));
+const Services = lazy(() => import('./pages/Services'));
+const Booking = lazy(() => import('./pages/Booking'));
+const Cart = lazy(() => import('./pages/Cart'));
+const Checkout = lazy(() => import('./pages/Checkout'));
+const Wishlist = lazy(() => import('./pages/Wishlist'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Orders = lazy(() => import('./pages/Orders'));
+const Bookings = lazy(() => import('./pages/Bookings'));
+const Addresses = lazy(() => import('./pages/Addresses'));
+const Login = lazy(() => import('./pages/Login'));
+const Register = lazy(() => import('./pages/Register'));
+const VerifyOTP = lazy(() => import('./pages/VerifyOTP'));
 
 // Admin Console Layout & Pages
-import AdminLayout from './components/admin/AdminLayout';
-import Overview from './pages/admin/Overview';
-import Analytics from './pages/admin/Analytics';
-import AdminProducts from './pages/admin/Products';
-import AdminCategories from './pages/admin/Categories';
-import AdminInventory from './pages/admin/Inventory';
-import AdminServices from './pages/admin/Services';
-import AdminOrders from './pages/admin/Orders';
-import AdminAppointments from './pages/admin/Appointments';
-import AdminCoupons from './pages/admin/Coupons';
-import AdminCustomers from './pages/admin/Customers';
-import AdminPlaybook from './pages/admin/Playbook';
-import AdminSettings from './pages/admin/Settings';
+const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
+const Overview = lazy(() => import('./pages/admin/Overview'));
+const Analytics = lazy(() => import('./pages/admin/Analytics'));
+const AdminProducts = lazy(() => import('./pages/admin/Products'));
+const AdminCategories = lazy(() => import('./pages/admin/Categories'));
+const AdminInventory = lazy(() => import('./pages/admin/Inventory'));
+const AdminServices = lazy(() => import('./pages/admin/Services'));
+const AdminOrders = lazy(() => import('./pages/admin/Orders'));
+const AdminAppointments = lazy(() => import('./pages/admin/Appointments'));
+const AdminCoupons = lazy(() => import('./pages/admin/Coupons'));
+const AdminCustomers = lazy(() => import('./pages/admin/Customers'));
+const AdminPlaybook = lazy(() => import('./pages/admin/Playbook'));
+const AdminSettings = lazy(() => import('./pages/admin/Settings'));
 
 // Protected Admin Route Component
 function ProtectedAdminRoute({ children }) {
@@ -80,55 +81,65 @@ function AppLayout() {
 
       {/* Main Page Body */}
       <main className={`flex-1 ${!isAdmin ? 'pb-16 md:pb-0' : ''}`}>
-        <Routes>
-          {/* ── Public Storefront Routes ── */}
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/products/:id" element={<ProductDetails />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/categories/:slug" element={<Products />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/services/:id" element={<Services />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Suspense
+          fallback={
+            <div className="flex min-h-[50vh] items-center justify-center" role="status" aria-live="polite">
+              <span className="rounded-full border border-[#DFBC77]/50 bg-white/80 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#855F14] shadow-sm">
+                Loading Nihara D'Aura...
+              </span>
+            </div>
+          }
+        >
+          <Routes>
+            {/* ── Public Storefront Routes ── */}
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/categories/:slug" element={<Products />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/services/:id" element={<Services />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/verify-otp" element={<VerifyOTP />} />
 
-          {/* ── Admin Console (Dedicated Luxury Layout with 9 Pages) - Protected Route */}
-          <Route path="/admin" element={
-            <ProtectedAdminRoute>
-              <AdminLayout />
-            </ProtectedAdminRoute>
-          }>
-            <Route index element={<Overview />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="categories" element={<AdminCategories />} />
-            <Route path="inventory" element={<AdminInventory />} />
-            <Route path="services" element={<AdminServices />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="appointments" element={<AdminAppointments />} />
-            <Route path="coupons" element={<AdminCoupons />} />
-            <Route path="customers" element={<AdminCustomers />} />
-            <Route path="playbook" element={<AdminPlaybook />} />
-            <Route path="settings" element={<AdminSettings />} />
-          </Route>
+            {/* ── Admin Console (Dedicated Luxury Layout with 9 Pages) - Protected Route */}
+            <Route path="/admin" element={
+              <ProtectedAdminRoute>
+                <AdminLayout />
+              </ProtectedAdminRoute>
+            }>
+              <Route index element={<Overview />} />
+              <Route path="analytics" element={<Analytics />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="categories" element={<AdminCategories />} />
+              <Route path="inventory" element={<AdminInventory />} />
+              <Route path="services" element={<AdminServices />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="appointments" element={<AdminAppointments />} />
+              <Route path="coupons" element={<AdminCoupons />} />
+              <Route path="customers" element={<AdminCustomers />} />
+              <Route path="playbook" element={<AdminPlaybook />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
 
-          {/* ── Customer Portal Routes ── */}
-          <Route path="/book" element={<Booking />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/edit" element={<Profile />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/orders/:id" element={<Orders />} />
-          <Route path="/bookings" element={<Bookings />} />
-          <Route path="/bookings/:id" element={<Bookings />} />
-          <Route path="/addresses" element={<Addresses />} />
+            {/* ── Customer Portal Routes ── */}
+            <Route path="/book" element={<Booking />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/edit" element={<Profile />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/orders/:id" element={<Orders />} />
+            <Route path="/bookings" element={<Bookings />} />
+            <Route path="/bookings/:id" element={<Bookings />} />
+            <Route path="/addresses" element={<Addresses />} />
 
-          {/* Catch-all redirect */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            {/* Catch-all redirect */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </main>
 
       {/* Global Storefront Cart & Footer (hidden on /admin routes) */}
@@ -136,6 +147,7 @@ function AppLayout() {
         <>
           <CartDrawer />
           <MobileBottomNav />
+          <WhatsAppButton />
           <Footer />
         </>
       )}

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   Sparkles, 
   Crown, 
@@ -8,7 +8,6 @@ import {
   Scissors, 
   Gem, 
   Flame, 
-  Heart,
   Palette,
   ShieldCheck,
   Truck,
@@ -20,20 +19,24 @@ import {
   Camera,
   Mail,
   UserCheck,
-  ShoppingBag,
-  MapPin
+  ShoppingBag
 } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 import { useServices } from '../context/ServiceContext';
 import ProductCard from '../components/products/ProductCard';
 import ServiceCard from '../components/services/ServiceCard';
 import HeroSlider from '../components/common/HeroSlider';
+import {
+  ARTIFICIAL_JEWELLERY,
+  isArtificialJewellery,
+  matchesJewellerySubcategory
+} from '../data/jewelleryCategories';
 
 export default function Home() {
   const { products } = useProducts();
   const { services } = useServices();
-  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('All');
+  const [activeSubcategory, setActiveSubcategory] = useState('All');
   const [patronTab, setPatronTab] = useState('bestsellers'); // 'bestsellers' | 'featured'
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
@@ -41,7 +44,7 @@ export default function Home() {
   const categories = [
     { label: 'All', icon: Sparkles },
     { label: 'Makeup', icon: Palette },
-    { label: 'Jewellery', icon: Gem },
+    { label: ARTIFICIAL_JEWELLERY.name, icon: Gem },
     { label: 'Nails', icon: Scissors },
     { label: 'Candles', icon: Flame },
   ];
@@ -61,7 +64,7 @@ export default function Home() {
         '18k-gold-turquoise-evil-eye-talisman-pendant'
       ];
 
-      const jewelleryProducts = allUniqueProducts.filter(p => p.category?.toLowerCase() === 'jewellery');
+      const jewelleryProducts = allUniqueProducts.filter(isArtificialJewellery);
       
       jewelleryProducts.sort((a, b) => {
         const aIdx = prioritySlugs.indexOf(a.slug);
@@ -72,11 +75,23 @@ export default function Home() {
         return (b.price || 0) - (a.price || 0);
       });
 
-      const otherProducts = allUniqueProducts.filter(p => p.category?.toLowerCase() !== 'jewellery');
+      const otherProducts = allUniqueProducts.filter(p => !isArtificialJewellery(p));
       return [...jewelleryProducts, ...otherProducts];
     }
-    return allUniqueProducts.filter(p => p.category?.toLowerCase() === activeCategory.toLowerCase());
-  }, [activeCategory, allUniqueProducts]);
+    const categoryProducts = isArtificialJewellery(activeCategory)
+      ? allUniqueProducts.filter(isArtificialJewellery)
+      : allUniqueProducts.filter(p => p.category?.toLowerCase() === activeCategory.toLowerCase());
+
+    if (
+      isArtificialJewellery(activeCategory) &&
+      activeSubcategory !== 'All' &&
+      ARTIFICIAL_JEWELLERY.subcategories.includes(activeSubcategory)
+    ) {
+      return categoryProducts.filter(product => matchesJewellerySubcategory(product, activeSubcategory));
+    }
+
+    return categoryProducts;
+  }, [activeCategory, activeSubcategory, allUniqueProducts]);
 
   const bestsellerProducts = allUniqueProducts.filter(p => p.isBestseller);
   const featuredProducts = allUniqueProducts.filter(p => p.isFeatured);
@@ -98,10 +113,10 @@ export default function Home() {
       date: "Wedding • Oct 2026",
       tag: "ROYAL WEDDING",
       rating: 5,
-      comment: "The Royal Kundan Haar set for my wedding was mesmerizing! The 24K gold foil and polki craftsmanship stunned everyone in our mandap. Included full Swiss hallmark certification and custom velvet chest.",
+      comment: "The Royal Kundan-inspired Haar set for my wedding was mesmerizing! Its intricate detailing and traditional style complemented my bridal look beautifully.",
       avatar: "/hero-slide-1.jpg",
       reviewImage: "/hero-slide-1.jpg",
-      boughtItem: "Royal 22K Gold Kundan Bridal Haar",
+      boughtItem: "Royal Kundan-Inspired Bridal Haar",
       itemType: "Jewellery"
     },
     {
@@ -126,10 +141,10 @@ export default function Home() {
       date: "Festive Collector • Aug 2026",
       tag: "GOLD HEIRLOOM",
       rating: 5,
-      comment: "The 22K Solid Gold Peacock Jhumkas and Lakshmi Coin Locket are heirlooms I will pass down to my daughter. The weight, balance, and BIS hallmark purity are absolutely genuine.",
+      comment: "The Peacock Jhumkas and Lakshmi Coin Locket added a beautiful traditional touch to my festive outfits. I love how easy they are to style.",
       avatar: "/hero-slide-5.jpg",
       reviewImage: "/hero-slide-5.jpg",
-      boughtItem: "22K Peacock Jhumkas & Lakshmi Locket",
+      boughtItem: "Peacock Jhumkas & Lakshmi Locket",
       itemType: "Jewellery"
     }
   ];
@@ -143,7 +158,7 @@ export default function Home() {
     },
     {
       id: 2,
-      title: "22K Solid Gold Peacock Jhumkas",
+      title: "Peacock Jhumkas & Lakshmi Locket",
       tag: "#NiharaGoldHeirlooms",
       image: "/hero-slide-3.jpg"
     },
@@ -169,6 +184,48 @@ export default function Home() {
         <HeroSlider />
       </section>
 
+      <section className="px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <div className="max-w-7xl mx-auto premium-section">
+          <div className="text-center max-w-3xl mx-auto">
+            <span className="section-eyebrow">Luxury Experience</span>
+            <h2 className="section-title">Crafted for your most precious moments</h2>
+          </div>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {[
+              {
+                icon: Crown,
+                title: 'Heirloom Craftsmanship',
+                text: 'Each piece balances statement design, distinctive detailing and contemporary elegance for lasting beauty.'
+              },
+              {
+                icon: Sparkles,
+                title: 'Bridal Styling',
+                text: 'From bridal makeup to final finishing touches, every detail is tailored for confidence and camera-ready glow.'
+              },
+              {
+                icon: ShieldCheck,
+                title: 'Thoughtful Details',
+                text: 'Carefully selected fashion jewellery and premium beauty products make every order feel special.'
+              },
+              {
+                icon: Truck,
+                title: 'Seamless Delivery',
+                text: 'Pan-India care, insured shipping and expert support keep every luxury purchase stress-free.'
+              }
+            ].map(({ icon: Icon, title, text }) => (
+              <div key={title} className="premium-card">
+                <span className="premium-card-icon">
+                  <Icon className="w-5 h-5" />
+                </span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 2. Luxury Guarantees & Perks Bar */}
       <section className="bg-stone-900 border-y border-[#DFBC77]/30 text-amber-100 py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center md:text-left">
@@ -178,8 +235,8 @@ export default function Home() {
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-200">100% Hallmarked Gold</h4>
-              <p className="text-[10px] text-stone-400 font-light">Certified 22K/24K BIS Purity</p>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-200">Statement Fashion Jewellery</h4>
+              <p className="text-[10px] text-stone-400 font-light">Styles for everyday and special occasions</p>
             </div>
           </div>
 
@@ -222,7 +279,7 @@ export default function Home() {
           
           {/* Banner 1: NEW ARRIVALS */}
           <Link 
-            to="/products?category=Jewellery" 
+            to={`/products?category=${encodeURIComponent(ARTIFICIAL_JEWELLERY.name)}`}
             className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block w-[84vw] sm:w-[65vw] md:w-auto flex-shrink-0 snap-center"
           >
             <img 
@@ -244,7 +301,7 @@ export default function Home() {
             </div>
           </Link>
 
-          {/* Banner 2: BEST SELLERS (Fixed Broken Image & Elevated to Real 22K Kundan Heirlooms) */}
+          {/* Banner 2: Best-selling fashion jewellery */}
           <Link 
             to="/products" 
             className="group relative h-64 sm:h-72 rounded-2xl overflow-hidden shadow-lg border border-[#DFBC77]/40 block w-[84vw] sm:w-[65vw] md:w-auto flex-shrink-0 snap-center"
@@ -257,7 +314,7 @@ export default function Home() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 via-stone-950/40 to-transparent flex flex-col justify-end p-6 text-center items-center">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-300 mb-1">
-                22K Certified Heirlooms
+                Signature Fashion Jewellery
               </span>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-white uppercase tracking-wider mb-2 drop-shadow">
                 BEST SELLERS
@@ -308,14 +365,12 @@ export default function Home() {
 
         <div className="flex gap-3.5 sm:gap-4 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
           {[
-            { name: 'Royal Kundan Haar', tag: 'Bridal Heritage', img: null, cat: 'Jewellery', subcat: 'Royal Kundan Haar' },
-            { name: 'Temple Gold Jhumkas', tag: '22K Hallmarked', img: null, cat: 'Jewellery', subcat: 'Temple Gold Jhumkas' },
-            { name: 'Nakshi Temple Kada', tag: 'Antique Handcrafted', img: null, cat: 'Jewellery', subcat: 'Nakshi Temple Kada' },
-            { name: 'Lakshmi Gold Locket', tag: 'Auspicious Polki', img: null, cat: 'Jewellery', subcat: 'Lakshmi Gold Locket' },
-            { name: 'Gold Ganesha Pendant', tag: 'Divine Blessing', img: null, cat: 'Jewellery', subcat: 'Gold Ganesha Pendant' },
-            { name: 'Evil Eye Pendant', tag: 'Turquoise 22K', img: null, cat: 'Jewellery', subcat: 'Evil Eye Pendant' },
-            { name: 'Sacred Om Locket', tag: 'Spiritual Grace', img: null, cat: 'Jewellery', subcat: 'Sacred Om Locket' },
-            { name: 'Kundan Chandbalis', tag: 'Jaipur Meenakari', img: null, cat: 'Jewellery', subcat: 'Kundan Chandbalis' },
+            { name: 'Earrings', tag: 'Statement Styles', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Earrings' },
+            { name: 'Necklaces & Sets', tag: 'For Every Occasion', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Necklaces & Sets' },
+            { name: 'Rings', tag: 'Everyday Elegance', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Rings' },
+            { name: 'Bangles & Bracelets', tag: 'Style Your Stack', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Bangles & Bracelets' },
+            { name: 'Pendants', tag: 'Meaningful Details', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Pendants' },
+            { name: 'Bridal Jewellery', tag: 'Celebration Edit', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Bridal Jewellery' },
             { name: 'Silk Foundation', tag: 'Weightless HD', img: '/hero-slide-2.jpg', cat: 'Makeup', subcat: 'Face Foundations' },
             { name: 'Press-On Nails', tag: 'Salon Art Suite', img: '/images/nails/nail_img_1.png', cat: 'Nails', subcat: 'Press-On Kits' },
             { name: 'Mogra Candles', tag: 'Pure Soy Wax', img: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=400&q=80', cat: 'Candles', subcat: 'Soy Wax Jar Candles' },
@@ -343,7 +398,7 @@ export default function Home() {
                     ) : (
                       <div className="flex flex-col items-center justify-center p-2 text-center select-none">
                         <Sparkles className="w-7 h-7 sm:w-8 sm:h-8 text-[#C59B27] drop-shadow-sm group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500" />
-                        <span className="text-[8px] font-serif font-bold text-[#855F14] tracking-wider uppercase mt-1">22K Gold</span>
+                        <span className="text-[8px] font-serif font-bold text-[#855F14] tracking-wider uppercase mt-1">Fashion</span>
                       </div>
                     )}
                   </div>
@@ -388,7 +443,10 @@ export default function Home() {
             return (
               <button
                 key={cat.label}
-                onClick={() => setActiveCategory(cat.label)}
+                onClick={() => {
+                  setActiveCategory(cat.label);
+                  setActiveSubcategory('All');
+                }}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wide transition-all whitespace-nowrap shadow-sm ${
                   isActive
                     ? 'bg-[#A67C37] text-white shadow-md scale-105 ring-2 ring-[#C59B27]/40'
@@ -401,6 +459,29 @@ export default function Home() {
             );
           })}
         </div>
+
+        {isArtificialJewellery(activeCategory) && (
+          <div className="flex items-center gap-2 overflow-x-auto border-b border-[#DFBC77]/30 pb-3 scrollbar-none">
+            {['All', ...ARTIFICIAL_JEWELLERY.subcategories].map((subcategory) => {
+              const isActive = activeSubcategory === subcategory;
+              return (
+                <button
+                  key={subcategory}
+                  type="button"
+                  onClick={() => setActiveSubcategory(subcategory)}
+                  aria-pressed={isActive}
+                  className={`whitespace-nowrap rounded-full border px-3.5 py-2 text-[11px] font-semibold transition-colors ${
+                    isActive
+                      ? 'border-[#A67C37] bg-[#A67C37] text-white shadow-sm'
+                      : 'border-[#EADECF] bg-white text-[#554D44] hover:border-[#DFBC77] hover:bg-[#FCF9F2]'
+                  }`}
+                >
+                  {subcategory === 'All' ? 'All Artificial Jewellery' : subcategory}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* Display 5 products for selected category (Mobile Horizontal Slide & Desktop Grid) */}
         <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-5 pt-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
@@ -429,7 +510,7 @@ export default function Home() {
               </h2>
 
               <p className="text-xs sm:text-sm text-amber-100/90 leading-relaxed font-light max-w-lg">
-                Pair authentic 22K Kundan haar sets with our signature 16-hour sweatproof HD Airbrush Makeup for your wedding functions.
+                Pair statement Kundan-inspired fashion jewellery with our signature HD Airbrush Makeup for your wedding functions.
               </p>
 
               <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-4">
@@ -441,10 +522,10 @@ export default function Home() {
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link
-                  to="/products?category=Jewellery"
+                  to={`/products?category=${encodeURIComponent(ARTIFICIAL_JEWELLERY.name)}`}
                   className="px-7 py-3.5 rounded-full text-xs uppercase tracking-wider font-semibold bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white transition-all"
                 >
-                  Explore Real Gold Haar
+                  Explore Bridal Jewellery
                 </Link>
               </div>
             </div>
@@ -452,13 +533,13 @@ export default function Home() {
             <div className="relative z-10 aspect-[4/3] rounded-2xl overflow-hidden border-4 border-amber-300/30 shadow-2xl">
               <img
                 src="/user-red-bride.jpg"
-                alt="Nihara Royal Red Lehenga Indian Bride in Gold Kundan Jewellery"
+                alt="Nihara Royal Red Lehenga Indian Bride in Kundan-inspired Fashion Jewellery"
                 className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute bottom-3 left-3 right-3 p-3 bg-black/60 backdrop-blur-md rounded-xl border border-white/20 flex items-center justify-between text-xs">
                 <div>
-                  <p className="font-bold text-white">22K Royal Gold Kundan Haar</p>
-                  <p className="text-[10px] text-amber-200">BIS Hallmarked • Jaipur Craftsmanship</p>
+                  <p className="font-bold text-white">Kundan-Inspired Bridal Haar</p>
+                  <p className="text-[10px] text-amber-200">Statement bridal fashion jewellery</p>
                 </div>
                 <span className="font-bold text-amber-300">₹38,500</span>
               </div>

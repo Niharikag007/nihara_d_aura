@@ -84,21 +84,20 @@ export default function Checkout() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent py-8 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto">
-      
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
+    <div className="mx-auto min-h-screen max-w-4xl bg-transparent px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mb-6 flex items-center gap-3">
         <button
           onClick={() => navigate(-1)}
-          className="p-1.5 rounded-full hover:bg-stone-200 text-stone-600 transition-colors"
+          className="rounded-full p-1.5 text-stone-600 transition-colors hover:bg-stone-200"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="h-5 w-5" />
         </button>
         <div>
-          <h1 className="font-serif text-2xl font-bold text-[#1C1917]">
+          <span className="section-eyebrow">Secure checkout</span>
+          <h1 className="mt-2 font-serif text-3xl font-bold text-[#1C1917] sm:text-4xl">
             Checkout & Secure Payment
           </h1>
-          <p className="text-xs text-stone-500">Fast 256-Bit SSL Encrypted Checkout</p>
+          <p className="mt-1 text-xs text-stone-500">Fast 256-Bit SSL Encrypted Checkout</p>
         </div>
       </div>
 
@@ -110,12 +109,12 @@ export default function Checkout() {
         )}
         
         {/* 1. Delivery Address Card matching APK */}
-        <div className="bg-white rounded-2xl p-5 border border-[#DFBC77]/40 shadow-sm space-y-4">
+        <div className="rounded-[1.75rem] border border-[#DFBC77]/40 bg-white p-5 shadow-[0_18px_32px_-28px_rgba(78,59,17,0.5)] space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-700 flex items-center gap-1.5">
+            <h2 className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-700">
               <span>Delivery Address</span>
             </h2>
-            <span className="text-[11px] font-semibold text-[#855F14] bg-[#FCF9F2] px-2.5 py-0.5 rounded-full border border-[#DFBC77]/40">
+            <span className="rounded-full border border-[#DFBC77]/40 bg-[#FCF9F2] px-2.5 py-0.5 text-[11px] font-semibold text-[#855F14]">
               Verified Location
             </span>
           </div>
@@ -154,13 +153,13 @@ export default function Checkout() {
         </div>
 
         {/* 2. Payment Method Card (Online + COD) */}
-        <div className="bg-white rounded-2xl p-5 border border-[#DFBC77]/40 shadow-sm space-y-3">
+        <div className="rounded-[1.75rem] border border-[#DFBC77]/40 bg-white p-5 shadow-[0_18px_32px_-28px_rgba(78,59,17,0.5)] space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-stone-700">
+            <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-700">
               Select Payment Gateway / Option
             </h2>
-            <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-              <ShieldCheck className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700">
+              <ShieldCheck className="h-3.5 w-3.5" />
               100% Safe Payment
             </div>
           </div>
@@ -204,8 +203,8 @@ export default function Checkout() {
         </div>
 
         {/* 3. Order Summary Card matching APK */}
-        <div className="bg-white rounded-2xl p-5 border border-[#DFBC77]/40 shadow-sm space-y-3">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-stone-700">
+        <div className="rounded-[1.75rem] border border-[#DFBC77]/40 bg-white p-5 shadow-[0_18px_32px_-28px_rgba(78,59,17,0.5)] space-y-3">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-700">
             Order Summary
           </h2>
 
@@ -237,15 +236,15 @@ export default function Checkout() {
         <button
           onClick={handleInitiatePayment}
           disabled={isPlacingOrder}
-          className="w-full btn-gold py-4 rounded-2xl text-xs uppercase tracking-widest font-bold shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+          className="btn-gold flex w-full items-center justify-center gap-2 rounded-[1.5rem] py-4 text-[10px] font-bold uppercase tracking-[0.2em] shadow-lg hover:shadow-xl"
         >
-          <Lock className="w-4 h-4" />
+          <Lock className="h-4 w-4" />
           <span>
             {paymentMethod === 'Cash on Delivery'
               ? `Confirm Cash on Delivery Order (₹${totalAmount.toLocaleString('en-IN')})`
               : `Proceed to Pay (₹${totalAmount.toLocaleString('en-IN')})`}
           </span>
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="h-4 w-4" />
         </button>
 
       </div>

@@ -30,20 +30,18 @@ export const initialData = {
     },
     {
       "id": "cat_jewellery",
-      "name": "22K Real Gold & Diamond Jewellery",
+      "name": "Artificial Jewellery",
       "slug": "jewellery",
       "itemCount": 30,
       "image": "/images/products/jewellery_royal_kundan_haar.jpg",
-      "description": "BIS 22K/18K Hallmarked gold jhumkas, bridal haar sets, 24K gold lockets & pendants, solitaire rings, and antique gold bangles.",
+      "description": "Statement fashion jewellery for everyday wear, celebrations, and bridal looks.",
       "subcategories": [
-        "Royal Kundan Haar",
-        "Temple Gold Jhumkas",
-        "Nakshi Temple Kada",
-        "Lakshmi Gold Locket",
-        "Gold Ganesha Pendant",
-        "Evil Eye Pendant",
-        "Sacred Om Locket",
-        "Kundan Chandbalis"
+        "Earrings",
+        "Necklaces & Sets",
+        "Rings",
+        "Bangles & Bracelets",
+        "Pendants",
+        "Bridal Jewellery"
       ]
     },
     {

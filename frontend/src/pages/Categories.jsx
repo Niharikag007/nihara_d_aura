@@ -1,11 +1,22 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
+import { ARTIFICIAL_JEWELLERY, isArtificialJewellery } from '../data/jewelleryCategories';
 
 export default function Categories() {
-  const navigate = useNavigate();
   const { categories, loading } = useServices();
+  const displayCategories = categories.map((category) => (
+    isArtificialJewellery(category.slug || category.name)
+      ? {
+          ...category,
+          name: ARTIFICIAL_JEWELLERY.name,
+          slug: ARTIFICIAL_JEWELLERY.slug,
+          description: ARTIFICIAL_JEWELLERY.description,
+          subcategories: ARTIFICIAL_JEWELLERY.subcategories
+        }
+      : category
+  ));
 
   return (
     <div className="min-h-screen bg-transparent py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -20,7 +31,7 @@ export default function Categories() {
           Explore Categories
         </h1>
         <p className="text-xs sm:text-sm text-stone-500 mt-2 leading-relaxed">
-          From certified Kundan jewellery to weightless silk formulations and private salon rituals.
+          From statement fashion jewellery to weightless silk formulations and private salon rituals.
         </p>
       </div>
 
@@ -33,7 +44,7 @@ export default function Categories() {
       ) : (
         /* Categories Grid / Stack */
         <div className="space-y-6">
-          {categories.map((cat) => (
+          {displayCategories.map((cat) => (
           <div
             key={cat.id}
             className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-[#DFBC77]/40 bg-white"
@@ -63,7 +74,7 @@ export default function Categories() {
                 </div>
 
                 <Link
-                  to={`/products?category=${encodeURIComponent(cat.slug)}`}
+                  to={`/products?category=${encodeURIComponent(isArtificialJewellery(cat.slug) ? ARTIFICIAL_JEWELLERY.name : cat.slug)}`}
                   className="btn-gold px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider self-start sm:self-auto flex items-center gap-1.5"
                 >
                   <span>Explore All</span>
@@ -80,7 +91,7 @@ export default function Categories() {
               {cat.subcategories.map((sub, i) => (
                 <Link
                   key={i}
-                  to={`/products?category=${encodeURIComponent(cat.slug)}&subcategory=${encodeURIComponent(sub)}`}
+                  to={`/products?category=${encodeURIComponent(isArtificialJewellery(cat.slug) ? ARTIFICIAL_JEWELLERY.name : cat.slug)}&subcategory=${encodeURIComponent(sub)}`}
                   className="text-xs bg-white text-stone-700 hover:text-[#855F14] hover:bg-amber-50 px-3 py-1.5 rounded-full border border-stone-200 hover:border-[#DFBC77] transition-all font-medium"
                 >
                   {sub}

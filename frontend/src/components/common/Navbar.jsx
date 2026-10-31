@@ -82,7 +82,7 @@ export default function Navbar() {
   const isServicesActive = location.pathname.startsWith('/services');
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-[#E8DFC8] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] transition-colors will-change-transform transform-gpu">
+    <header className="sticky top-0 z-50 border-b border-[#E8DFC8] bg-white/90 backdrop-blur-xl shadow-[0_8px_28px_-18px_rgba(88,64,22,0.45)] transition-colors will-change-transform transform-gpu">
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-1 sm:gap-4">
@@ -93,6 +93,8 @@ export default function Navbar() {
               onClick={toggleMobileMenu} 
               className="lg:hidden p-1.5 sm:p-2 text-[#1C1917] hover:text-[#C59B27] transition-colors flex-shrink-0"
               aria-label="Toggle Navigation Menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation-menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
@@ -120,7 +122,7 @@ export default function Navbar() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`text-sm font-medium tracking-wide transition-colors relative py-1 ${
+                  className={`relative py-1 text-sm font-medium tracking-[0.1em] uppercase transition-colors ${
                     isActive 
                       ? 'text-[#C59B27] font-semibold' 
                       : 'text-[#26221F] hover:text-[#C59B27]'
@@ -128,7 +130,7 @@ export default function Navbar() {
                 >
                   {item.label}
                   {isActive && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#C59B27] rounded-full" />
+                    <span className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full bg-[#C59B27]" />
                   )}
                 </Link>
               );
@@ -166,7 +168,7 @@ export default function Navbar() {
             </div>
             <Link
               to={bookingLink.path}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-xs tracking-wider font-semibold bg-gradient-to-r from-[#D4AF37] to-[#B3861B] text-white shadow-sm hover:shadow-md hover:scale-105 transition-all"
+              className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#B3861B] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-white shadow-[0_12px_20px_-12px_rgba(184,134,11,0.9)] transition-all hover:scale-[1.02] hover:shadow-[0_16px_24px_-12px_rgba(184,134,11,0.95)]"
             >
               <Calendar className="w-3.5 h-3.5" />
               <span>{bookingLink.label}</span>
@@ -179,10 +181,10 @@ export default function Navbar() {
             {/* Search Trigger Button */}
             <button
               onClick={toggleSearch}
-              className={`p-1.5 sm:p-2 rounded-full transition-all ${
+              className={`rounded-full p-1.5 sm:p-2 transition-all ${
                 isSearchOpen 
                   ? 'bg-[#C59B27] text-white shadow-sm' 
-                  : 'text-[#26221F] hover:text-[#C59B27] hover:bg-[#F4ECE1]'
+                  : 'text-[#26221F] hover:bg-[#F4ECE1] hover:text-[#C59B27]'
               }`}
               aria-label={isSearchOpen ? 'Close Search' : 'Open Search'}
               title={isSearchOpen ? 'Close Search' : 'Search catalog'}
@@ -319,7 +321,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#FAF3E6]/98 backdrop-blur-md border-b border-[#E8DFC8] px-4 pt-3 pb-6 space-y-3 animate-fade-in shadow-xl">
+        <div id="mobile-navigation-menu" className="lg:hidden bg-[#FAF3E6]/98 backdrop-blur-md border-b border-[#E8DFC8] px-4 pt-3 pb-6 space-y-3 animate-fade-in shadow-xl">
           {navLinks.map((item) => (
             <Link
               key={item.path}

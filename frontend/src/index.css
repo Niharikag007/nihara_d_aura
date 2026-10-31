@@ -19,6 +19,7 @@
     -moz-osx-font-smoothing: grayscale;
     position: relative;
     text-size-adjust: 100%;
+    background: linear-gradient(180deg, #FFFDF9 0%, #F9F5EE 100%);
   }
 
   /* GPU-composited fixed gradient background — Premium White & Royal Gold Aura */
@@ -80,6 +81,80 @@
 }
 
 /* Luxury Card & Button Components with GPU Acceleration */
+.section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(197, 155, 39, 0.3);
+  background: rgba(255, 249, 240, 0.7);
+  color: #8c6a1b;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  margin-top: 1rem;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  color: #1c1917;
+}
+
+.premium-section {
+  border: 1px solid rgba(223, 188, 119, 0.28);
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(251,247,241,0.95));
+  border-radius: 2rem;
+  box-shadow: 0 22px 60px -32px rgba(90, 63, 11, 0.25);
+  padding: 2rem 1.25rem;
+}
+
+.premium-card {
+  position: relative;
+  height: 100%;
+  border: 1px solid rgba(223, 188, 119, 0.3);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(249,244,236,0.95));
+  border-radius: 1.5rem;
+  padding: 1.4rem 1.2rem;
+  box-shadow: 0 12px 30px -22px rgba(120, 89, 19, 0.45);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.premium-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(197, 155, 39, 0.65);
+  box-shadow: 0 18px 36px -22px rgba(120, 89, 19, 0.52);
+}
+
+.premium-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, rgba(212,175,55,0.18), rgba(255,255,255,0.7));
+  border: 1px solid rgba(197, 155, 39, 0.25);
+  color: #8c6a1b;
+  margin-bottom: 1rem;
+}
+
+.premium-card h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+  color: #1c1917;
+}
+
+.premium-card p {
+  color: #5f5245;
+  font-size: 0.96rem;
+  line-height: 1.6;
+}
+
 .btn-gold {
   background: linear-gradient(135deg, #D4AF37 0%, #B3861B 100%);
   color: #FFFFFF;
@@ -172,6 +247,17 @@
 .animate-slide-left {
   animation: slideLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform;
+}
+
+@media (max-width: 640px) {
+  .premium-section {
+    padding: 1.5rem 1rem;
+    border-radius: 1.5rem;
+  }
+
+  .section-title {
+    letter-spacing: -0.03em;
+  }
 }
 
 
