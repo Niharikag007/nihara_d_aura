@@ -28,20 +28,23 @@ export const mockData = {
     },
     {
       "id": "cat_jewellery",
-      "name": "22K Real Gold & Diamond Jewellery",
+      "name": "Artificial Jewellery",
       "slug": "jewellery",
       "itemCount": 30,
-      "image": "/images/products/jewellery_royal_kundan_haar.jpg",
-      "description": "BIS 22K/18K Hallmarked gold jhumkas, bridal haar sets, 24K gold lockets & pendants, solitaire rings, and antique gold bangles.",
+      "image": "/images/artificial-jewellery/necklaces.jpg",
+      "description": "Fashion jewellery for everyday wear, celebrations, gifting and bridal looks.",
       "subcategories": [
-        "Royal Kundan Haar",
-        "Temple Gold Jhumkas",
-        "Nakshi Temple Kada",
-        "Lakshmi Gold Locket",
-        "Gold Ganesha Pendant",
-        "Evil Eye Pendant",
-        "Sacred Om Locket",
-        "Kundan Chandbalis"
+        "Earrings",
+        "Necklaces & Sets",
+        "Rings",
+        "Bangles & Bracelets",
+        "Pendants",
+        "Bridal Jewellery",
+        "Jewellery Sets",
+        "Couple Jewellery",
+        "Personalised Jewellery",
+        "Anklets",
+        "Gift Boxes"
       ]
     },
     {
@@ -89,7 +92,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/choker-stock-rose.jpg"
       ],
       "description": "Handcrafted in 18K Rose Gold with luminous uncut polki diamonds, emerald accents, and delicate dangling freshwater seed pearls.",
       "variants": [
@@ -121,7 +124,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/choker-stock-diamond.jpg"
       ],
       "description": "A continuous ribbon of brilliant round diamonds prong-set into gleaming 18K rose gold. Designed for breathtaking bridal elegance.",
       "variants": [
@@ -153,7 +156,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/choker-stock-floral.jpg"
       ],
       "description": "Delicate blossoming petals cast in 18K rose gold accented with shimmering zircon crystals and fine filigree lace work.",
       "variants": [
@@ -185,7 +188,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/necklace-editorial.jpg"
       ],
       "description": "Opulent 18K rose gold lattice collar studded with Zambian emerald tear-drops and sparkling champagne diamonds.",
       "variants": [
@@ -217,7 +220,7 @@ export const mockData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1600003014755-ba31aa59c4b6?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/choker-stock-pearl.jpg"
       ],
       "description": "Multiple tiers of lustrous Basra-inspired natural pearls interwoven with hand-engraved 18K rose gold spacers.",
       "variants": [
@@ -249,7 +252,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/products/jewellery_temple_gold_jhumkas.jpg"
+        "/images/artificial-jewellery/earrings.jpg"
       ],
       "description": "Intricately carved 22K solid gold temple jhumka earrings featuring divine peacock motifs, ruby cabochons, and gold bead tassels.",
       "variants": [
@@ -313,7 +316,7 @@ export const mockData = {
       "isFeatured": false,
       "isBestseller": true,
       "images": [
-        "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/studs-stock.jpg"
       ],
       "description": "Classic floral cluster earrings handcrafted in 18K yellow gold with scintillating lab-grown diamond petals.",
       "variants": [
@@ -345,7 +348,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/products/jewellery_temple_gold_jhumkas.jpg"
+        "/images/artificial-jewellery/jhumka-stock-closeup.jpg"
       ],
       "description": "Divine Goddess Lakshmi motif carved in antique 22K gold with ruby accents and delicate gold bead bells.",
       "variants": [
@@ -376,7 +379,7 @@ export const mockData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "/images/products/jewellery_temple_gold_jhumkas.jpg"
+        "/images/artificial-jewellery/jhumka-stock-mehndi.jpg"
       ],
       "description": "Finely spun gold filigree dome jhumkas featuring delicate floral wirework and rhythmic dangling gold beads.",
       "variants": [
@@ -407,7 +410,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/products/jewellery_royal_kundan_haar.jpg"
+        "/images/artificial-jewellery/bridal.jpg"
       ],
       "description": "Grand heritage 22K BIS Hallmarked gold bridal haar adorned with uncut polki diamonds, hand-painted Jaipur meenakari, and ruby drops.",
       "variants": [
@@ -439,7 +442,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/tikka-stock.jpg"
       ],
       "description": "Regal forehead adornment with pure 22K solid gold филигранное carving, Burmese ruby drops, and lustrous pearl chains.",
       "variants": [
@@ -471,7 +474,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/products/jewellery_royal_kundan_haar.jpg"
+        "/images/artificial-jewellery/sets.jpg"
       ],
       "description": "Heirloom bridal set with open-setting Polki diamonds, carved Colombian emerald droplets, and matching Chandbali earrings.",
       "variants": [
@@ -502,7 +505,7 @@ export const mockData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "/images/products/jewellery_royal_kundan_haar.jpg"
+        "/images/artificial-jewellery/necklaces.jpg"
       ],
       "description": "Traditional 22K gold coin Kasu Mala featuring embossed Lakshmi motifs and sparkling kemp stone ruby surrounds.",
       "variants": [
@@ -533,7 +536,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/products/jewellery_royal_kundan_haar.jpg"
+        "/images/artificial-jewellery/personalised.jpg"
       ],
       "description": "Close-fitting royal Rajputi Guluband necklace adorned with red rubies, freshwater pearls, and fine filigree panels.",
       "variants": [
@@ -595,7 +598,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/pendants.jpg"
       ],
       "description": "Contemporary puffed heart pendant crafted in 18K rose gold accented with brilliant micro-pave natural diamonds on an Italian box chain.",
       "variants": [
@@ -721,7 +724,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/products/jewellery_nakshi_temple_kada.jpg"
+        "/images/artificial-jewellery/bangles-stock-ornate.jpg"
       ],
       "description": "Pair of masterfully handcrafted 22K antique gold kangans featuring divine floral jaali work and screw pin side lock.",
       "variants": [
@@ -754,7 +757,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/products/jewellery_nakshi_temple_kada.jpg"
+        "/images/artificial-jewellery/bangles-stock-mehndi.jpg"
       ],
       "description": "Heavy single Kada bracelet with deep-relief Nakshi carving of Goddess Lakshmi flanked by temple elephants.",
       "variants": [
@@ -786,7 +789,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/bangles.jpg"
       ],
       "description": "Set of 4 delicate bridal gold churis studded with Burma ruby florets and micro-beaded gold edges.",
       "variants": [
@@ -818,7 +821,7 @@ export const mockData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "/images/products/jewellery_nakshi_temple_kada.jpg"
+        "/images/artificial-jewellery/bangles-stock-bracelets.jpg"
       ],
       "description": "Exquisite openable bangle crafted with delicate floral wire filigree and pearl cluster terminals.",
       "variants": [
@@ -850,7 +853,7 @@ export const mockData = {
       "isFeatured": false,
       "isBestseller": true,
       "images": [
-        "/images/products/jewellery_nakshi_temple_kada.jpg"
+        "/images/artificial-jewellery/bangles-stock-black.jpg"
       ],
       "description": "Stately 22K antique gold cuff featuring dual confronting peacock heads adorned with synthetic rubies and emeralds.",
       "variants": [
@@ -881,7 +884,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/ring-stock.jpg"
       ],
       "description": "Royal statement ring featuring an uncut natural polki diamond center set in 18K solid yellow gold with delicate leaf filigree prongs.",
       "variants": [
@@ -914,7 +917,7 @@ export const mockData = {
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1603561596112-0a132b757442?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/cocktail-ring-stock.jpg"
       ],
       "description": "Grand circular cocktail ring with 3D raised peacock in 22K gold, accented with emeralds, rubies, and seed pearl border.",
       "variants": [
@@ -945,7 +948,7 @@ export const mockData = {
       "isFeatured": false,
       "isBestseller": true,
       "images": [
-        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/couple.jpg"
       ],
       "description": "Timeless eternity ring featuring continuous micro-pave brilliant diamonds set all around an 18K rose gold band.",
       "variants": [
@@ -978,7 +981,7 @@ export const mockData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1603561596112-0a132b757442?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/ring-detail-stock.jpg"
       ],
       "description": "Auspicious royal ring featuring a natural oval emerald center surrounded by the nine Vedic gemstone energies.",
       "variants": [
@@ -1010,7 +1013,7 @@ export const mockData = {
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=1200&q=85"
+        "/images/artificial-jewellery/rings.jpg"
       ],
       "description": "Subtle everyday luxury signet ring hand-chiselled with lotus motifs into solid 22K yellow gold.",
       "variants": [

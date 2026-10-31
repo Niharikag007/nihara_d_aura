@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import PaymentGatewayModal from '../components/common/PaymentGatewayModal';
+import { getProductImage } from '../data/jewelleryCategories';
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ export default function Checkout() {
         variant: i.variant,
         size: i.size,
         price: (i.product?.price || 0) * i.quantity,
-        image: i.product?.images?.[0]
+        image: getProductImage(i.product)
       })),
       shippingAddress: `${deliveryAddress.fullName}, ${deliveryAddress.streetAddress}`,
       customer: user?.name,
@@ -212,8 +213,8 @@ export default function Checkout() {
             {items.map((item, i) => (
               <div key={i} className="flex justify-between py-1.5 border-b border-stone-100 items-center">
                 <div className="flex items-center gap-2">
-                  {item.product?.images?.[0] && (
-                    <img src={item.product.images[0]} alt="" className="w-8 h-8 object-cover rounded-md" />
+                  {item.product && (
+                    <img src={getProductImage(item.product)} alt="" className="w-8 h-8 object-cover rounded-md" />
                   )}
                   <span className="text-stone-700 font-medium">
                     {item.quantity}x {item.product?.name} ({item.variant})

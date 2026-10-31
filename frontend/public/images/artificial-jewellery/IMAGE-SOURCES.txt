@@ -1,0 +1,38 @@
+These are real stock photographs from Unsplash, used as category/editorial imagery.
+They are not photographs of Nihara D'Aura's exact inventory products.
+
+Unsplash license: https://unsplash.com/license
+
+earrings.jpg: https://images.unsplash.com/photo-1652766540048-de0a878a3266
+necklaces.jpg: https://images.unsplash.com/photo-1694062045776-f48d9b6de57e
+rings.jpg: https://images.unsplash.com/photo-1608042314453-ae338d80c427
+bangles.jpg: https://images.unsplash.com/photo-1601121141461-9d6647bca1ed
+pendants.jpg: https://images.unsplash.com/photo-1599643477877-530eb83abc8e
+bridal.jpg: https://images.unsplash.com/photo-1600685890506-593fdf55949b
+sets.jpg: https://images.unsplash.com/photo-1585960622850-ed33c41d6418
+couple.jpg: https://images.unsplash.com/photo-1511253819057-5408d4d70465
+personalised.jpg: https://images.unsplash.com/photo-1670541481909-0b2c047fb45a
+anklets.jpg: https://images.unsplash.com/photo-1764420068424-9f28e8df9ca5
+gift-boxes.jpg: https://images.unsplash.com/photo-1515562141207-7a88fb7ce338
+
+Additional product-card placeholders (editorial stock only, not exact inventory photography):
+ring-stock.jpg: https://images.unsplash.com/photo-1605100804763-247f67b3557e
+cocktail-ring-stock.jpg: https://images.unsplash.com/photo-1603561596112-0a132b757442
+ring-detail-stock.jpg: https://images.unsplash.com/photo-1617038220319-276d3cfab638
+choker-stock-rose.jpg: https://images.unsplash.com/photo-1535632066927-ab7c9ab60908
+choker-stock-diamond.jpg: https://images.unsplash.com/photo-1599643477877-530eb83abc8e
+choker-stock-floral.jpg: https://images.unsplash.com/photo-1535632787350-4e68ef0ac584
+choker-stock-pearl.jpg: https://images.unsplash.com/photo-1600003014755-ba31aa59c4b6
+studs-stock.jpg: https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d
+tikka-stock.jpg: https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f
+necklace-editorial.jpg: https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52
+jewellery-editorial.jpg: https://images.unsplash.com/photo-1611652022419-a9419f74343d
+
+Additional product-card placeholder photos (editorial stock only, not exact inventory photography):
+Pexels license: https://www.pexels.com/license/
+bangles-stock-ornate.jpg: https://www.pexels.com/photo/close-up-of-intricate-golden-bangles-37485307/
+bangles-stock-mehndi.jpg: https://www.pexels.com/photo/womans-hand-with-mehendi-ornaments-and-gold-bracelets-20626511/
+bangles-stock-bracelets.jpg: https://www.pexels.com/photo/elegant-gold-bracelets-on-reflective-surface-38827895/
+bangles-stock-black.jpg: https://www.pexels.com/photo/two-gold-bracelets-on-a-black-background-20493839/
+jhumka-stock-closeup.jpg: https://www.pexels.com/photo/elegant-gold-jhumka-earring-on-woman-s-ear-37601639/
+jhumka-stock-mehndi.jpg: https://www.pexels.com/photo/close-up-of-mehendi-adorned-hands-with-jhumka-earring-36841599/

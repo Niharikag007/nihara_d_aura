@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Search, Filter, ArrowUpDown, Sparkles, X } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 import ProductCard from '../components/products/ProductCard';
+import HorizontalScroll from '../components/common/HorizontalScroll';
 import {
   ARTIFICIAL_JEWELLERY,
   isArtificialJewellery,
@@ -176,7 +177,12 @@ export default function Products() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-stone-200">
         
         {/* Category Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <HorizontalScroll
+          label="product categories"
+          className="min-w-0 flex-1"
+          viewportClassName="pb-1"
+          contentClassName="gap-2"
+        >
           {categories.map((cat) => {
             const isActive = activeCategory.toLowerCase() === cat.toLowerCase();
             return (
@@ -193,7 +199,7 @@ export default function Products() {
               </button>
             );
           })}
-        </div>
+        </HorizontalScroll>
 
         {/* Sort Controls */}
         <div className="flex items-center gap-3 self-end sm:self-auto">
@@ -228,27 +234,33 @@ export default function Products() {
 
       {/* Subcategory Pills Navigation Bar (Appears when active Category is selected) */}
       {availableSubcategories.length > 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto py-3 mb-2 scrollbar-none border-b border-stone-100 bg-white/50 px-2 rounded-xl mt-2">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#A87D17] flex-shrink-0 mr-1">
+        <div className="mb-2 mt-2 flex flex-col gap-1 rounded-xl border-b border-stone-100 bg-white/50 px-2 py-3 sm:flex-row sm:items-center sm:gap-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#A87D17] flex-shrink-0 sm:mr-1">
             Subcategories:
           </span>
-          {availableSubcategories.map((sub) => {
-            const isSubActive = activeSubcategory.toLowerCase() === sub.toLowerCase() || 
-              (sub.startsWith('All') && (!activeSubcategory || activeSubcategory.toLowerCase() === 'all'));
-            return (
-              <button
-                key={sub}
-                onClick={() => handleSubcategorySelect(sub)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-                  isSubActive
-                    ? 'bg-[#C59B27] text-white shadow-sm font-bold'
-                    : 'bg-[#FCF9F2] text-stone-700 border border-[#DFBC77]/50 hover:bg-amber-100/60'
-                }`}
-              >
-                {sub}
-              </button>
-            );
-          })}
+          <HorizontalScroll
+            label="product subcategories"
+            className="min-w-0 flex-1"
+            contentClassName="gap-2"
+          >
+            {availableSubcategories.map((sub) => {
+              const isSubActive = activeSubcategory.toLowerCase() === sub.toLowerCase() ||
+                (sub.startsWith('All') && (!activeSubcategory || activeSubcategory.toLowerCase() === 'all'));
+              return (
+                <button
+                  key={sub}
+                  onClick={() => handleSubcategorySelect(sub)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+                    isSubActive
+                      ? 'bg-[#C59B27] text-white shadow-sm font-bold'
+                      : 'bg-[#FCF9F2] text-stone-700 border border-[#DFBC77]/50 hover:bg-amber-100/60'
+                  }`}
+                >
+                  {sub}
+                </button>
+              );
+            })}
+          </HorizontalScroll>
         </div>
       )}
 

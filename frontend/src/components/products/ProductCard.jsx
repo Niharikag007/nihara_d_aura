@@ -5,7 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useToast } from '../../context/ToastContext';
 import QuickViewModal from './QuickViewModal';
-import { ARTIFICIAL_JEWELLERY, isArtificialJewellery } from '../../data/jewelleryCategories';
+import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductFallbackImage, getProductImage, getProductImageAlt, isArtificialJewellery } from '../../data/jewelleryCategories';
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
@@ -19,7 +19,7 @@ export default function ProductCard({ product }) {
 
   // Clean, non-repetitive category label
   const categoryLabel = useMemo(() => {
-    if (isArtificialJewellery(product)) return ARTIFICIAL_JEWELLERY.name;
+    if (isArtificialJewellery(product)) return `${ARTIFICIAL_JEWELLERY.name} • ${getJewellerySubcategory(product)}`;
     if (!product.category) return 'Luxury';
     if (!product.subcategory || 
         product.subcategory.toLowerCase().startsWith('all') || 
@@ -29,10 +29,10 @@ export default function ProductCard({ product }) {
     return `${product.category} • ${product.subcategory}`;
   }, [product]);
 
-  const fallbackImg = '/hero-slide-1.jpg';
+  const fallbackImg = getProductFallbackImage(product);
   const displayImage = imgError 
     ? fallbackImg 
-    : (product.images?.[0] || fallbackImg);
+    : getProductImage(product);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
@@ -61,8 +61,10 @@ export default function ProductCard({ product }) {
           <Link to={`/products/${product.id}`} className="block w-full h-full">
             <img
               src={displayImage}
-              alt={product.name}
-              onError={() => setImgError(true)}
+              alt={getProductImageAlt(product)}
+              onError={() => {
+                if (displayImage !== fallbackImg) setImgError(true);
+              }}
               className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 will-change-transform"
               loading="lazy"
               decoding="async"

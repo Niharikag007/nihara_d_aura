@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
-import { ARTIFICIAL_JEWELLERY, isArtificialJewellery } from '../data/jewelleryCategories';
+import { ARTIFICIAL_JEWELLERY, ARTIFICIAL_JEWELLERY_IMAGES, isArtificialJewellery } from '../data/jewelleryCategories';
 
 export default function Categories() {
   const { categories, loading } = useServices();
@@ -13,6 +13,7 @@ export default function Categories() {
           name: ARTIFICIAL_JEWELLERY.name,
           slug: ARTIFICIAL_JEWELLERY.slug,
           description: ARTIFICIAL_JEWELLERY.description,
+          image: ARTIFICIAL_JEWELLERY_IMAGES['Necklaces & Sets'],
           subcategories: ARTIFICIAL_JEWELLERY.subcategories
         }
       : category

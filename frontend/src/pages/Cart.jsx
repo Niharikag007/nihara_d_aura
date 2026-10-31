@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ShoppingBag, ArrowRight, X, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useOffers } from '../context/OffersContext';
+import { getProductImage, getProductImageAlt } from '../data/jewelleryCategories';
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -80,8 +81,8 @@ export default function Cart() {
             >
               <div className="flex items-center gap-4">
                 <img
-                  src={item.product?.images?.[0] || '/hero-slide-1.jpg'}
-                  alt={item.product?.name}
+                  src={getProductImage(item.product)}
+                  alt={getProductImageAlt(item.product)}
                   onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
                   className="h-16 w-16 flex-shrink-0 rounded-2xl border border-stone-200 bg-stone-100 object-cover sm:h-20 sm:w-20"
                 />

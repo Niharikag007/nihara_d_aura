@@ -16,6 +16,7 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useToast } from '../context/ToastContext';
 import ProductCard from '../components/products/ProductCard';
+import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductImage, getProductImageAlt, getProductImages, isArtificialJewellery } from '../data/jewelleryCategories';
 
 export default function ProductDetails() {
   const { products } = useProducts();
@@ -32,10 +33,12 @@ export default function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || 'Standard');
   const [quantity, setQuantity] = useState(1);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
+  const productImages = getProductImages(product);
 
   const isFavorited = isInWishlist(product.id);
 
   const cleanCategoryLabel = React.useMemo(() => {
+    if (isArtificialJewellery(product)) return `${ARTIFICIAL_JEWELLERY.name} • ${getJewellerySubcategory(product)}`;
     if (!product?.category) return 'Luxury';
     if (!product.subcategory || 
         product.subcategory.toLowerCase().startsWith('all') || 
@@ -43,7 +46,7 @@ export default function ProductDetails() {
       return product.category;
     }
     return `${product.category} • ${product.subcategory}`;
-  }, [product?.category, product?.subcategory]);
+  }, [product]);
 
   const handleAddToCart = () => {
     addToCart(product, quantity, selectedVariant, selectedSize);
@@ -85,17 +88,17 @@ export default function ProductDetails() {
               <Heart className={`w-5 h-5 ${isFavorited ? 'fill-[#C59B27] text-[#C59B27]' : 'text-stone-500'}`} />
             </button>
             <img
-              src={product.images[activeImageIdx] || product.images[0] || '/hero-slide-1.jpg'}
-              alt={product.name}
+              src={getProductImage(product, activeImageIdx)}
+              alt={getProductImageAlt(product)}
               onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
               className="w-full h-full object-cover object-center"
             />
           </div>
 
           {/* Thumbnails */}
-          {product.images.length > 1 && (
+          {productImages.length > 1 && (
             <div className="flex gap-3 overflow-x-auto pb-2">
-              {product.images.map((img, i) => (
+              {productImages.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveImageIdx(i)}

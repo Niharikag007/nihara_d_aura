@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { X, Trash2, ShoppingBag, ArrowRight, Sparkles, Tag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useOffers } from '../../context/OffersContext';
+import { getProductImage, getProductImageAlt } from '../../data/jewelleryCategories';
 
 export default function CartDrawer() {
   const navigate = useNavigate();
@@ -104,8 +105,8 @@ export default function CartDrawer() {
               items.map((item, idx) => (
                 <div key={idx} className="bg-white rounded-2xl p-3.5 border border-[#DFBC77]/35 flex gap-3 shadow-sm hover:shadow-md transition-shadow">
                   <img
-                    src={item.product?.images?.[0] || '/hero-slide-1.jpg'}
-                    alt={item.product?.name}
+                    src={getProductImage(item.product)}
+                    alt={getProductImageAlt(item.product)}
                     onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
                     className="w-16 h-16 rounded-xl object-cover bg-stone-50 border border-[#E8DFC8] flex-shrink-0"
                   />

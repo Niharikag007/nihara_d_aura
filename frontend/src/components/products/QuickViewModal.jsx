@@ -15,6 +15,7 @@ import {
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useToast } from '../../context/ToastContext';
+import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductImage, getProductImageAlt, getProductImages, isArtificialJewellery } from '../../data/jewelleryCategories';
 
 export default function QuickViewModal({ product, isOpen, onClose }) {
   const { addToCart, setIsDrawerOpen } = useCart();
@@ -59,9 +60,11 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   const fallbackImg = '/hero-slide-1.jpg';
   const displayImage = imgError 
     ? fallbackImg 
-    : (product.images?.[activeImageIdx] || product.images?.[0] || fallbackImg);
+    : getProductImage(product, activeImageIdx);
+  const displayImages = getProductImages(product);
 
   const cleanCategoryLabel = (() => {
+    if (isArtificialJewellery(product)) return `${ARTIFICIAL_JEWELLERY.name} • ${getJewellerySubcategory(product)}`;
     if (!product.subcategory || product.subcategory.toLowerCase().startsWith('all') || product.subcategory.toLowerCase() === product.category?.toLowerCase()) {
       return product.category;
     }
@@ -118,16 +121,16 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
                 <img
                   src={displayImage}
-                  alt={product.name}
+                  alt={getProductImageAlt(product)}
                   onError={() => setImgError(true)}
                   className="w-full h-full object-cover object-center transition-transform duration-500"
                 />
               </div>
 
               {/* Thumbnails if multiple images exist */}
-              {product.images && product.images.length > 1 && (
+              {displayImages.length > 1 && (
                 <div className="flex gap-2.5 mt-3 overflow-x-auto pb-1 scrollbar-none">
-                  {product.images.map((img, idx) => (
+                  {displayImages.map((img, idx) => (
                     <button
                       key={idx}
                       onClick={() => {

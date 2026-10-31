@@ -26,8 +26,10 @@ import { useServices } from '../context/ServiceContext';
 import ProductCard from '../components/products/ProductCard';
 import ServiceCard from '../components/services/ServiceCard';
 import HeroSlider from '../components/common/HeroSlider';
+import HorizontalScroll from '../components/common/HorizontalScroll';
 import {
   ARTIFICIAL_JEWELLERY,
+  ARTIFICIAL_JEWELLERY_IMAGES,
   isArtificialJewellery,
   matchesJewellerySubcategory
 } from '../data/jewelleryCategories';
@@ -363,14 +365,24 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="flex gap-3.5 sm:gap-4 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
+        <HorizontalScroll
+          label="top categories"
+          className="-mx-4 sm:mx-0"
+          viewportClassName="px-4 pb-4 sm:px-0 snap-x snap-mandatory"
+          contentClassName="gap-3.5 sm:gap-4"
+        >
           {[
-            { name: 'Earrings', tag: 'Statement Styles', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Earrings' },
-            { name: 'Necklaces & Sets', tag: 'For Every Occasion', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Necklaces & Sets' },
-            { name: 'Rings', tag: 'Everyday Elegance', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Rings' },
-            { name: 'Bangles & Bracelets', tag: 'Style Your Stack', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Bangles & Bracelets' },
-            { name: 'Pendants', tag: 'Meaningful Details', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Pendants' },
-            { name: 'Bridal Jewellery', tag: 'Celebration Edit', img: null, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Bridal Jewellery' },
+            { name: 'Earrings', tag: 'Statement Styles', img: ARTIFICIAL_JEWELLERY_IMAGES.Earrings, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Earrings' },
+            { name: 'Necklaces & Sets', tag: 'For Every Occasion', img: ARTIFICIAL_JEWELLERY_IMAGES['Necklaces & Sets'], cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Necklaces & Sets' },
+            { name: 'Rings', tag: 'Everyday Elegance', img: ARTIFICIAL_JEWELLERY_IMAGES.Rings, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Rings' },
+            { name: 'Bangles & Bracelets', tag: 'Style Your Stack', img: ARTIFICIAL_JEWELLERY_IMAGES['Bangles & Bracelets'], cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Bangles & Bracelets' },
+            { name: 'Pendants', tag: 'Meaningful Details', img: ARTIFICIAL_JEWELLERY_IMAGES.Pendants, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Pendants' },
+            { name: 'Bridal Jewellery', tag: 'Celebration Edit', img: ARTIFICIAL_JEWELLERY_IMAGES['Bridal Jewellery'], cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Bridal Jewellery' },
+            { name: 'Jewellery Sets', tag: 'Ready-to-Wear Pairings', img: ARTIFICIAL_JEWELLERY_IMAGES['Jewellery Sets'], cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Jewellery Sets' },
+            { name: 'Couple Jewellery', tag: 'Made for Two', img: ARTIFICIAL_JEWELLERY_IMAGES['Couple Jewellery'], cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Couple Jewellery' },
+            { name: 'Personalised Jewellery', tag: 'A Personal Touch', img: ARTIFICIAL_JEWELLERY_IMAGES['Personalised Jewellery'], cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Personalised Jewellery' },
+            { name: 'Anklets', tag: 'For Every Step', img: ARTIFICIAL_JEWELLERY_IMAGES.Anklets, cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Anklets' },
+            { name: 'Gift Boxes', tag: 'Ready to Gift', img: ARTIFICIAL_JEWELLERY_IMAGES['Gift Boxes'], cat: ARTIFICIAL_JEWELLERY.name, subcat: 'Gift Boxes' },
             { name: 'Silk Foundation', tag: 'Weightless HD', img: '/hero-slide-2.jpg', cat: 'Makeup', subcat: 'Face Foundations' },
             { name: 'Press-On Nails', tag: 'Salon Art Suite', img: '/images/nails/nail_img_1.png', cat: 'Nails', subcat: 'Press-On Kits' },
             { name: 'Mogra Candles', tag: 'Pure Soy Wax', img: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=400&q=80', cat: 'Candles', subcat: 'Soy Wax Jar Candles' },
@@ -383,7 +395,7 @@ export default function Home() {
               {/* Luxury Gold Halo on Hover */}
               <div className="absolute inset-0 bg-radial-gradient from-[#DFBC77]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-              {/* Circle Badge Accent (No image for jewellery, royal gold sparkles icon) */}
+              {/* Category image badge */}
               <div className="relative mb-3.5">
                 <div className="p-1 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F5E6C4] to-[#AA7C11] shadow-md group-hover:scale-105 transition-transform duration-500">
                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-white bg-gradient-to-br from-[#FFFDF9] via-[#FBF8F2] to-[#F5EEDC] shadow-inner flex items-center justify-center">
@@ -417,7 +429,7 @@ export default function Home() {
               </div>
             </Link>
           ))}
-        </div>
+        </HorizontalScroll>
       </section>
 
       {/* 3. Horizontal Category Filter Pills & Product Showcase */}
