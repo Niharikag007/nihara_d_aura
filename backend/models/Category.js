@@ -16,7 +16,6 @@ const categorySchema = new mongoose.Schema({
   itemCount: {
     type: Number,
     default: 0,
-    //hii
   },
   image: {
     type: String,
