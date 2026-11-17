@@ -1,4 +1,3 @@
-// Preloaded client dataset matching backend, APK, Video & PRD
 export const mockData = {
   "users": [
     {
@@ -79,20 +78,20 @@ export const mockData = {
   "products": [
     {
       "id": "prod_choker",
-      "name": "Nihara Signature 18K Rose Gold Choker",
+      "name": "Pearl Bloom Choker Set",
       "slug": "nihara-signature-18k-rose-gold-choker",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 24500,
-      "originalPrice": 28000,
-      "discountPercent": 13,
+      "price": 680,
+      "originalPrice": 816,
+      "discountPercent": 17,
       "rating": 4.9,
       "reviewCount": 98,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/choker-stock-rose.jpg"
+        "/images/artificial-jewellery/jewel_01.jpeg"
       ],
       "description": "Handcrafted in 18K Rose Gold with luminous uncut polki diamonds, emerald accents, and delicate dangling freshwater seed pearls.",
       "variants": [
@@ -111,20 +110,20 @@ export const mockData = {
     },
     {
       "id": "prod_rosegold_diamond_choker",
-      "name": "Luminary Diamond 18K Rose Gold Tennis Choker",
+      "name": "Royal Pearl Collar",
       "slug": "luminary-diamond-18k-rose-gold-tennis-choker",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 32900,
-      "originalPrice": 38000,
-      "discountPercent": 13,
+      "price": 760,
+      "originalPrice": 912,
+      "discountPercent": 17,
       "rating": 5,
       "reviewCount": 112,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/choker-stock-diamond.jpg"
+        "/images/artificial-jewellery/jewel_02.jpeg"
       ],
       "description": "A continuous ribbon of brilliant round diamonds prong-set into gleaming 18K rose gold. Designed for breathtaking bridal elegance.",
       "variants": [
@@ -143,20 +142,20 @@ export const mockData = {
     },
     {
       "id": "prod_rosegold_floral_choker",
-      "name": "Blooming Flora 18K Rose Gold Layered Choker",
+      "name": "Floral Kundan Layer Choker",
       "slug": "blooming-flora-18k-rose-gold-layered-choker",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 28500,
-      "originalPrice": 33000,
-      "discountPercent": 14,
+      "price": 700,
+      "originalPrice": 840,
+      "discountPercent": 17,
       "rating": 4.8,
       "reviewCount": 76,
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/choker-stock-floral.jpg"
+        "/images/artificial-jewellery/jewel_03.jpeg"
       ],
       "description": "Delicate blossoming petals cast in 18K rose gold accented with shimmering zircon crystals and fine filigree lace work.",
       "variants": [
@@ -175,20 +174,20 @@ export const mockData = {
     },
     {
       "id": "prod_rosegold_emerald_choker",
-      "name": "Regal Emerald Drop 18K Rose Gold Collar",
+      "name": "Emerald Lace Collar",
       "slug": "regal-emerald-drop-18k-rose-gold-collar",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 36000,
-      "originalPrice": 42000,
-      "discountPercent": 14,
+      "price": 890,
+      "originalPrice": 1068,
+      "discountPercent": 17,
       "rating": 4.9,
       "reviewCount": 89,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/necklace-editorial.jpg"
+        "/images/artificial-jewellery/jewel_04.jpeg"
       ],
       "description": "Opulent 18K rose gold lattice collar studded with Zambian emerald tear-drops and sparkling champagne diamonds.",
       "variants": [
@@ -207,20 +206,20 @@ export const mockData = {
     },
     {
       "id": "prod_rosegold_pearl_choker",
-      "name": "Basra Pearl & 18K Rose Gold Cascade Choker",
+      "name": "Pearl Cascade Choker",
       "slug": "basra-pearl-18k-rose-gold-cascade-choker",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 26800,
-      "originalPrice": 31000,
-      "discountPercent": 14,
+      "price": 650,
+      "originalPrice": 780,
+      "discountPercent": 17,
       "rating": 4.9,
       "reviewCount": 64,
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/choker-stock-pearl.jpg"
+        "/images/artificial-jewellery/jewel_05.jpeg"
       ],
       "description": "Multiple tiers of lustrous Basra-inspired natural pearls interwoven with hand-engraved 18K rose gold spacers.",
       "variants": [
@@ -403,20 +402,20 @@ export const mockData = {
     },
     {
       "id": "prod_gold_haar",
-      "name": "Royal 22K Gold Kundan Bridal Haar Set",
+      "name": "Lotus Bridal Haar Set",
       "slug": "royal-22k-gold-kundan-bridal-haar-set",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 38500,
-      "originalPrice": 45000,
-      "discountPercent": 14,
+      "price": 920,
+      "originalPrice": 1104,
+      "discountPercent": 17,
       "rating": 5,
       "reviewCount": 168,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/bridal.jpg"
+        "/images/artificial-jewellery/jewel_06.jpeg"
       ],
       "description": "Grand heritage 22K BIS Hallmarked gold bridal haar adorned with uncut polki diamonds, hand-painted Jaipur meenakari, and ruby drops.",
       "variants": [
@@ -435,20 +434,20 @@ export const mockData = {
     },
     {
       "id": "prod_tikka",
-      "name": "Heritage 22K Gold & Ruby Bridal Maang Tikka",
+      "name": "Lotus Maang Tikka",
       "slug": "heritage-22k-gold-ruby-bridal-maang-tikka",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 12500,
-      "originalPrice": 14500,
-      "discountPercent": 14,
+      "price": 560,
+      "originalPrice": 672,
+      "discountPercent": 17,
       "rating": 4.9,
       "reviewCount": 88,
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/tikka-stock.jpg"
+        "/images/artificial-jewellery/jewel_07.jpeg"
       ],
       "description": "Regal forehead adornment with pure 22K solid gold филигранное carving, Burmese ruby drops, and lustrous pearl chains.",
       "variants": [
@@ -467,20 +466,20 @@ export const mockData = {
     },
     {
       "id": "prod_polki_bridal_set",
-      "name": "Mughal Polki & Emerald Grand Bridal Haar Set",
+      "name": "Royal Bridal Set",
       "slug": "mughal-polki-emerald-grand-bridal-haar-set",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 54000,
-      "originalPrice": 62000,
-      "discountPercent": 13,
+      "price": 980,
+      "originalPrice": 1176,
+      "discountPercent": 17,
       "rating": 5,
       "reviewCount": 145,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/sets.jpg"
+        "/images/artificial-jewellery/jewel_08.jpeg"
       ],
       "description": "Heirloom bridal set with open-setting Polki diamonds, carved Colombian emerald droplets, and matching Chandbali earrings.",
       "variants": [
@@ -498,20 +497,20 @@ export const mockData = {
     },
     {
       "id": "prod_temple_kasu_set",
-      "name": "South Indian Temple Gold Kasu Mala Bridal Set",
+      "name": "Temple Pearl Bridal Set",
       "slug": "south-indian-temple-gold-kasu-mala-bridal-set",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 48500,
-      "originalPrice": 55000,
-      "discountPercent": 12,
+      "price": 860,
+      "originalPrice": 1032,
+      "discountPercent": 17,
       "rating": 4.9,
       "reviewCount": 92,
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/necklaces.jpg"
+        "/images/artificial-jewellery/jewel_09.jpeg"
       ],
       "description": "Traditional 22K gold coin Kasu Mala featuring embossed Lakshmi motifs and sparkling kemp stone ruby surrounds.",
       "variants": [
@@ -529,20 +528,20 @@ export const mockData = {
     },
     {
       "id": "prod_guluband_collar_set",
-      "name": "Antique 22K Gold Guluband Collar & Earrings Suite",
+      "name": "Pearl Grace Collar Set",
       "slug": "antique-22k-gold-guluband-collar-earrings-suite",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 42000,
-      "originalPrice": 48000,
-      "discountPercent": 12,
+      "price": 780,
+      "originalPrice": 936,
+      "discountPercent": 17,
       "rating": 4.9,
       "reviewCount": 81,
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/personalised.jpg"
+        "/images/artificial-jewellery/jewel_10.jpeg"
       ],
       "description": "Close-fitting royal Rajputi Guluband necklace adorned with red rubies, freshwater pearls, and fine filigree panels.",
       "variants": [
@@ -560,20 +559,20 @@ export const mockData = {
     },
     {
       "id": "prod_gold_locket",
-      "name": "24K Gold Lakshmi Coin Locket & Chain Set",
+      "name": "Pearl Locket & Chain",
       "slug": "24k-gold-lakshmi-coin-locket-chain-set",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Lakshmi Gold Locket",
-      "price": 21500,
-      "originalPrice": 25000,
-      "discountPercent": 14,
+      "price": 610,
+      "originalPrice": 732,
+      "discountPercent": 17,
       "rating": 5,
       "reviewCount": 185,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/products/jewellery_lakshmi_gold_locket.jpg"
+        "/images/artificial-jewellery/jewel_11.jpeg"
       ],
       "description": "Auspicious 24K pure gold Goddess Lakshmi embossed coin locket suspended from a 22K solid gold handcrafted rope chain.",
       "variants": [
@@ -591,20 +590,20 @@ export const mockData = {
     },
     {
       "id": "prod_pendant_chain",
-      "name": "18K Rose Gold Diamond Heart Pendant & Chain",
+      "name": "Floral Pendant Set",
       "slug": "18k-rose-gold-diamond-heart-pendant-chain",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Royal Kundan Haar",
-      "price": 15800,
-      "originalPrice": 18500,
-      "discountPercent": 15,
+      "price": 740,
+      "originalPrice": 888,
+      "discountPercent": 17,
       "rating": 4.8,
       "reviewCount": 94,
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/pendants.jpg"
+        "/images/artificial-jewellery/jewel_12.jpeg"
       ],
       "description": "Contemporary puffed heart pendant crafted in 18K rose gold accented with brilliant micro-pave natural diamonds on an Italian box chain.",
       "variants": [
@@ -623,20 +622,20 @@ export const mockData = {
     },
     {
       "id": "prod_ganesha_pendant",
-      "name": "24K Solid Gold Divine Ganesha Embossed Pendant",
+      "name": "Lotus Ganesha Pendant",
       "slug": "24k-solid-gold-divine-ganesha-embossed-pendant",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Gold Ganesha Pendant",
-      "price": 18200,
-      "originalPrice": 21000,
-      "discountPercent": 13,
+      "price": 690,
+      "originalPrice": 828,
+      "discountPercent": 17,
       "rating": 5,
       "reviewCount": 124,
       "isFeatured": false,
       "isBestseller": true,
       "images": [
-        "/images/products/jewellery_gold_ganesha_pendant.jpg"
+        "/images/artificial-jewellery/jewel_13.jpeg"
       ],
       "description": "Sacred Lord Ganesha portrait embossed on 24K pure 999 gold bar frame with divine lotus edging.",
       "variants": [
@@ -654,20 +653,20 @@ export const mockData = {
     },
     {
       "id": "prod_evil_eye_pendant",
-      "name": "18K Gold & Turquoise Evil Eye Medallion Pendant",
+      "name": "Blessing Evil Eye Pendant",
       "slug": "18k-gold-turquoise-evil-eye-medallion-pendant",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Evil Eye Pendant",
-      "price": 13900,
-      "originalPrice": 16000,
-      "discountPercent": 13,
+      "price": 640,
+      "originalPrice": 768,
+      "discountPercent": 17,
       "rating": 4.8,
       "reviewCount": 79,
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "/images/products/jewellery_evil_eye_pendant.jpg"
+        "/images/artificial-jewellery/jewel_14.jpeg"
       ],
       "description": "Protective talisman pendant crafted in 18K gold featuring turquoise enamel and a sparkling diamond iris.",
       "variants": [
@@ -686,20 +685,20 @@ export const mockData = {
     },
     {
       "id": "prod_om_sacred_locket",
-      "name": "22K Hallmarked Sacred Om Mantra Filigree Locket",
+      "name": "Sacred Om Locket",
       "slug": "22k-hallmarked-sacred-om-mantra-filigree-locket",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Sacred Om Locket",
-      "price": 16700,
-      "originalPrice": 19500,
-      "discountPercent": 14,
+      "price": 720,
+      "originalPrice": 864,
+      "discountPercent": 17,
       "rating": 4.9,
       "reviewCount": 98,
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/products/jewellery_sacred_om_locket.jpg"
+        "/images/artificial-jewellery/jewel_15.jpeg"
       ],
       "description": "Timeless sacred Om medallion surrounded by delicate 22K gold filigree wire rays and ruby center point.",
       "variants": [
@@ -717,20 +716,20 @@ export const mockData = {
     },
     {
       "id": "prod_bangles",
-      "name": "22K Solid Gold Carved Antique Kangan (Set of 2)",
+      "name": "Temple Pearl Kada Set",
       "slug": "22k-solid-gold-carved-antique-kangan-set-of-2",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Nakshi Temple Kada",
-      "price": 32000,
-      "originalPrice": 38000,
-      "discountPercent": 16,
+      "price": 810,
+      "originalPrice": 972,
+      "discountPercent": 17,
       "rating": 5,
       "reviewCount": 110,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/bangles-stock-ornate.jpg"
+        "/images/artificial-jewellery/jewel_16.jpeg"
       ],
       "description": "Pair of masterfully handcrafted 22K antique gold kangans featuring divine floral jaali work and screw pin side lock.",
       "variants": [
@@ -750,20 +749,20 @@ export const mockData = {
     },
     {
       "id": "prod_nakshi_kada",
-      "name": "Royal Nakshi Lakshmi Temple Kada",
+      "name": "Lakshmi Temple Kada",
       "slug": "royal-nakshi-lakshmi-temple-kada",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Nakshi Temple Kada",
-      "price": 28500,
-      "originalPrice": 33000,
-      "discountPercent": 14,
+      "price": 770,
+      "originalPrice": 924,
+      "discountPercent": 17,
       "rating": 4.9,
       "reviewCount": 87,
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/bangles-stock-mehndi.jpg"
+        "/images/artificial-jewellery/jewel_17.jpeg"
       ],
       "description": "Heavy single Kada bracelet with deep-relief Nakshi carving of Goddess Lakshmi flanked by temple elephants.",
       "variants": [
@@ -782,20 +781,20 @@ export const mockData = {
     },
     {
       "id": "prod_ruby_gold_bangles",
-      "name": "22K Floral Ruby Studded Gold Churi (Set of 4)",
+      "name": "Ruby Pearl Bangle Set",
       "slug": "22k-floral-ruby-studded-gold-churi-set-of-4",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Nakshi Temple Kada",
-      "price": 45000,
-      "originalPrice": 52000,
-      "discountPercent": 13,
+      "price": 990,
+      "originalPrice": 1188,
+      "discountPercent": 17,
       "rating": 5,
       "reviewCount": 132,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/bangles.jpg"
+        "/images/artificial-jewellery/jewel_18.jpeg"
       ],
       "description": "Set of 4 delicate bridal gold churis studded with Burma ruby florets and micro-beaded gold edges.",
       "variants": [
@@ -814,20 +813,20 @@ export const mockData = {
     },
     {
       "id": "prod_filigree_kangan",
-      "name": "Royal Jaipur Openable Filigree Gold Bangle",
+      "name": "Floral Kangan Bangle",
       "slug": "royal-jaipur-openable-filigree-gold-bangle",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Nakshi Temple Kada",
-      "price": 24900,
-      "originalPrice": 29000,
-      "discountPercent": 14,
+      "price": 710,
+      "originalPrice": 852,
+      "discountPercent": 17,
       "rating": 4.8,
       "reviewCount": 65,
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/bangles-stock-bracelets.jpg"
+        "/images/artificial-jewellery/jewel_19.jpeg"
       ],
       "description": "Exquisite openable bangle crafted with delicate floral wire filigree and pearl cluster terminals.",
       "variants": [
@@ -846,20 +845,20 @@ export const mockData = {
     },
     {
       "id": "prod_peacock_temple_cuff",
-      "name": "Antique Finish 22K Gold Peacock Kada Cuff",
+      "name": "Peacock Temple Cuff",
       "slug": "antique-finish-22k-gold-peacock-kada-cuff",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Nakshi Temple Kada",
-      "price": 31000,
-      "originalPrice": 36000,
-      "discountPercent": 14,
+      "price": 840,
+      "originalPrice": 1008,
+      "discountPercent": 17,
       "rating": 4.9,
       "reviewCount": 94,
       "isFeatured": false,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/bangles-stock-black.jpg"
+        "/images/artificial-jewellery/jewel_20.jpeg"
       ],
       "description": "Stately 22K antique gold cuff featuring dual confronting peacock heads adorned with synthetic rubies and emeralds.",
       "variants": [
@@ -877,20 +876,20 @@ export const mockData = {
     },
     {
       "id": "prod_anti_tarnish_ring",
-      "name": "Everyday Anti-Tarnish Fashion Ring",
+      "name": "Pearl Charm Ring",
       "slug": "everyday-anti-tarnish-fashion-ring",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Rings",
-      "price": 399,
-      "originalPrice": 399,
-      "discountPercent": 0,
+      "price": 499,
+      "originalPrice": 599,
+      "discountPercent": 17,
       "rating": 0,
       "reviewCount": 0,
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/rings.jpg"
+        "/images/artificial-jewellery/jewel_21.jpeg"
       ],
       "description": "An everyday fashion ring with an anti-tarnish finish. The stock photo is illustrative; the actual design may vary. Keep dry and store separately to help preserve the finish.",
       "variants": [
