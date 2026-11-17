@@ -889,7 +889,9 @@ export const mockData = {
       "reviewCount": 0,
       "isFeatured": false,
       "isBestseller": false,
-      "images": [],
+      "images": [
+        "/images/artificial-jewellery/rings/emerald-flower-ring.png"
+      ],
       "description": "An everyday fashion ring with an anti-tarnish finish. The stock photo is illustrative; the actual design may vary. Keep dry and store separately to help preserve the finish.",
       "variants": [
         "Gold-tone finish"
