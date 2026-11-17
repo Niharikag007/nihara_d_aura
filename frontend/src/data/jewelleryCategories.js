@@ -20,7 +20,7 @@ export const ARTIFICIAL_JEWELLERY = {
 export const ARTIFICIAL_JEWELLERY_IMAGES = {
   Earrings: '/images/artificial-jewellery/earrings/earring_01.jpeg',
   'Necklaces & Sets': '/images/artificial-jewellery/necklaces/necklace_01.jpeg',
-  Rings: '/images/artificial-jewellery/rings/emerald-flower-ring.png',
+  Rings: '/images/artificial-jewellery/rings/ring_01.png',
   'Bangles & Bracelets': '/images/artificial-jewellery/bracelets/bracelet_01.jpeg',
   Pendants: '/images/artificial-jewellery/pendants/pendant_01.jpeg',
   'Bridal Jewellery': '',
@@ -242,6 +242,7 @@ export function getProductImages(product) {
     const folderBySubcategory = {
       Earrings: 'earrings',
       'Necklaces & Sets': 'necklaces',
+      Rings: 'rings',
       Pendants: 'pendants',
       'Bangles & Bracelets': 'bracelets'
     };
