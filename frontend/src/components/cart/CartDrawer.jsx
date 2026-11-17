@@ -104,12 +104,14 @@ export default function CartDrawer() {
             ) : (
               items.map((item, idx) => (
                 <div key={idx} className="bg-white rounded-2xl p-3.5 border border-[#DFBC77]/35 flex gap-3 shadow-sm hover:shadow-md transition-shadow">
-                  <img
-                    src={getProductImage(item.product)}
-                    alt={getProductImageAlt(item.product)}
-                    onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
-                    className="w-16 h-16 rounded-xl object-cover bg-stone-50 border border-[#E8DFC8] flex-shrink-0"
-                  />
+                  {getProductImage(item.product) && (
+                    <img
+                      src={getProductImage(item.product)}
+                      alt={getProductImageAlt(item.product)}
+                      onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                      className="w-16 h-16 rounded-xl object-cover bg-stone-50 border border-[#E8DFC8] flex-shrink-0"
+                    />
+                  )}
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
                       <div className="flex items-start justify-between gap-1">

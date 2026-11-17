@@ -87,12 +87,14 @@ export default function ProductDetails() {
             >
               <Heart className={`w-5 h-5 ${isFavorited ? 'fill-[#C59B27] text-[#C59B27]' : 'text-stone-500'}`} />
             </button>
-            <img
-              src={getProductImage(product, activeImageIdx)}
-              alt={getProductImageAlt(product)}
-              onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
-              className="w-full h-full object-cover object-center"
-            />
+            {getProductImage(product, activeImageIdx) && (
+              <img
+                src={getProductImage(product, activeImageIdx)}
+                alt={getProductImageAlt(product)}
+                onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                className="w-full h-full object-cover object-center"
+              />
+            )}
           </div>
 
           {/* Thumbnails */}

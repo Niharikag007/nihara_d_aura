@@ -15,7 +15,7 @@ import {
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useToast } from '../../context/ToastContext';
-import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductImage, getProductImageAlt, getProductImages, isArtificialJewellery } from '../../data/jewelleryCategories';
+import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductFallbackImage, getProductImage, getProductImageAlt, getProductImages, isArtificialJewellery } from '../../data/jewelleryCategories';
 
 export default function QuickViewModal({ product, isOpen, onClose }) {
   const { addToCart, setIsDrawerOpen } = useCart();
@@ -57,7 +57,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   if (!isOpen || !product) return null;
 
   const isFavorited = isInWishlist(product.id);
-  const fallbackImg = '/hero-slide-1.jpg';
+  const fallbackImg = getProductFallbackImage(product);
   const displayImage = imgError 
     ? fallbackImg 
     : getProductImage(product, activeImageIdx);
@@ -119,12 +119,14 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                   </span>
                 )}
 
-                <img
-                  src={displayImage}
-                  alt={getProductImageAlt(product)}
-                  onError={() => setImgError(true)}
-                  className="w-full h-full object-cover object-center transition-transform duration-500"
-                />
+                {displayImage && (
+                  <img
+                    src={displayImage}
+                    alt={getProductImageAlt(product)}
+                    onError={() => setImgError(true)}
+                    className="w-full h-full object-cover object-center transition-transform duration-500"
+                  />
+                )}
               </div>
 
               {/* Thumbnails if multiple images exist */}

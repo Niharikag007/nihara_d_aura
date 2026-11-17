@@ -213,7 +213,7 @@ export default function Checkout() {
             {items.map((item, i) => (
               <div key={i} className="flex justify-between py-1.5 border-b border-stone-100 items-center">
                 <div className="flex items-center gap-2">
-                  {item.product && (
+                  {item.product && getProductImage(item.product) && (
                     <img src={getProductImage(item.product)} alt="" className="w-8 h-8 object-cover rounded-md" />
                   )}
                   <span className="text-stone-700 font-medium">

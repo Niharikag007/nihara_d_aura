@@ -59,16 +59,18 @@ export default function ProductCard({ product }) {
       <div className="group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-[#DFBC77]/40 bg-white shadow-[0_14px_32px_-24px_rgba(88,64,22,0.45)] transition-all duration-300 hover:-translate-y-1 hover:border-[#C59B27]/75 hover:shadow-[0_24px_42px_-24px_rgba(88,64,22,0.6)] will-change-transform transform-gpu">
         <div className="relative aspect-square overflow-hidden bg-[#FBF8F2]">
           <Link to={`/products/${product.id}`} className="block w-full h-full">
-            <img
-              src={displayImage}
-              alt={getProductImageAlt(product)}
-              onError={() => {
-                if (displayImage !== fallbackImg) setImgError(true);
-              }}
-              className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 will-change-transform"
-              loading="lazy"
-              decoding="async"
-            />
+            {displayImage && (
+              <img
+                src={displayImage}
+                alt={getProductImageAlt(product)}
+                onError={() => {
+                  if (displayImage !== fallbackImg) setImgError(true);
+                }}
+                className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 will-change-transform"
+                loading="lazy"
+                decoding="async"
+              />
+            )}
           </Link>
 
           {product.discountPercent > 0 && (

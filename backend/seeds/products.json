@@ -11,7 +11,9 @@
     "discountPercent": 17,
     "rating": 4.9,
     "reviewCount": 98,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/necklaces/necklace_01.jpeg"
+      ],
     "description": "Handcrafted in 18K Rose Gold with luminous uncut polki diamonds, emerald accents, and delicate dangling freshwater seed pearls.",
     "variants": [
       "18K Rose Gold",
@@ -44,7 +46,9 @@
     "discountPercent": 17,
     "rating": 5,
     "reviewCount": 112,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/necklaces/necklace_02.jpeg"
+      ],
     "description": "A continuous ribbon of brilliant round diamonds prong-set into gleaming 18K rose gold. Designed for breathtaking bridal elegance.",
     "variants": [
       "18K Rose Gold & VVS Diamonds",
@@ -77,7 +81,9 @@
     "discountPercent": 17,
     "rating": 4.8,
     "reviewCount": 76,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/necklaces/necklace_03.jpeg"
+      ],
     "description": "Delicate blossoming petals cast in 18K rose gold accented with shimmering zircon crystals and fine filigree lace work.",
     "variants": [
       "Petal Rose Gold",
@@ -110,7 +116,9 @@
     "discountPercent": 17,
     "rating": 4.9,
     "reviewCount": 89,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/necklaces/necklace_04.jpeg"
+      ],
     "description": "Opulent 18K rose gold lattice collar studded with Zambian emerald tear-drops and sparkling champagne diamonds.",
     "variants": [
       "Zambian Emerald & Rose Gold",
@@ -143,7 +151,9 @@
     "discountPercent": 17,
     "rating": 4.9,
     "reviewCount": 64,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/necklaces/necklace_05.jpeg"
+      ],
     "description": "Multiple tiers of lustrous Basra-inspired natural pearls interwoven with hand-engraved 18K rose gold spacers.",
     "variants": [
       "Natural Pearl & Rose Gold",
@@ -177,8 +187,11 @@
     "rating": 4.9,
     "reviewCount": 142,
     "images": [
-      "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=1200&q=85"
-    ],
+        "/images/artificial-jewellery/earrings/earring_01.jpeg",
+        "/images/artificial-jewellery/earrings/earring_02.jpeg",
+        "/images/artificial-jewellery/earrings/earring_17.jpeg",
+        "/images/artificial-jewellery/earrings/earring_18.jpeg"
+      ],
     "description": "Intricately carved 22K solid gold temple jhumka earrings featuring divine peacock motifs, ruby cabochons, and gold bead tassels.",
     "variants": [
       "Antique Matte Gold",
@@ -212,8 +225,11 @@
     "rating": 4.9,
     "reviewCount": 95,
     "images": [
-      "https://images.pexels.com/photos/1458867/pexels-photo-1458867.jpeg?auto=compress&cs=tinysrgb&w=800"
-    ],
+        "/images/artificial-jewellery/earrings/earring_08.jpeg",
+        "/images/artificial-jewellery/earrings/earring_13.jpeg",
+        "/images/artificial-jewellery/earrings/earring_14.jpeg",
+        "/images/artificial-jewellery/earrings/earring_15.jpeg"
+      ],
     "description": "Majestic crescent moon Chandbali earrings set in 22K gold plating with uncut polki kundan, green enamelling, and seed pearl clusters.",
     "variants": [
       "Kundan & Emerald Green",
@@ -247,8 +263,10 @@
     "rating": 4.8,
     "reviewCount": 88,
     "images": [
-      "https://images.unsplash.com/photo-1588444837495-c6cfeb53f32d?auto=format&fit=crop&w=1200&q=85"
-    ],
+        "/images/artificial-jewellery/earrings/earring_04.jpeg",
+        "/images/artificial-jewellery/earrings/earring_06.jpeg",
+        "/images/artificial-jewellery/earrings/earring_07.jpeg"
+      ],
     "description": "Classic floral cluster earrings handcrafted in 18K yellow gold with scintillating lab-grown diamond petals.",
     "variants": [
       "18K Yellow Gold",
@@ -282,8 +300,11 @@
     "rating": 5,
     "reviewCount": 73,
     "images": [
-      "https://images.pexels.com/photos/2735970/pexels-photo-2735970.jpeg?auto=compress&cs=tinysrgb&w=800"
-    ],
+        "/images/artificial-jewellery/earrings/earring_03.jpeg",
+        "/images/artificial-jewellery/earrings/earring_05.jpeg",
+        "/images/artificial-jewellery/earrings/earring_10.jpeg",
+        "/images/artificial-jewellery/earrings/earring_11.jpeg"
+      ],
     "description": "Divine Goddess Lakshmi motif carved in antique 22K gold with ruby accents and delicate gold bead bells.",
     "variants": [
       "Antique Matte 22K Gold"
@@ -316,8 +337,10 @@
     "rating": 4.9,
     "reviewCount": 64,
     "images": [
-      "https://images.pexels.com/photos/2735981/pexels-photo-2735981.jpeg?auto=compress&cs=tinysrgb&w=800"
-    ],
+        "/images/artificial-jewellery/earrings/earring_09.jpeg",
+        "/images/artificial-jewellery/earrings/earring_12.jpeg",
+        "/images/artificial-jewellery/earrings/earring_16.jpeg"
+      ],
     "description": "Finely spun gold filigree dome jhumkas featuring delicate floral wirework and rhythmic dangling gold beads.",
     "variants": [
       "22K Yellow Gold"
@@ -479,7 +502,9 @@
     "discountPercent": 17,
     "rating": 4.9,
     "reviewCount": 81,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/necklaces/necklace_04.jpeg"
+      ],
     "description": "Close-fitting royal Rajputi Guluband necklace adorned with red rubies, freshwater pearls, and fine filigree panels.",
     "variants": [
       "22K Gold & Royal Ruby"
@@ -511,7 +536,9 @@
     "discountPercent": 17,
     "rating": 5,
     "reviewCount": 185,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/pendants/pendant_02.jpeg"
+      ],
     "description": "Auspicious 24K pure gold Goddess Lakshmi embossed coin locket suspended from a 22K solid gold handcrafted rope chain.",
     "variants": [
       "24K Pure Gold Coin + 22K Chain"
@@ -543,7 +570,9 @@
     "discountPercent": 17,
     "rating": 4.8,
     "reviewCount": 94,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/pendants/pendant_01.jpeg"
+      ],
     "description": "Contemporary puffed heart pendant crafted in 18K rose gold accented with brilliant micro-pave natural diamonds on an Italian box chain.",
     "variants": [
       "18K Rose Gold",
@@ -576,7 +605,9 @@
     "discountPercent": 17,
     "rating": 5,
     "reviewCount": 124,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/pendants/pendant_03.jpeg"
+      ],
     "description": "Sacred Lord Ganesha portrait embossed on 24K pure 999 gold bar frame with divine lotus edging.",
     "variants": [
       "24K Pure Gold 999"
@@ -608,7 +639,9 @@
     "discountPercent": 17,
     "rating": 4.8,
     "reviewCount": 79,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/pendants/pendant_04.jpeg"
+      ],
     "description": "Protective talisman pendant crafted in 18K gold featuring turquoise enamel and a sparkling diamond iris.",
     "variants": [
       "18K Yellow Gold & Turquoise",
@@ -641,7 +674,9 @@
     "discountPercent": 17,
     "rating": 4.9,
     "reviewCount": 98,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/pendants/pendant_05.jpeg"
+      ],
     "description": "Timeless sacred Om medallion surrounded by delicate 22K gold filigree wire rays and ruby center point.",
     "variants": [
       "22K Solid Gold"
@@ -673,7 +708,10 @@
     "discountPercent": 17,
     "rating": 5,
     "reviewCount": 110,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/bracelets/bracelet_01.jpeg",
+        "/images/artificial-jewellery/bracelets/bracelet_02.jpeg"
+      ],
     "description": "Pair of masterfully handcrafted 22K antique gold kangans featuring divine floral jaali work and screw pin side lock.",
     "variants": [
       "Size 2.4",
@@ -707,7 +745,9 @@
     "discountPercent": 14,
     "rating": 4.9,
     "reviewCount": 87,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/bracelets/bracelet_03.jpeg"
+      ],
     "description": "Heavy single Kada bracelet with deep-relief Nakshi carving of Goddess Lakshmi flanked by temple elephants.",
     "variants": [
       "Size 2.4",
@@ -740,7 +780,10 @@
     "discountPercent": 17,
     "rating": 5,
     "reviewCount": 132,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/bracelets/bracelet_04.jpeg",
+        "/images/artificial-jewellery/bracelets/bracelet_05.jpeg"
+      ],
     "description": "Set of 4 delicate bridal gold churis studded with Burma ruby florets and micro-beaded gold edges.",
     "variants": [
       "Set of 4 (Size 2.4)",
@@ -773,7 +816,9 @@
     "discountPercent": 17,
     "rating": 4.8,
     "reviewCount": 65,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/bracelets/bracelet_06.jpeg"
+      ],
     "description": "Exquisite openable bangle crafted with delicate floral wire filigree and pearl cluster terminals.",
     "variants": [
       "Size 2.4",
@@ -806,7 +851,9 @@
     "discountPercent": 17,
     "rating": 4.9,
     "reviewCount": 94,
-    "images": [],
+    "images": [
+        "/images/artificial-jewellery/bracelets/bracelet_07.jpeg"
+      ],
     "description": "Stately 22K antique gold cuff featuring dual confronting peacock heads adorned with synthetic rubies and emeralds.",
     "variants": [
       "Free Size Adjustable Cuff"

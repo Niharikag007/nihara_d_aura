@@ -80,12 +80,14 @@ export default function Cart() {
               className="flex flex-col justify-between gap-4 rounded-[1.75rem] border border-stone-200/90 bg-white p-4 shadow-[0_18px_32px_-28px_rgba(78,59,17,0.5)] transition-all hover:border-[#0A6847]/40 hover:shadow-[0_24px_36px_-28px_rgba(78,59,17,0.5)] sm:flex-row sm:items-center sm:p-5"
             >
               <div className="flex items-center gap-4">
-                <img
-                  src={getProductImage(item.product)}
-                  alt={getProductImageAlt(item.product)}
-                  onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
-                  className="h-16 w-16 flex-shrink-0 rounded-2xl border border-stone-200 bg-stone-100 object-cover sm:h-20 sm:w-20"
-                />
+                {getProductImage(item.product) && (
+                  <img
+                    src={getProductImage(item.product)}
+                    alt={getProductImageAlt(item.product)}
+                    onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                    className="h-16 w-16 flex-shrink-0 rounded-2xl border border-stone-200 bg-stone-100 object-cover sm:h-20 sm:w-20"
+                  />
+                )}
                 <div>
                   <h3 className="font-serif text-base font-bold text-[#1C1917] sm:text-lg">
                     {item.product?.name}
