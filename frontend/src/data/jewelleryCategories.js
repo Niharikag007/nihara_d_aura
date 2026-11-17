@@ -19,16 +19,16 @@ export const ARTIFICIAL_JEWELLERY = {
 
 export const ARTIFICIAL_JEWELLERY_IMAGES = {
   Earrings: '/images/artificial-jewellery/earring_01.png',
-  'Necklaces & Sets': '/images/artificial-jewellery/jewel_01.jpeg',
-  Rings: '/images/artificial-jewellery/jewel_21.jpeg',
-  'Bangles & Bracelets': '/images/artificial-jewellery/jewel_16.jpeg',
-  Pendants: '/images/artificial-jewellery/jewel_11.jpeg',
-  'Bridal Jewellery': '/images/artificial-jewellery/jewel_06.jpeg',
-  'Jewellery Sets': '/images/artificial-jewellery/jewel_08.jpeg',
-  'Couple Jewellery': '/images/artificial-jewellery/jewel_02.jpeg',
-  'Personalised Jewellery': '/images/artificial-jewellery/jewel_10.jpeg',
-  Anklets: '/images/artificial-jewellery/jewel_17.jpeg',
-  'Gift Boxes': '/images/artificial-jewellery/jewel_19.jpeg'
+  'Necklaces & Sets': '',
+  Rings: '',
+  'Bangles & Bracelets': '',
+  Pendants: '',
+  'Bridal Jewellery': '',
+  'Jewellery Sets': '',
+  'Couple Jewellery': '',
+  'Personalised Jewellery': '',
+  Anklets: '',
+  'Gift Boxes': ''
 };
 
 export const REMOVED_JEWELLERY_PRODUCT_IDS = [
