@@ -18,7 +18,7 @@ export const ARTIFICIAL_JEWELLERY = {
 };
 
 export const ARTIFICIAL_JEWELLERY_IMAGES = {
-  Earrings: '/images/artificial-jewellery/earrings.jpg',
+  Earrings: '/images/artificial-jewellery/earring_01.png',
   'Necklaces & Sets': '/images/artificial-jewellery/necklaces.jpg',
   Rings: '/images/artificial-jewellery/rings.jpg',
   'Bangles & Bracelets': '/images/artificial-jewellery/bangles.jpg',
@@ -165,15 +165,15 @@ const seedImageReplacementsBySlug = {
   },
   '22k-solid-gold-peacock-temple-jhumkas': {
     source: '/images/products/jewellery_temple_gold_jhumkas.jpg',
-    replacement: ARTIFICIAL_JEWELLERY_IMAGES.Earrings
+    replacement: '/images/artificial-jewellery/earring_01.png'
   },
   'antique-22k-gold-lakshmi-temple-danglers': {
     source: '/images/products/jewellery_temple_gold_jhumkas.jpg',
-    replacement: '/images/artificial-jewellery/jhumka-stock-closeup.jpg'
+    replacement: '/images/artificial-jewellery/earring_07.png'
   },
   'traditional-rajasthani-filigree-22k-gold-jhumkas': {
     source: '/images/products/jewellery_temple_gold_jhumkas.jpg',
-    replacement: '/images/artificial-jewellery/jhumka-stock-mehndi.jpg'
+    replacement: '/images/artificial-jewellery/earring_05.png'
   }
 };
 

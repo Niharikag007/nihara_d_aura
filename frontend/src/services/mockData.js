@@ -239,20 +239,22 @@ export const mockData = {
     },
     {
       "id": "prod_gold_jhumka",
-      "name": "22K Solid Gold Peacock Temple Jhumkas",
-      "slug": "22k-solid-gold-peacock-temple-jhumkas",
+      "name": "Royal Emerald Floral Jhumkas",
+      "slug": "royal-emerald-floral-jhumkas",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Temple Gold Jhumkas",
-      "price": 18999,
-      "originalPrice": 22000,
-      "discountPercent": 14,
+      "price": 790,
+      "originalPrice": 980,
+      "discountPercent": 19,
       "rating": 4.9,
       "reviewCount": 142,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/earrings.jpg"
+        "/images/artificial-jewellery/earring_01.png",
+        "/images/artificial-jewellery/earring_02.png",
+        "/images/artificial-jewellery/earring_05.png"
       ],
       "description": "Intricately carved 22K solid gold temple jhumka earrings featuring divine peacock motifs, ruby cabochons, and gold bead tassels.",
       "variants": [
@@ -271,20 +273,21 @@ export const mockData = {
     },
     {
       "id": "prod_kundan_chandbalis",
-      "name": "Royal Jadau Kundan & Pearl Chandbalis",
-      "slug": "royal-jadau-kundan-pearl-chandbalis",
+      "name": "Royal Ruby Flower Drop Earrings",
+      "slug": "royal-ruby-flower-drop-earrings",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Kundan Chandbalis",
-      "price": 16500,
-      "originalPrice": 19500,
-      "discountPercent": 15,
+      "price": 640,
+      "originalPrice": 820,
+      "discountPercent": 22,
       "rating": 4.9,
       "reviewCount": 95,
       "isFeatured": true,
       "isBestseller": true,
       "images": [
-        "/images/products/jewellery_kundan_chandbalis.jpg"
+        "/images/artificial-jewellery/earring_03.png",
+        "/images/artificial-jewellery/earring_06.png"
       ],
       "description": "Majestic crescent moon Chandbali earrings set in 22K gold plating with uncut polki kundan, green enamelling, and seed pearl clusters.",
       "variants": [
@@ -303,20 +306,21 @@ export const mockData = {
     },
     {
       "id": "prod_solitaire_studs",
-      "name": "18K Gold Floral Solitaire Stud Earrings",
-      "slug": "18k-gold-floral-solitaire-stud-earrings",
+      "name": "Pearl Gold Blossom Studs",
+      "slug": "pearl-gold-blossom-studs",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Temple Gold Jhumkas",
-      "price": 14200,
-      "originalPrice": 16500,
-      "discountPercent": 14,
+      "price": 870,
+      "originalPrice": 980,
+      "discountPercent": 11,
       "rating": 4.8,
       "reviewCount": 88,
       "isFeatured": false,
       "isBestseller": true,
       "images": [
-        "/images/artificial-jewellery/studs-stock.jpg"
+        "/images/artificial-jewellery/earring_04.png",
+        "/images/artificial-jewellery/earring_09.png"
       ],
       "description": "Classic floral cluster earrings handcrafted in 18K yellow gold with scintillating lab-grown diamond petals.",
       "variants": [
@@ -335,20 +339,21 @@ export const mockData = {
     },
     {
       "id": "prod_temple_danglers",
-      "name": "Antique 22K Gold Lakshmi Temple Danglers",
-      "slug": "antique-22k-gold-lakshmi-temple-danglers",
+      "name": "Golden Bell Temple Dangler Earrings",
+      "slug": "golden-bell-temple-dangler-earrings",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Kundan Chandbalis",
-      "price": 21000,
-      "originalPrice": 24500,
-      "discountPercent": 14,
+      "price": 950,
+      "originalPrice": 1180,
+      "discountPercent": 20,
       "rating": 5,
       "reviewCount": 73,
       "isFeatured": true,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/jhumka-stock-closeup.jpg"
+        "/images/artificial-jewellery/earring_07.png",
+        "/images/artificial-jewellery/earring_08.png"
       ],
       "description": "Divine Goddess Lakshmi motif carved in antique 22K gold with ruby accents and delicate gold bead bells.",
       "variants": [
@@ -366,20 +371,21 @@ export const mockData = {
     },
     {
       "id": "prod_filigree_jhumka",
-      "name": "Traditional Rajasthani Filigree 22K Gold Jhumkas",
-      "slug": "traditional-rajasthani-filigree-22k-gold-jhumkas",
+      "name": "Amber Crystal Festive Jhumkas",
+      "slug": "amber-crystal-festive-jhumkas",
       "category": "Jewellery",
       "categorySlug": "jewellery",
       "subcategory": "Temple Gold Jhumkas",
-      "price": 19800,
-      "originalPrice": 23000,
-      "discountPercent": 14,
+      "price": 720,
+      "originalPrice": 890,
+      "discountPercent": 19,
       "rating": 4.9,
       "reviewCount": 64,
       "isFeatured": false,
       "isBestseller": false,
       "images": [
-        "/images/artificial-jewellery/jhumka-stock-mehndi.jpg"
+        "/images/artificial-jewellery/earring_05.png",
+        "/images/artificial-jewellery/earring_02.png"
       ],
       "description": "Finely spun gold filigree dome jhumkas featuring delicate floral wirework and rhythmic dangling gold beads.",
       "variants": [
