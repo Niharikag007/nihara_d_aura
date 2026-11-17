@@ -6,6 +6,7 @@ import ProductCard from '../components/products/ProductCard';
 import HorizontalScroll from '../components/common/HorizontalScroll';
 import {
   ARTIFICIAL_JEWELLERY,
+  getProductImages,
   isArtificialJewellery,
   matchesJewellerySubcategory
 } from '../data/jewelleryCategories';
@@ -57,6 +58,8 @@ export default function Products() {
 
   // Filtering & Sorting
   let filtered = products.filter((p) => {
+    if (isArtificialJewellery(p) && getProductImages(p).length === 0) return false;
+
     // Category filter
     if (activeCategory.toLowerCase() !== 'all' &&
         (isArtificialJewellery(activeCategory)

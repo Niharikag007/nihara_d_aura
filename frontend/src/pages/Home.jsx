@@ -30,6 +30,7 @@ import HorizontalScroll from '../components/common/HorizontalScroll';
 import {
   ARTIFICIAL_JEWELLERY,
   ARTIFICIAL_JEWELLERY_IMAGES,
+  getProductImages,
   isArtificialJewellery,
   matchesJewellerySubcategory
 } from '../data/jewelleryCategories';
@@ -53,7 +54,8 @@ export default function Home() {
 
   // Filtered products for active category (guaranteed 100% unique from MongoDB)
   const allUniqueProducts = useMemo(() => {
-    return Array.from(new Map(products.map(p => [(p.id || p._id), p])).values());
+    return Array.from(new Map(products.map(p => [(p.id || p._id), p])).values())
+      .filter(product => !isArtificialJewellery(product) || getProductImages(product).length > 0);
   }, [products]);
 
   const filteredProducts = useMemo(() => {
