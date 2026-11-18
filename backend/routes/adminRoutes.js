@@ -34,17 +34,22 @@ router.get('/dashboard', async (req, res) => {
         category: p.category,
         categorySlug: p.categorySlug,
         subcategory: p.subcategory,
+        collection: p.productCollection || 'Jewellery',
+        cost: p.cost || 0,
         price: p.price,
         originalPrice: p.originalPrice,
         discountPercent: p.discountPercent,
         rating: p.rating,
         reviewCount: p.reviewCount,
         images: p.images,
+        image: p.image || (p.images && p.images[0]) || '',
         description: p.description,
         variants: p.variants,
         sizes: p.sizes,
         features: p.features,
         stock: p.stock,
+        status: p.status || 'Live',
+        soldLast30: p.soldLast30 || 0,
         isFeatured: p.isFeatured,
         isBestseller: p.isBestseller,
         createdAt: p.createdAt,
@@ -142,17 +147,22 @@ router.get('/products', async (req, res) => {
         category: p.category,
         categorySlug: p.categorySlug,
         subcategory: p.subcategory,
+        collection: p.productCollection || 'Jewellery',
+        cost: p.cost || 0,
         price: p.price,
         originalPrice: p.originalPrice,
         discountPercent: p.discountPercent,
         rating: p.rating,
         reviewCount: p.reviewCount,
         images: p.images,
+        image: p.image || (p.images && p.images[0]) || '',
         description: p.description,
         variants: p.variants,
         sizes: p.sizes,
         features: p.features,
         stock: p.stock,
+        status: p.status || 'Live',
+        soldLast30: p.soldLast30 || 0,
         isFeatured: p.isFeatured,
         isBestseller: p.isBestseller,
         createdAt: p.createdAt,
@@ -167,9 +177,14 @@ router.get('/products', async (req, res) => {
 router.post('/products', async (req, res) => {
   try {
     const productData = req.body;
+    // Map 'collection' from frontend to 'productCollection' in database
+    if (productData.collection) {
+      productData.productCollection = productData.collection;
+      delete productData.collection;
+    }
     const product = new Product(productData);
     const savedProduct = await product.save();
-    
+
     // Emit socket event for real-time update
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'product', action: 'create', data: savedProduct });
@@ -180,7 +195,30 @@ router.post('/products', async (req, res) => {
       message: 'Product created successfully',
       product: {
         id: savedProduct._id,
-        ...savedProduct.toObject(),
+        name: savedProduct.name,
+        slug: savedProduct.slug,
+        category: savedProduct.category,
+        categorySlug: savedProduct.categorySlug,
+        subcategory: savedProduct.subcategory,
+        collection: savedProduct.productCollection || 'Jewellery',
+        cost: savedProduct.cost || 0,
+        price: savedProduct.price,
+        originalPrice: savedProduct.originalPrice,
+        discountPercent: savedProduct.discountPercent,
+        rating: savedProduct.rating,
+        reviewCount: savedProduct.reviewCount,
+        images: savedProduct.images,
+        image: savedProduct.image || (savedProduct.images && savedProduct.images[0]) || '',
+        description: savedProduct.description,
+        variants: savedProduct.variants,
+        sizes: savedProduct.sizes,
+        features: savedProduct.features,
+        stock: savedProduct.stock,
+        status: savedProduct.status || 'Live',
+        soldLast30: savedProduct.soldLast30 || 0,
+        isFeatured: savedProduct.isFeatured,
+        isBestseller: savedProduct.isBestseller,
+        createdAt: savedProduct.createdAt,
       },
     });
   } catch (error) {
@@ -192,7 +230,13 @@ router.post('/products', async (req, res) => {
 router.patch('/products/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {
+    const updateData = { ...req.body };
+    // Map 'collection' from frontend to 'productCollection' in database
+    if (updateData.collection) {
+      updateData.productCollection = updateData.collection;
+      delete updateData.collection;
+    }
+    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });
@@ -211,7 +255,30 @@ router.patch('/products/:id', async (req, res) => {
       message: 'Product updated successfully',
       product: {
         id: updatedProduct._id,
-        ...updatedProduct.toObject(),
+        name: updatedProduct.name,
+        slug: updatedProduct.slug,
+        category: updatedProduct.category,
+        categorySlug: updatedProduct.categorySlug,
+        subcategory: updatedProduct.subcategory,
+        collection: updatedProduct.productCollection || 'Jewellery',
+        cost: updatedProduct.cost || 0,
+        price: updatedProduct.price,
+        originalPrice: updatedProduct.originalPrice,
+        discountPercent: updatedProduct.discountPercent,
+        rating: updatedProduct.rating,
+        reviewCount: updatedProduct.reviewCount,
+        images: updatedProduct.images,
+        image: updatedProduct.image || (updatedProduct.images && updatedProduct.images[0]) || '',
+        description: updatedProduct.description,
+        variants: updatedProduct.variants,
+        sizes: updatedProduct.sizes,
+        features: updatedProduct.features,
+        stock: updatedProduct.stock,
+        status: updatedProduct.status || 'Live',
+        soldLast30: updatedProduct.soldLast30 || 0,
+        isFeatured: updatedProduct.isFeatured,
+        isBestseller: updatedProduct.isBestseller,
+        createdAt: updatedProduct.createdAt,
       },
     });
   } catch (error) {

@@ -28,6 +28,29 @@ const productSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  // Admin-specific fields (use productCollection instead of collection to avoid reserved keyword)
+  productCollection: {
+    type: String,
+    enum: ['Jewellery', 'Makeup', 'Nails', 'Candles'],
+    default: 'Jewellery',
+  },
+  cost: {
+    type: Number,
+    default: 0,
+  },
+  status: {
+    type: String,
+    enum: ['Live', 'Draft'],
+    default: 'Live',
+  },
+  soldLast30: {
+    type: Number,
+    default: 0,
+  },
+  image: {
+    type: String,
+  },
+  // Pricing
   price: {
     type: Number,
     required: true,
