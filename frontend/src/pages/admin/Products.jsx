@@ -459,7 +459,7 @@ export default function Products() {
       <div className="flex flex-wrap items-center gap-2.5">
         {/* Collection Filter */}
         <div className="flex items-center gap-1.5 bg-white dark:bg-[#181416] p-1 rounded-xl border border-[#e9e3dd] dark:border-white/10 shadow-sm">
-          {['All', ...categories.map((category) => category.name)].map(col => (
+          {['All', 'Jewellery', 'Makeup', 'Nails', 'Candles'].map(col => (
             <button
               key={col}
               onClick={() => setCollectionFilter(col)}
