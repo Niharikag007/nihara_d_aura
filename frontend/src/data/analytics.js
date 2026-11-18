@@ -25,6 +25,7 @@ export function generateDailyRevenue(days) {
   }
   return data;
 }
+//hello
 
 export const dailyData = generateDailyRevenue(90);
 
