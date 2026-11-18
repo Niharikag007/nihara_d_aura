@@ -11,6 +11,7 @@ import Modal from '../../components/admin/Modal';
 import StatusPill from '../../components/admin/StatusPill';
 import ConfirmDialog from '../../components/admin/ConfirmDialog';
 import { formatINR, calcMargin } from '../../utils/adminUtils';
+import { getProductImage, isArtificialJewellery } from '../../data/jewelleryCategories';
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -248,27 +249,30 @@ export default function Products() {
       key: 'name',
       header: 'Product',
       sortable: true,
-      render: (val, row) => (
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 flex-shrink-0 border border-inherit">
-            {row.image ? (
-              <img src={row.image} alt={row.name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-xs font-bold text-stone-400">
-                {row.name.charAt(0)}
-              </div>
-            )}
+      render: (val, row) => {
+        const image = isArtificialJewellery(row) ? getProductImage(row) : row.image;
+        return (
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 flex-shrink-0 border border-inherit">
+              {image ? (
+                <img src={image} alt={row.name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-xs font-bold text-stone-400">
+                  {row.name.charAt(0)}
+                </div>
+              )}
+            </div>
+            <div className="min-w-0">
+              <span className="font-semibold block truncate text-stone-900 dark:text-white">
+                {row.name}
+              </span>
+              <span className="text-[11px] text-stone-400 block font-mono">
+                {row.id}
+              </span>
+            </div>
           </div>
-          <div className="min-w-0">
-            <span className="font-semibold block truncate text-stone-900 dark:text-white">
-              {row.name}
-            </span>
-            <span className="text-[11px] text-stone-400 block font-mono">
-              {row.id}
-            </span>
-          </div>
-        </div>
-      ),
+        );
+      },
     },
     {
       key: 'collection',
