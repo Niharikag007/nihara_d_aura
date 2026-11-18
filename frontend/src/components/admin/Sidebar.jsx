@@ -1,10 +1,11 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, BarChart3, Package, ShoppingBag, CalendarDays, Scissors, Layers, Boxes,
-  Tag, Users, BookOpen, Settings, Moon, Sun, ChevronLeft, Sparkles
+  Tag, Users, BookOpen, Settings, Moon, Sun, ChevronLeft, Sparkles, LogOut
 } from 'lucide-react';
 import useAdminStore from '../../store/useAdminStore';
+import { useAuth } from '../../context/AuthContext';
 
 const navGroups = [
   {
@@ -37,7 +38,14 @@ const navGroups = [
 ];
 
 export default function Sidebar({ collapsed, onCollapse }) {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const { darkMode, toggleDark, products, categories, services, orders, appointments, coupons, settings } = useAdminStore();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login?role=admin');
+  };
 
   const badges = {
     products: products.length,
@@ -80,6 +88,19 @@ export default function Sidebar({ collapsed, onCollapse }) {
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <ChevronLeft className={`w-4 h-4 transition-transform ${collapsed ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+
+        {/* Dark mode toggle (top left) */}
+        <div className="px-3 py-3 border-b border-white/8 flex-shrink-0">
+          <button
+            onClick={toggleDark}
+            className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-white/50 hover:text-white/80 hover:bg-white/5 transition-all w-full focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
+            aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {darkMode ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
+            {!collapsed && <span>{darkMode ? 'Light mode' : 'Dark mode'}</span>}
           </button>
         </div>
 
@@ -136,16 +157,16 @@ export default function Sidebar({ collapsed, onCollapse }) {
           ))}
         </nav>
 
-        {/* Theme toggle */}
+        {/* Logout button */}
         <div className="px-3 py-3 border-t border-white/8 flex-shrink-0">
           <button
-            onClick={toggleDark}
-            className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-white/50 hover:text-white/80 hover:bg-white/5 transition-all w-full focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+            onClick={handleLogout}
+            className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-all w-full focus:outline-none focus:ring-2 focus:ring-rose-500/50"
             style={{ fontFamily: 'Manrope, sans-serif' }}
-            aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label="Logout"
           >
-            {darkMode ? <Sun className="w-[18px] h-[18px]" /> : <Moon className="w-[18px] h-[18px]" />}
-            {!collapsed && <span>{darkMode ? 'Light mode' : 'Dark mode'}</span>}
+            <LogOut className="w-[18px] h-[18px]" />
+            {!collapsed && <span>Logout</span>}
           </button>
         </div>
       </aside>
@@ -181,6 +202,16 @@ export default function Sidebar({ collapsed, onCollapse }) {
             )}
           </NavLink>
         ))}
+        {/* Logout button for mobile */}
+        <button
+          onClick={handleLogout}
+          className="relative flex flex-col items-center gap-0.5 px-3 py-2 flex-shrink-0 text-[10px] font-medium text-rose-400 hover:text-rose-300 transition-colors focus:outline-none"
+          style={{ fontFamily: 'Manrope, sans-serif' }}
+          aria-label="Logout"
+        >
+          <LogOut className="w-5 h-5" />
+          <span className="whitespace-nowrap">Logout</span>
+        </button>
       </nav>
     </>
   );
