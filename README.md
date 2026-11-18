@@ -7,6 +7,8 @@
 ![Express](https://img.shields.io/badge/Express.js-4.21-000000?logo=express&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb&logoColor=white)
 
+[![Deployed with Vercel](https://vercel.com/button)](https://nihara-d-aura.vercel.app)
+
 Welcome to **Nihara D'Aura** (`Jewellery & Makeup`), a state-of-the-art, ultra-luxury e-commerce web application and salon booking platform built with modern web standards (React 19, Vite, Tailwind CSS, Node.js, Express, and MongoDB).
 
 ---
