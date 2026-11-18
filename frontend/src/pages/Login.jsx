@@ -38,6 +38,9 @@ export default function Login() {
   // OTP flow step: 'enter_identifier' | 'enter_otp'
   const [otpStep, setOtpStep] = useState('enter_identifier');
 
+  // Admin OTP flow step: 'enter_credentials' | 'enter_admin_otp'
+  const [adminOtpStep, setAdminOtpStep] = useState('enter_credentials');
+
   // Patron input (Email or Phone Number)
   const [identifier, setIdentifier] = useState('');
 
@@ -64,6 +67,7 @@ export default function Login() {
   useEffect(() => {
     if (roleParam === 'admin' || redirectParam === '/admin') {
       setIsAdminMode(true);
+      setAdminOtpStep('enter_credentials');
     }
     if (emailParam) {
       setIdentifier(emailParam);
@@ -152,7 +156,11 @@ export default function Login() {
         otpInputsRef.current[nextFocus].focus();
       }
       if (newOtp.every((digit) => /^\d$/.test(digit))) {
-        void handleVerifyOtp(undefined, newOtp.join(''));
+        if (isAdminMode) {
+          void handleAdminOtpVerification(undefined, newOtp.join(''));
+        } else {
+          void handleVerifyOtp(undefined, newOtp.join(''));
+        }
       }
       return;
     }
@@ -167,7 +175,11 @@ export default function Login() {
     }
 
     if (newOtp.every((digit) => /^\d$/.test(digit))) {
-      void handleVerifyOtp(undefined, newOtp.join(''));
+      if (isAdminMode) {
+        void handleAdminOtpVerification(undefined, newOtp.join(''));
+      } else {
+        void handleVerifyOtp(undefined, newOtp.join(''));
+      }
     }
   };
 
@@ -268,21 +280,106 @@ export default function Login() {
     const cleanEmail = adminEmail.trim().toLowerCase();
     try {
       const response = await api.login(cleanEmail, adminPassword, 'admin');
-      if (!response?.success || !response.token || response.user?.role !== 'admin') {
-        setErrorMessage(response?.message || 'Administrator authentication failed.');
-        return;
-      }
-      const result = login(response.user, response.token);
-      if (!result.success) {
-        setErrorMessage(result.message);
-        return;
-      }
-      showToast('Administrator sign-in successful.', 'success');
-      navigate(redirectParam || '/admin');
-    } catch (error) {
-      setErrorMessage(error.message || 'Administrator authentication failed.');
-    } finally {
       setIsSubmitting(false);
+
+      if (response?.success) {
+        // If OTP is required, show OTP input
+        if (response.requiresOtp || response.message?.toLowerCase().includes('otp')) {
+          setAdminOtpStep('enter_admin_otp');
+          showToast(response.message || 'Login OTP sent successfully to your email', 'success');
+          setResendTimer(30);
+        } else if (response.token && response.user?.role === 'admin') {
+          // Direct login without OTP
+          const result = login(response.user, response.token);
+          if (!result.success) {
+            setErrorMessage(result.message);
+            return;
+          }
+          showToast('Administrator sign-in successful.', 'success');
+          navigate(redirectParam || '/admin');
+        } else {
+          setErrorMessage(response?.message || 'Administrator authentication failed.');
+        }
+      } else {
+        setErrorMessage(response?.message || 'Administrator authentication failed.');
+      }
+    } catch (error) {
+      setIsSubmitting(false);
+      setErrorMessage(error.message || 'Administrator authentication failed.');
+    }
+  };
+
+  // Handle Admin OTP Verification
+  const handleAdminOtpVerification = async (e, verificationCode = otp.join('').trim()) => {
+    e?.preventDefault();
+    if (verificationInProgress.current) return;
+
+    setErrorMessage('');
+
+    if (!/^\d{6}$/.test(verificationCode)) {
+      setErrorMessage('Please enter the complete 6-digit verification code.');
+      return;
+    }
+
+    verificationInProgress.current = true;
+    setIsSubmitting(true);
+    const cleanEmail = adminEmail.trim().toLowerCase();
+
+    try {
+      const res = await api.verifyOtp(cleanEmail, verificationCode);
+
+      if (res && res.success) {
+        const verifiedUser = res.user || res.data?.user || {
+          id: 'usr_' + Date.now(),
+          name: cleanEmail.split('@')[0] || 'Admin',
+          email: cleanEmail,
+          role: 'admin',
+          tier: 'Administrator',
+          rewardPoints: 0
+        };
+
+        const loginResult = login(verifiedUser, res.token);
+        if (!loginResult.success) {
+          setErrorMessage(loginResult.message);
+          return;
+        }
+        showToast(`Welcome back, ${verifiedUser.name || 'Admin'}! Authentication verified.`, 'success');
+        navigate(redirectParam || '/admin');
+      } else {
+        setErrorMessage(res?.message || 'Invalid or expired verification code.');
+      }
+    } catch (err) {
+      setErrorMessage(err.message || 'Verification error. Please try again.');
+    } finally {
+      verificationInProgress.current = false;
+      setIsSubmitting(false);
+    }
+  };
+
+  // Resend Admin OTP
+  const handleResendAdminOtp = async () => {
+    if (resendTimer > 0) return;
+    if (isResending) return;
+    const cleanEmail = adminEmail.trim().toLowerCase();
+    setIsResending(true);
+    setOtp(['', '', '', '', '', '']);
+
+    try {
+      const res = await api.login(cleanEmail, adminPassword, 'admin');
+      if (res && res.success) {
+        setResendTimer(30);
+        showToast(res.message || `Fresh OTP dispatched to ${cleanEmail}`, 'info');
+      } else {
+        setErrorMessage(res?.message || 'Failed to resend OTP. Please try again.');
+      }
+    } catch (err) {
+      setErrorMessage(err.message || 'Error requesting a fresh OTP.');
+    } finally {
+      setIsResending(false);
+    }
+
+    if (otpInputsRef.current[0]) {
+      otpInputsRef.current[0].focus();
     }
   };
 
@@ -310,10 +407,12 @@ export default function Login() {
             <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-[#DFBC77]/60 bg-[#FAF7F2] text-[#855F14] text-[10.5px] font-semibold tracking-wider uppercase shadow-xs">
               <Sparkles className="w-3.5 h-3.5 text-[#C59B27]" />
               <span>
-                {isAdminMode 
-                  ? 'STAFF PORTAL ACCESS' 
-                  : otpStep === 'enter_otp' 
-                    ? 'SECURITY VERIFICATION' 
+                {isAdminMode
+                  ? adminOtpStep === 'enter_admin_otp'
+                    ? 'SECURITY VERIFICATION'
+                    : 'STAFF PORTAL ACCESS'
+                  : otpStep === 'enter_otp'
+                    ? 'SECURITY VERIFICATION'
                     : 'JEWELLERY • MAKEUP • SALON'}
               </span>
             </div>
@@ -329,15 +428,19 @@ export default function Login() {
           {/* Screen Title & Subtitle */}
           <div className="space-y-1">
             <h1 className="text-2xl sm:text-[26px] font-bold text-stone-900 tracking-tight">
-              {isAdminMode 
-                ? 'Staff Portal' 
-                : otpStep === 'enter_otp' 
-                  ? 'Verify Security Code' 
+              {isAdminMode
+                ? adminOtpStep === 'enter_admin_otp'
+                  ? 'Verify Security Code'
+                  : 'Staff Portal'
+                : otpStep === 'enter_otp'
+                  ? 'Verify Security Code'
                   : 'Welcome Back'}
             </h1>
             <p className="text-sm text-stone-500 font-normal max-w-xs mx-auto leading-relaxed">
               {isAdminMode
-                ? 'Enter administrative credentials to access management console'
+                ? adminOtpStep === 'enter_admin_otp'
+                  ? `Enter the 6-digit verification code dispatched to ${adminEmail}`
+                  : 'Enter administrative credentials to access management console'
                 : otpStep === 'enter_otp'
                   ? `Enter the 6-digit verification code dispatched to ${identifier}`
                   : 'Enter your email or phone number to receive an OTP'}
@@ -355,76 +458,159 @@ export default function Login() {
 
         {/* -------------------- ADMIN LOGIN FORM -------------------- */}
         {isAdminMode ? (
-          <form onSubmit={handleAdminPasswordLogin} className="space-y-4">
-            <div>
-              <label className="text-xs sm:text-[13px] font-['Times_New_Roman',_Times,_serif] font-normal tracking-wide text-stone-700 block mb-2 text-left">
-                Admin Email Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
-                  <Mail className="w-4 h-4 text-[#C59B27]" />
+          adminOtpStep === 'enter_credentials' ? (
+            <form onSubmit={handleAdminPasswordLogin} className="space-y-4">
+              <div>
+                <label className="text-xs sm:text-[13px] font-['Times_New_Roman',_Times,_serif] font-normal tracking-wide text-stone-700 block mb-2 text-left">
+                  Admin Email Address
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
+                    <Mail className="w-4 h-4 text-[#C59B27]" />
+                  </div>
+                  <input
+                    type="email"
+                    required
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value.toLowerCase())}
+                    placeholder="admin@niharadaura.com"
+                    className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#C59B27] hover:border-[#855F14] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                  />
                 </div>
-                <input
-                  type="email"
-                  required
-                  value={adminEmail}
-                  onChange={(e) => setAdminEmail(e.target.value.toLowerCase())}
-                  placeholder="admin@niharadaura.com"
-                  className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#C59B27] hover:border-[#855F14] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
-                />
               </div>
-            </div>
 
-            <div>
-              <label className="text-xs sm:text-[13px] font-['Times_New_Roman',_Times,_serif] font-normal tracking-wide text-stone-700 block mb-2 text-left">
-                Admin Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
-                  <Lock className="w-4 h-4 text-[#C59B27]" />
+              <div>
+                <label className="text-xs sm:text-[13px] font-['Times_New_Roman',_Times,_serif] font-normal tracking-wide text-stone-700 block mb-2 text-left">
+                  Admin Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
+                    <Lock className="w-4 h-4 text-[#C59B27]" />
+                  </div>
+                  <input
+                    type={showAdminPassword ? 'text' : 'password'}
+                    required
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full pl-10 pr-11 py-3.5 rounded-2xl border-2 border-[#C59B27] hover:border-[#855F14] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowAdminPassword(!showAdminPassword)}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 p-1"
+                    aria-label={showAdminPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showAdminPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
-                <input
-                  type={showAdminPassword ? 'text' : 'password'}
-                  required
-                  value={adminPassword}
-                  onChange={(e) => setAdminPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-10 pr-11 py-3.5 rounded-2xl border-2 border-[#C59B27] hover:border-[#855F14] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
-                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 rounded-2xl font-['Times_New_Roman',_Times,_serif] text-base tracking-wider text-white bg-gradient-to-r from-[#9E7318] via-[#C59B27] to-[#855F14] hover:from-[#B0831D] hover:via-[#D4AF37] hover:to-[#9E7318] shadow-[0_12px_28px_rgba(184,134,11,0.32)] hover:shadow-[0_16px_36px_rgba(184,134,11,0.42)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
+              >
+                <span>{isSubmitting ? 'Authenticating...' : 'Access Admin Console →'}</span>
+              </button>
+
+              <div className="text-center pt-1">
                 <button
                   type="button"
-                  onClick={() => setShowAdminPassword(!showAdminPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 p-1"
-                  aria-label={showAdminPassword ? 'Hide password' : 'Show password'}
+                  onClick={() => {
+                    setIsAdminMode(false);
+                    setAdminOtpStep('enter_credentials');
+                    setErrorMessage('');
+                    setAdminEmail('');
+                    setAdminPassword('');
+                    setOtp(['', '', '', '', '', '']);
+                  }}
+                  className="text-xs font-['Times_New_Roman',_Times,_serif] font-normal text-[#855F14] hover:underline cursor-pointer"
                 >
-                  {showAdminPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  ← Return to Patron Login
                 </button>
               </div>
-            </div>
+            </form>
+          ) : (
+            /* Admin OTP Verification Form */
+            <form onSubmit={handleAdminOtpVerification} className="space-y-5">
+              <div className="flex items-center justify-between text-xs text-stone-700 px-3 py-2.5 bg-[#FAF7F2] rounded-xl border border-[#E8DFC8]">
+                <span>Dispatched to: <b className="text-stone-900">{adminEmail}</b></span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAdminOtpStep('enter_credentials');
+                    setOtp(['', '', '', '', '', '']);
+                  }}
+                  className="text-[#855F14] font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <Edit3 className="w-3 h-3" />
+                  <span>Change</span>
+                </button>
+              </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-4 rounded-2xl font-['Times_New_Roman',_Times,_serif] text-base tracking-wider text-white bg-gradient-to-r from-[#9E7318] via-[#C59B27] to-[#855F14] hover:from-[#B0831D] hover:via-[#D4AF37] hover:to-[#9E7318] shadow-[0_12px_28px_rgba(184,134,11,0.32)] hover:shadow-[0_16px_36px_rgba(184,134,11,0.42)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
-            >
-              <span>{isSubmitting ? 'Authenticating...' : 'Access Admin Console →'}</span>
-            </button>
+              <div>
+                <label className="text-xs font-semibold text-stone-700 block mb-2 text-center uppercase tracking-wider">
+                  Enter 6-Digit Verification Code
+                </label>
+                <div className="flex items-center justify-center gap-2 sm:gap-2.5">
+                  {otp.map((digit, idx) => (
+                    <input
+                      key={idx}
+                      ref={(el) => (otpInputsRef.current[idx] = el)}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={digit}
+                      onChange={(e) => handleOtpDigitChange(e.target.value, idx)}
+                      onKeyDown={(e) => handleOtpKeyDown(e, idx)}
+                      className="w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-stone-900 bg-[#FCFAF6] focus:bg-white border-2 border-[#855F14] rounded-xl focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs"
+                    />
+                  ))}
+                </div>
+              </div>
 
-            <div className="text-center pt-1">
+              <div className="flex items-center justify-between text-xs text-stone-600 pt-1 px-1">
+                <span>Didn't receive code?</span>
+                <button
+                  type="button"
+                  onClick={handleResendAdminOtp}
+                  disabled={resendTimer > 0 || isResending}
+                  className="text-[#855F14] font-bold hover:underline flex items-center gap-1 cursor-pointer disabled:text-stone-400 disabled:no-underline disabled:cursor-not-allowed"
+                >
+                  {isResending ? (
+                    <LoaderCircle className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-3 h-3" />
+                  )}
+                  <span>{isResending ? 'Sending...' : resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend Code'}</span>
+                </button>
+              </div>
+
               <button
-                type="button"
-                onClick={() => {
-                  setIsAdminMode(false);
-                  setErrorMessage('');
-                  setAdminEmail('');
-                  setAdminPassword('');
-                }}
-                className="text-xs font-['Times_New_Roman',_Times,_serif] font-normal text-[#855F14] hover:underline cursor-pointer"
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 rounded-2xl font-bold text-base text-white bg-[#855F14] hover:bg-[#6e4d0d] active:scale-[0.99] shadow-[0_8px_20px_rgba(133,95,20,0.25)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
               >
-                ← Return to Patron Login
+                {isSubmitting && <LoaderCircle className="w-4 h-4 animate-spin" />}
+                <span>{isSubmitting ? 'Verifying Code...' : 'Verify & Enter →'}</span>
               </button>
-            </div>
-          </form>
+
+              <div className="text-center pt-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAdminOtpStep('enter_credentials');
+                    setErrorMessage('');
+                    setOtp(['', '', '', '', '', '']);
+                  }}
+                  className="text-xs font-['Times_New_Roman',_Times,_serif] font-normal text-[#855F14] hover:underline cursor-pointer"
+                >
+                  ← Back to Login
+                </button>
+              </div>
+            </form>
+          )
         ) : (
           /* -------------------- USER PASSWORDLESS OTP LOGIN -------------------- */
           <div className="space-y-4">
@@ -557,7 +743,9 @@ export default function Login() {
                     type="button"
                     onClick={() => {
                       setIsAdminMode(true);
+                      setAdminOtpStep('enter_credentials');
                       setErrorMessage('');
+                      setOtp(['', '', '', '', '', '']);
                     }}
                     className="text-[11px] text-stone-400 hover:text-[#855F14] transition-colors cursor-pointer"
                   >
