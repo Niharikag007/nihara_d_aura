@@ -3,14 +3,14 @@
 
 const products = [
   // ── JEWELLERY ──
-  { id: 'PRD-001', name: 'Pearl Bloom Choker Set', collection: 'Jewellery', sku: 'JWL-RGC-001', cost: 20100, price: 24500, stock: 7, status: 'Live', image: '/images/artificial-jewellery/necklaces/necklace_01.jpeg', soldLast30: 12, createdAt: '2026-06-15' },
-  { id: 'PRD-002', name: 'Royal Pearl Collar', collection: 'Jewellery', sku: 'JWL-DTC-002', cost: 27000, price: 32900, stock: 4, status: 'Live', image: '/images/artificial-jewellery/necklaces/necklace_02.jpeg', soldLast30: 8, createdAt: '2026-05-20' },
-  { id: 'PRD-003', name: '22K Solid Gold Peacock Temple Jhumkas', collection: 'Jewellery', sku: 'JWL-PJE-003', cost: 14500, price: 17800, stock: 15, status: 'Live', image: '/images/artificial-jewellery/earrings/earring_01.jpeg', soldLast30: 22, createdAt: '2026-04-10' },
-  { id: 'PRD-004', name: 'Royal Jadau Kundan & Pearl Chandbalis', collection: 'Jewellery', sku: 'JWL-BKH-004', cost: 38000, price: 46500, stock: 2, status: 'Live', image: '/images/artificial-jewellery/earrings/earring_08.jpeg', soldLast30: 3, createdAt: '2026-07-01' },
-  { id: 'PRD-005', name: 'Temple Pearl Kada Set', collection: 'Jewellery', sku: 'JWL-TGB-005', cost: 22000, price: 26800, stock: 9, status: 'Live', image: '/images/artificial-jewellery/bracelets/bracelet_01.jpeg', soldLast30: 6, createdAt: '2026-03-22' },
-  { id: 'PRD-006', name: 'Pearl Locket & Chain', collection: 'Jewellery', sku: 'JWL-GPL-006', cost: 8200, price: 10000, stock: 0, status: 'Live', image: '/images/artificial-jewellery/pendants/pendant_02.jpeg', soldLast30: 0, createdAt: '2026-08-05' },
-  { id: 'PRD-007', name: 'Floral Pendant Set', collection: 'Jewellery', sku: 'JWL-PDR-007', cost: 12500, price: 15200, stock: 11, status: 'Live', image: '/images/artificial-jewellery/pendants/pendant_03.jpeg', soldLast30: 14, createdAt: '2026-02-14' },
-  { id: 'PRD-008', name: 'Antique 22K Gold Lakshmi Temple Danglers', collection: 'Jewellery', sku: 'JWL-ANP-008', cost: 3400, price: 4200, stock: 25, status: 'Live', image: '/images/artificial-jewellery/earrings/earring_17.jpeg', soldLast30: 0, createdAt: '2026-09-10' },
+  { id: 'PRD-001', name: 'Pearl Bloom Choker Set', collection: 'Jewellery', sku: 'JWL-RGC-001', cost: 557, price: 680, stock: 7, status: 'Live', image: '/images/artificial-jewellery/necklaces/necklace_01.jpeg', soldLast30: 12, createdAt: '2026-06-15' },
+  { id: 'PRD-002', name: 'Royal Pearl Collar', collection: 'Jewellery', sku: 'JWL-DTC-002', cost: 623, price: 760, stock: 4, status: 'Live', image: '/images/artificial-jewellery/necklaces/necklace_02.jpeg', soldLast30: 8, createdAt: '2026-05-20' },
+  { id: 'PRD-003', name: '22K Solid Gold Peacock Temple Jhumkas', collection: 'Jewellery', sku: 'JWL-PJE-003', cost: 15579, price: 18999, stock: 15, status: 'Live', image: '/images/artificial-jewellery/earrings/earring_01.jpeg', soldLast30: 22, createdAt: '2026-04-10' },
+  { id: 'PRD-004', name: 'Royal Jadau Kundan & Pearl Chandbalis', collection: 'Jewellery', sku: 'JWL-BKH-004', cost: 13530, price: 16500, stock: 2, status: 'Live', image: '/images/artificial-jewellery/earrings/earring_08.jpeg', soldLast30: 3, createdAt: '2026-07-01' },
+  { id: 'PRD-005', name: 'Temple Pearl Kada Set', collection: 'Jewellery', sku: 'JWL-TGB-005', cost: 664, price: 810, stock: 9, status: 'Live', image: '/images/artificial-jewellery/bracelets/bracelet_01.jpeg', soldLast30: 6, createdAt: '2026-03-22' },
+  { id: 'PRD-006', name: 'Pearl Locket & Chain', collection: 'Jewellery', sku: 'JWL-GPL-006', cost: 500, price: 610, stock: 0, status: 'Live', image: '/images/artificial-jewellery/pendants/pendant_02.jpeg', soldLast30: 0, createdAt: '2026-08-05' },
+  { id: 'PRD-007', name: 'Floral Pendant Set', collection: 'Jewellery', sku: 'JWL-PDR-007', cost: 607, price: 740, stock: 11, status: 'Live', image: '/images/artificial-jewellery/pendants/pendant_03.jpeg', soldLast30: 14, createdAt: '2026-02-14' },
+  { id: 'PRD-008', name: 'Antique 22K Gold Lakshmi Temple Danglers', collection: 'Jewellery', sku: 'JWL-ANP-008', cost: 17220, price: 21000, stock: 25, status: 'Live', image: '/images/artificial-jewellery/earrings/earring_17.jpeg', soldLast30: 0, createdAt: '2026-09-10' },
 
   // ── MAKEUP ──
   { id: 'PRD-009', name: 'Glow velvet silk foundation', collection: 'Makeup', sku: 'MKP-GVF-009', cost: 1375, price: 2499, stock: 42, status: 'Live', image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400', soldLast30: 38, createdAt: '2026-01-18' },

@@ -740,29 +740,95 @@ router.put('/settings', async (req, res) => {
 // 9. Analytics
 router.get('/analytics', async (req, res) => {
   try {
-    const { days = 30 } = req.query;
+    const requestedDays = Math.max(1, parseInt(req.query.days, 10) || 30);
+    const days = requestedDays;
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - parseInt(days));
+    startDate.setHours(0, 0, 0, 0);
+    startDate.setDate(startDate.getDate() - days + 1);
+    const previousStart = new Date(startDate);
+    previousStart.setDate(previousStart.getDate() - days);
 
     const [orders, products, appointments] = await Promise.all([
-      Order.find({ createdAt: { $gte: startDate } }),
+      Order.find({ createdAt: { $gte: previousStart } }).populate('items.productId'),
       Product.find(),
       Booking.find({ createdAt: { $gte: startDate } }),
     ]);
 
-    const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
-    const totalOrders = orders.length;
-    const totalAppointments = appointments.length;
+    const currentOrders = orders.filter(order =>
+      order.createdAt >= startDate && order.status !== 'Cancelled'
+    );
+    const previousOrders = orders.filter(order =>
+      order.createdAt >= previousStart && order.createdAt < startDate && order.status !== 'Cancelled'
+    );
+    const revenue = currentOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+    const previousRevenue = previousOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+    const ordersCount = currentOrders.length;
+    const previousOrdersCount = previousOrders.length;
+    const aov = ordersCount ? revenue / ordersCount : 0;
+    const previousAov = previousOrdersCount ? previousRevenue / previousOrdersCount : 0;
+    const delta = (current, previous) => previous ? ((current - previous) / previous) * 100 : 0;
+
+    const chartData = [];
+    for (let offset = days - 1; offset >= 0; offset -= 1) {
+      const date = new Date();
+      date.setHours(0, 0, 0, 0);
+      date.setDate(date.getDate() - offset);
+      const nextDate = new Date(date);
+      nextDate.setDate(nextDate.getDate() + 1);
+      const dayOrders = currentOrders.filter(order => {
+        const createdAt = new Date(order.createdAt);
+        return createdAt >= date && createdAt < nextDate;
+      });
+      chartData.push({
+        date: date.toISOString().slice(0, 10),
+        label: date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+        revenue: dayOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0),
+        orders: dayOrders.length,
+      });
+    }
+
+    const productMap = new Map(products.map(product => [String(product._id), product]));
+    const collectionRevenue = new Map();
+    const topSellerMap = new Map();
+    currentOrders.forEach(order => {
+      (order.items || []).forEach(item => {
+        const quantity = Number(item.quantity) || 1;
+        const amount = Number(item.subtotal) || Number(item.price) * quantity || 0;
+        const productId = String(item.productId?._id || item.productId || '');
+        const product = productMap.get(productId);
+        const collection = product?.productCollection || product?.category || 'Other';
+        collectionRevenue.set(collection, (collectionRevenue.get(collection) || 0) + amount);
+
+        const sellerKey = productId || item.name || 'unknown';
+        const existing = topSellerMap.get(sellerKey) || {
+          id: sellerKey,
+          name: product?.name || item.name || 'Unknown product',
+          collection,
+          unitsSold: 0,
+          revenue: 0,
+        };
+        existing.unitsSold += quantity;
+        existing.revenue += amount;
+        topSellerMap.set(sellerKey, existing);
+      });
+    });
 
     res.status(200).json({
       success: true,
-      analytics: {
-        totalRevenue,
-        totalOrders,
-        totalAppointments,
-        totalProducts: products.length,
-        period: { days: parseInt(days), startDate },
-      },
+      revenue,
+      revenueDelta: delta(revenue, previousRevenue),
+      orders: ordersCount,
+      ordersDelta: delta(ordersCount, previousOrdersCount),
+      aov,
+      aovDelta: delta(aov, previousAov),
+      chartData,
+      revenueByCollection: Array.from(collectionRevenue, ([name, value]) => ({ name, value })),
+      topSellers: Array.from(topSellerMap.values()).sort((a, b) =>
+        b.revenue - a.revenue || b.unitsSold - a.unitsSold
+      ).slice(0, 8),
+      totalAppointments: appointments.length,
+      totalProducts: products.length,
+      period: { days, startDate },
     });
   } catch (error) {
     console.error('Error fetching analytics:', error);

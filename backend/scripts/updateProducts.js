@@ -64,6 +64,20 @@ async function updateProducts() {
       let needsUpdate = false;
       const seedMatch = seedProductBySlug.get(product.slug);
       const seedCategory = seedMatch?.category || seedMatch?.categorySlug || '';
+      if (seedMatch) {
+        if (Number(product.price) !== Number(seedMatch.price)) {
+          product.price = seedMatch.price;
+          needsUpdate = true;
+        }
+        if (seedMatch.originalPrice != null && Number(product.originalPrice) !== Number(seedMatch.originalPrice)) {
+          product.originalPrice = seedMatch.originalPrice;
+          needsUpdate = true;
+        }
+        if (seedMatch.discountPercent != null && Number(product.discountPercent) !== Number(seedMatch.discountPercent)) {
+          product.discountPercent = seedMatch.discountPercent;
+          needsUpdate = true;
+        }
+      }
       if (seedMatch && /jewell/i.test(seedCategory)) {
         if (product.name !== seedMatch.name) {
           product.name = seedMatch.name;

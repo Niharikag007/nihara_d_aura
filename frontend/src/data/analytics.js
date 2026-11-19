@@ -79,7 +79,7 @@ export const topSellers = [
   { id: 'PRD-014', name: 'Waterproof kajal duo pack', collection: 'Makeup', unitsSold: 45, revenue: 22455 },
   { id: 'PRD-019', name: 'Cuticle oil elixir (15 ml)', collection: 'Nails', unitsSold: 32, revenue: 12768 },
   { id: 'PRD-012', name: 'Rosé blush & highlighter duo', collection: 'Makeup', unitsSold: 27, revenue: 35073 },
-  { id: 'PRD-003', name: '22K Solid Gold Peacock Temple Jhumkas', collection: 'Jewellery', unitsSold: 22, revenue: 391600 },
+  { id: 'PRD-003', name: '22K Solid Gold Peacock Temple Jhumkas', collection: 'Jewellery', unitsSold: 22, revenue: 417978 },
   { id: 'PRD-025', name: 'Lavender room mist (200 ml)', collection: 'Candles', unitsSold: 22, revenue: 13178 },
   { id: 'PRD-018', name: 'French tip soft-gel extensions', collection: 'Nails', unitsSold: 21, revenue: 18879 },
 ];

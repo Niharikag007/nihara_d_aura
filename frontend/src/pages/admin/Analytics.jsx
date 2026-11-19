@@ -24,7 +24,19 @@ export default function Analytics() {
     setLoading(true);
     setError('');
     adminApi.getAnalytics(range).then((data) => {
-      if (active) setAnalytics(data);
+      if (!active) return;
+      const payload = data.analytics || data;
+      setAnalytics({
+        revenue: Number(payload.revenue ?? payload.totalRevenue) || 0,
+        revenueDelta: Number(payload.revenueDelta) || 0,
+        orders: Number(payload.orders ?? payload.totalOrders) || 0,
+        ordersDelta: Number(payload.ordersDelta) || 0,
+        aov: Number(payload.aov) || 0,
+        aovDelta: Number(payload.aovDelta) || 0,
+        chartData: Array.isArray(payload.chartData) ? payload.chartData : [],
+        revenueByCollection: Array.isArray(payload.revenueByCollection) ? payload.revenueByCollection : [],
+        topSellers: Array.isArray(payload.topSellers) ? payload.topSellers : [],
+      });
     }).catch((requestError) => {
       if (active) setError(requestError.message);
     }).finally(() => {
