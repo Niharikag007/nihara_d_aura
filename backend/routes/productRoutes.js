@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Product = require('../models/Product');
+const adminAuth = require('../middleware/adminAuth');
 
 // 1. Get all products (with filtering, search, sorting, and pagination)
 router.get('/', async (req, res) => {
@@ -98,7 +99,7 @@ router.get('/:slugOrId', async (req, res) => {
 });
 
 // 3. Create a new product
-router.post('/', async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   try {
     const {
       name,
@@ -161,7 +162,7 @@ router.post('/', async (req, res) => {
 });
 
 // 4. Update a product by id
-router.put('/:id', async (req, res) => {
+router.put('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -186,7 +187,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // 5. Delete a product by id
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 

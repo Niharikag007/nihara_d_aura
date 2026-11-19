@@ -59,13 +59,21 @@ export function ServiceProvider({ children }) {
     socket.on('booking:created', handleUpdate);
     socket.on('booking:cancelled', handleUpdate);
     socket.on('service:updated', handleUpdate);
+    socket.on('service:created', handleUpdate);
+    socket.on('service:deleted', handleUpdate);
     socket.on('category:updated', handleUpdate);
+    socket.on('category:created', handleUpdate);
+    socket.on('category:deleted', handleUpdate);
 
     return () => {
       socket.off('booking:created', handleUpdate);
       socket.off('booking:cancelled', handleUpdate);
       socket.off('service:updated', handleUpdate);
+      socket.off('service:created', handleUpdate);
+      socket.off('service:deleted', handleUpdate);
       socket.off('category:updated', handleUpdate);
+      socket.off('category:created', handleUpdate);
+      socket.off('category:deleted', handleUpdate);
     };
   }, [socket, fetchAllData]);
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Artist = require('../models/Artist');
+const adminAuth = require('../middleware/adminAuth');
 
 // 1. Get all artists
 router.get('/', async (req, res) => {
@@ -40,7 +41,7 @@ router.get('/:slugOrId', async (req, res) => {
 });
 
 // 3. Create artist
-router.post('/', async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   try {
     const { name, slug, role, experience, rating, reviewCount, avatar, bio, specialties } = req.body;
 
@@ -71,7 +72,7 @@ router.post('/', async (req, res) => {
 });
 
 // 4. Update artist
-router.put('/:id', async (req, res) => {
+router.put('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -96,7 +97,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // 5. Delete artist
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 

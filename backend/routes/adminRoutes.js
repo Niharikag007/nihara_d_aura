@@ -7,6 +7,8 @@ const Order = require('../models/Order');
 const Booking = require('../models/Booking');
 const Coupon = require('../models/Coupon');
 const User = require('../models/User');
+const Setting = require('../models/Setting');
+const InventoryAdjustment = require('../models/InventoryAdjustment');
 const adminAuth = require('../middleware/adminAuth');
 
 // Middleware to ensure all routes require admin authentication
@@ -15,7 +17,7 @@ router.use(adminAuth);
 // 1. Get Dashboard Data
 router.get('/dashboard', async (req, res) => {
   try {
-    const [products, orders, appointments, coupons, customers, services, categories] = await Promise.all([
+    const [products, orders, appointments, coupons, customers, services, categories, storedSettings] = await Promise.all([
       Product.find().sort({ createdAt: -1 }),
       Order.find().sort({ createdAt: -1 }),
       Booking.find().sort({ createdAt: -1 }),
@@ -23,6 +25,7 @@ router.get('/dashboard', async (req, res) => {
       User.find({ role: 'user' }).sort({ createdAt: -1 }),
       Service.find().sort({ createdAt: -1 }),
       Category.find().sort({ createdAt: -1 }),
+      Setting.findOne({ key: 'store' }),
     ]);
 
     res.status(200).json({
@@ -123,9 +126,9 @@ router.get('/dashboard', async (req, res) => {
         createdAt: cat.createdAt,
       })),
       settings: {
-        storeName: "Nihara D'Aura",
-        lowStockThreshold: 5,
-        targetMargins: { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 },
+        storeName: storedSettings?.storeName || "Nihara D'Aura",
+        lowStockThreshold: storedSettings?.lowStockThreshold ?? 5,
+        targetMargins: storedSettings?.targetMargins || { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 },
       },
     });
   } catch (error) {
@@ -188,6 +191,7 @@ router.post('/products', async (req, res) => {
     // Emit socket event for real-time update
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'product', action: 'create', data: savedProduct });
+      req.io.emit('product:created', savedProduct);
     }
 
     res.status(201).json({
@@ -248,6 +252,7 @@ router.patch('/products/:id', async (req, res) => {
     // Emit socket event for real-time update
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'product', action: 'update', data: updatedProduct });
+      req.io.emit('product:updated', updatedProduct);
     }
 
     res.status(200).json({
@@ -299,6 +304,7 @@ router.delete('/products/:id', async (req, res) => {
     // Emit socket event for real-time update
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'product', action: 'delete', data: { id } });
+      req.io.emit('product:deleted', { id });
     }
 
     res.status(200).json({
@@ -342,6 +348,7 @@ router.post('/categories', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'category', action: 'create', data: savedCategory });
+      req.io.emit('category:created', savedCategory);
     }
 
     res.status(201).json({
@@ -373,6 +380,7 @@ router.patch('/categories/:id', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'category', action: 'update', data: updatedCategory });
+      req.io.emit('category:updated', updatedCategory);
     }
 
     res.status(200).json({
@@ -401,6 +409,7 @@ router.delete('/categories/:id', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'category', action: 'delete', data: { id } });
+      req.io.emit('category:deleted', { id });
     }
 
     res.status(200).json({
@@ -450,6 +459,7 @@ router.post('/services', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'service', action: 'create', data: savedService });
+      req.io.emit('service:created', savedService);
     }
 
     res.status(201).json({
@@ -481,6 +491,7 @@ router.patch('/services/:id', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'service', action: 'update', data: updatedService });
+      req.io.emit('service:updated', updatedService);
     }
 
     res.status(200).json({
@@ -509,6 +520,7 @@ router.delete('/services/:id', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'service', action: 'delete', data: { id } });
+      req.io.emit('service:deleted', { id });
     }
 
     res.status(200).json({
@@ -537,6 +549,7 @@ router.patch('/orders/:id', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'order', action: 'update', data: updatedOrder });
+      req.io.emit('order:updated', updatedOrder);
     }
 
     res.status(200).json({
@@ -563,6 +576,7 @@ router.post('/appointments', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'appointment', action: 'create', data: savedAppointment });
+      req.io.emit('booking:created', savedAppointment);
     }
 
     res.status(201).json({
@@ -594,6 +608,10 @@ router.patch('/appointments/:id', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'appointment', action: 'update', data: updatedAppointment });
+      req.io.emit('booking:updated', updatedAppointment);
+      if (updatedAppointment.status === 'Cancelled') {
+        req.io.emit('booking:cancelled', updatedAppointment);
+      }
     }
 
     res.status(200).json({
@@ -622,6 +640,7 @@ router.delete('/appointments/:id', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'appointment', action: 'delete', data: { id } });
+      req.io.emit('booking:cancelled', { id });
     }
 
     res.status(200).json({
@@ -644,6 +663,7 @@ router.post('/coupons', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'coupon', action: 'create', data: savedCoupon });
+      req.io.emit('offer:created', savedCoupon);
     }
 
     res.status(201).json({
@@ -675,6 +695,7 @@ router.patch('/coupons/:id', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'coupon', action: 'update', data: updatedCoupon });
+      req.io.emit('offer:updated', updatedCoupon);
     }
 
     res.status(200).json({
@@ -703,6 +724,7 @@ router.delete('/coupons/:id', async (req, res) => {
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'coupon', action: 'delete', data: { id } });
+      req.io.emit('offer:deleted', { id });
     }
 
     res.status(200).json({
@@ -718,18 +740,25 @@ router.delete('/coupons/:id', async (req, res) => {
 // 8. Settings
 router.put('/settings', async (req, res) => {
   try {
-    // For now, just return the settings (in a real app, save to database)
-    const settings = {
-      ...req.body,
+    const defaults = {
       storeName: req.body.storeName || "Nihara D'Aura",
-      lowStockThreshold: req.body.lowStockThreshold || 5,
+      lowStockThreshold: Number(req.body.lowStockThreshold ?? 5),
       targetMargins: req.body.targetMargins || { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 },
     };
+    const settings = await Setting.findOneAndUpdate(
+      { key: 'store' },
+      { key: 'store', ...defaults },
+      { new: true, upsert: true, runValidators: true }
+    );
 
     res.status(200).json({
       success: true,
       message: 'Settings updated successfully',
-      settings,
+      settings: {
+        storeName: settings.storeName,
+        lowStockThreshold: settings.lowStockThreshold,
+        targetMargins: settings.targetMargins,
+      },
     });
   } catch (error) {
     console.error('Error updating settings:', error);
@@ -839,10 +868,21 @@ router.get('/analytics', async (req, res) => {
 // 10. Inventory Adjustments
 router.get('/inventory/adjustments', async (req, res) => {
   try {
-    // For now, return empty array (in a real app, save to database)
+    const adjustments = await InventoryAdjustment.find()
+      .sort({ createdAt: -1 })
+      .limit(200);
     res.status(200).json({
       success: true,
-      adjustments: [],
+      adjustments: adjustments.map(adjustment => ({
+        id: adjustment._id,
+        productId: adjustment.productId,
+        productName: adjustment.productName,
+        delta: adjustment.delta,
+        previousStock: adjustment.previousStock,
+        newStock: adjustment.newStock,
+        reason: adjustment.reason,
+        adjustedAt: adjustment.createdAt,
+      })),
     });
   } catch (error) {
     console.error('Error fetching inventory adjustments:', error);
@@ -854,18 +894,36 @@ router.post('/inventory/:id/adjustments', async (req, res) => {
   try {
     const { id } = req.params;
     const { delta, reason } = req.body;
+    const numericDelta = Number(delta);
+    if (!Number.isFinite(numericDelta) || numericDelta === 0) {
+      return res.status(400).json({ success: false, message: 'A non-zero numeric stock delta is required' });
+    }
+    if (!reason || !reason.trim()) {
+      return res.status(400).json({ success: false, message: 'A reason is required for stock adjustment' });
+    }
 
     const product = await Product.findById(id);
     if (!product) {
       return res.status(404).json({ success: false, message: 'Product not found' });
     }
 
-    product.stock = Math.max(0, product.stock + delta);
+    const previousStock = product.stock || 0;
+    product.stock = Math.max(0, previousStock + numericDelta);
     await product.save();
+    await InventoryAdjustment.create({
+      productId: product._id,
+      productName: product.name,
+      delta: numericDelta,
+      previousStock,
+      newStock: product.stock,
+      reason: reason.trim(),
+      adjustedBy: req.user._id,
+    });
 
     // Emit socket event
     if (req.io) {
       req.io.to('admin').emit('admin:data:changed', { type: 'product', action: 'update', data: product });
+      req.io.emit('product:updated', product);
     }
 
     res.status(200).json({

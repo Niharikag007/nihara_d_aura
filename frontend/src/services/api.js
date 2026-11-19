@@ -54,7 +54,9 @@ export const api = {
   async getProducts(params = {}) {
     const query = new URLSearchParams(params).toString();
     const serverRes = await request(`/products?${query}`);
-    if (serverRes && serverRes.products) return serverRes;
+    if (serverRes && Array.isArray(serverRes.data)) {
+      return { ...serverRes, products: serverRes.data };
+    }
 
     // Fallback logic
     let products = [...mockData.products];
@@ -70,7 +72,9 @@ export const api = {
 
   async getProductById(id) {
     const serverRes = await request(`/products/${id}`);
-    if (serverRes && serverRes.product) return serverRes;
+    if (serverRes && serverRes.data) {
+      return { ...serverRes, product: serverRes.data };
+    }
 
     const product = mockData.products.find(p => p.id === id || p.slug === id);
     const related = mockData.products.filter(p => p.id !== id).slice(0, 4);
@@ -80,7 +84,9 @@ export const api = {
   // Categories
   async getCategories() {
     const serverRes = await request('/categories');
-    if (serverRes && serverRes.categories) return serverRes;
+    if (serverRes && Array.isArray(serverRes.data)) {
+      return { ...serverRes, categories: serverRes.data };
+    }
     return { success: true, categories: mockData.categories };
   },
 
@@ -92,7 +98,9 @@ export const api = {
 
   async getCategoryBySlug(slug) {
     const serverRes = await request(`/categories/${slug}`);
-    if (serverRes && serverRes.category) return serverRes;
+    if (serverRes && serverRes.data) {
+      return { ...serverRes, category: serverRes.data };
+    }
     const category = mockData.categories.find(c => c.slug === slug || c.id === slug);
     return { success: true, category };
   },
@@ -100,20 +108,26 @@ export const api = {
   // Salon Services & Artists
   async getServices() {
     const serverRes = await request('/services');
-    if (serverRes && serverRes.services) return serverRes;
+    if (serverRes && Array.isArray(serverRes.data)) {
+      return { ...serverRes, services: serverRes.data };
+    }
     return { success: true, services: mockData.services };
   },
 
   async getServiceById(id) {
     const serverRes = await request(`/services/${id}`);
-    if (serverRes && serverRes.service) return serverRes;
+    if (serverRes && serverRes.data) {
+      return { ...serverRes, service: serverRes.data };
+    }
     const service = mockData.services.find(s => s.id === id);
     return { success: true, service };
   },
 
   async getArtists() {
     const serverRes = await request('/artists');
-    if (serverRes && serverRes.artists) return serverRes;
+    if (serverRes && Array.isArray(serverRes.data)) {
+      return { ...serverRes, artists: serverRes.data };
+    }
     return { success: true, artists: mockData.artists };
   },
 

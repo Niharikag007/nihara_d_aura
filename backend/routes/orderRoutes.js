@@ -1,66 +1,89 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
+const Order = require('../models/Order');
+const auth = require('../middleware/auth');
 
-// Sample mock orders store if none in db
-const sampleOrders = [
-  {
-    id: 'ord_91823',
-    orderId: 'ORD-91823',
-    createdAt: '2026-10-24T10:30:00.000Z',
-    items: [
-      {
-        id: 'prod_choker',
-        name: 'Nihara Signature 18K Rose Gold Choker',
-        price: 24500,
-        quantity: 1,
-        image: '/images/artificial-jewellery/choker-stock-rose.jpg'
-      }
-    ],
-    shippingAddress: {
-      fullName: 'Abhay Kumar',
-      street: '42 Lotus Heights',
-      city: 'Hyderabad',
-      state: 'Telangana',
-      pincode: '500033'
-    },
-    paymentMethod: 'Online Payment Gateway',
-    totalAmount: 24500,
-    status: 'Delivered',
-    trackingNumber: 'DEL-91823-EXP'
+router.use(auth);
+
+router.get('/', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: 'Sign in required' });
+    }
+    const orders = await Order.find({ userId: req.user._id }).sort({ createdAt: -1 });
+    res.status(200).json({
+      success: true,
+      orders: orders.map(order => ({
+        id: order._id,
+        orderId: `ORD-${String(order._id).slice(-8).toUpperCase()}`,
+        createdAt: order.createdAt,
+        items: order.items,
+        shippingAddress: order.shippingAddress,
+        paymentMethod: order.paymentMethod,
+        totalAmount: order.totalAmount,
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+        trackingNumber: order.trackingNumber,
+      })),
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Could not load orders' });
   }
-];
-
-router.get('/', (req, res) => {
-  res.status(200).json({
-    success: true,
-    orders: sampleOrders
-  });
 });
 
-router.post('/', (req, res) => {
-  const newOrder = {
-    id: `ord_${Date.now()}`,
-    orderId: `ORD-${Math.floor(10000 + Math.random() * 90000)}`,
-    createdAt: new Date().toISOString(),
-    status: 'Processing',
-    ...req.body
-  };
-  sampleOrders.unshift(newOrder);
-  res.status(201).json({
-    success: true,
-    order: newOrder
-  });
+router.post('/', async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: 'Sign in required' });
+    }
+    const items = (req.body.items || []).map(item => ({
+      productId: mongoose.Types.ObjectId.isValid(item.productId) ? item.productId : undefined,
+      name: item.name,
+      price: Number(item.price) || 0,
+      quantity: Number(item.qty || item.quantity) || 1,
+      subtotal: Number(item.price) || 0,
+    }));
+    const order = await Order.create({
+      userId: req.user._id,
+      customerName: req.body.customer || req.user.name,
+      customerEmail: req.body.email || req.user.email,
+      customerPhone: req.body.phone || req.user.phone || '',
+      items,
+      totalAmount: Number(req.body.totalAmount) || 0,
+      status: 'Pending',
+      paymentStatus: req.body.paymentStatus || 'Pending',
+      paymentMethod: req.body.paymentMethod,
+      shippingAddress: typeof req.body.shippingAddress === 'string'
+        ? { street: req.body.shippingAddress }
+        : req.body.shippingAddress,
+      notes: req.body.couponCode ? `Coupon: ${req.body.couponCode}` : '',
+    });
+    if (req.io) req.io.emit('order:created', { id: order._id });
+    res.status(201).json({
+      success: true,
+      order: {
+        id: order._id,
+        orderId: `ORD-${String(order._id).slice(-8).toUpperCase()}`,
+        createdAt: order.createdAt,
+        items: order.items,
+        shippingAddress: order.shippingAddress,
+        paymentMethod: order.paymentMethod,
+        totalAmount: order.totalAmount,
+        status: order.status,
+      },
+    });
+  } catch (error) {
+    console.error('Order create error:', error);
+    res.status(500).json({ success: false, message: 'Could not create order' });
+  }
 });
 
-router.patch('/:id', (req, res) => {
-  const order = sampleOrders.find(o => o.id === req.params.id || o.orderId === req.params.id);
-  if (order) {
-    Object.assign(order, req.body);
-    return res.status(200).json({ success: true, order });
+router.patch('/:id', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ success: false, message: 'Sign in required' });
   }
-  res.status(404).json({ success: false, message: 'Order not found' });
+  res.status(403).json({ success: false, message: 'Use the admin dashboard to update orders' });
 });
 
 module.exports = router;
-

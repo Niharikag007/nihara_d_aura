@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Coupon = require('../models/Coupon');
 
 const activeOffers = [
   {
@@ -31,11 +32,29 @@ const activeOffers = [
   }
 ];
 
-router.get('/', (req, res) => {
-  res.status(200).json({
-    success: true,
-    offers: activeOffers
-  });
+router.get('/', async (req, res) => {
+  try {
+    const coupons = await Coupon.find({ isActive: true }).sort({ createdAt: -1 });
+    if (coupons.length > 0) {
+      return res.status(200).json({
+        success: true,
+        offers: coupons.map(coupon => ({
+          id: coupon._id,
+          code: coupon.code,
+          discount: coupon.discountType === 'percentage'
+            ? `${coupon.discountValue}% OFF`
+            : `₹${coupon.discountValue} OFF`,
+          title: coupon.description || coupon.code,
+          description: coupon.description || `${coupon.code} coupon`,
+          minOrder: coupon.minOrderValue || 0,
+          validUntil: coupon.validUntil ? new Date(coupon.validUntil).toLocaleDateString('en-IN') : 'Ongoing',
+        })),
+      });
+    }
+  } catch (error) {
+    console.error('Error loading coupons:', error);
+  }
+  res.status(200).json({ success: true, offers: activeOffers });
 });
 
 module.exports = router;

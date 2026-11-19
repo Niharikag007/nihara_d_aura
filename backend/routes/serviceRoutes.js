@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Service = require('../models/Service');
+const adminAuth = require('../middleware/adminAuth');
 
 // 1. Get all services (with optional category filter)
 router.get('/', async (req, res) => {
@@ -47,7 +48,7 @@ router.get('/:slugOrId', async (req, res) => {
 });
 
 // 3. Create service
-router.post('/', async (req, res) => {
+router.post('/', adminAuth, async (req, res) => {
   try {
     const {
       name,
@@ -93,7 +94,7 @@ router.post('/', async (req, res) => {
 });
 
 // 4. Update service
-router.put('/:id', async (req, res) => {
+router.put('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -118,7 +119,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // 5. Delete service
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 

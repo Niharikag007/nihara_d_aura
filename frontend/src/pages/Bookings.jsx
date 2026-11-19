@@ -29,9 +29,11 @@ export default function Bookings() {
   useEffect(() => {
     if (!socket) return;
     socket.on('booking:created', fetchBookings);
+    socket.on('booking:updated', fetchBookings);
     socket.on('booking:cancelled', fetchBookings);
     return () => {
       socket.off('booking:created', fetchBookings);
+      socket.off('booking:updated', fetchBookings);
       socket.off('booking:cancelled', fetchBookings);
     };
   }, [socket, fetchBookings]);
