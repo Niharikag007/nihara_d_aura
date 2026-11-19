@@ -136,10 +136,10 @@ function AppLayout() {
             </Route>
 
             {/* ── Customer Portal Routes ── */}
-            <Route path="/book" element={<Booking />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/book" element={<ProtectedCustomerRoute><Booking /></ProtectedCustomerRoute>} />
+            <Route path="/cart" element={<ProtectedCustomerRoute><Cart /></ProtectedCustomerRoute>} />
+            <Route path="/checkout" element={<ProtectedCustomerRoute><Checkout /></ProtectedCustomerRoute>} />
+            <Route path="/wishlist" element={<ProtectedCustomerRoute><Wishlist /></ProtectedCustomerRoute>} />
             <Route path="/profile" element={<ProtectedCustomerRoute><Profile /></ProtectedCustomerRoute>} />
             <Route path="/profile/edit" element={<ProtectedCustomerRoute><Profile /></ProtectedCustomerRoute>} />
             <Route path="/orders" element={<ProtectedCustomerRoute><Orders /></ProtectedCustomerRoute>} />

@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useOffers } from './OffersContext';
 import { useAuth } from './AuthContext';
 import { api } from '../services/api';
@@ -11,8 +12,9 @@ const isRemovedProduct = (item) => removedProductIds.has(
 );
 
 export function CartProvider({ children }) {
+  const navigate = useNavigate();
   const { offers, validateCoupon } = useOffers();
-  const { token } = useAuth();
+  const { token, isAuthenticated } = useAuth();
 
   // Load saved cart from localStorage or start with empty bag
   const [items, setItems] = useState(() => {
@@ -122,6 +124,10 @@ export function CartProvider({ children }) {
   const totalItemCount = useMemo(() => items.reduce((acc, item) => acc + item.quantity, 0), [items]);
 
   const addToCart = useCallback((product, quantity = 1, variant = 'Standard', size = 'Standard') => {
+    if (!isAuthenticated) {
+      navigate(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`);
+      return false;
+    }
     setItems(prev => {
       const idx = prev.findIndex(i => i.productId === product.id && i.variant === variant && i.size === size);
       let next;
@@ -134,7 +140,8 @@ export function CartProvider({ children }) {
       saveCart(next);
       return next;
     });
-  }, [saveCart]);
+    return true;
+  }, [isAuthenticated, navigate, saveCart]);
 
   const updateQuantity = useCallback((productId, variant, size, delta) => {
     setItems(prev => {

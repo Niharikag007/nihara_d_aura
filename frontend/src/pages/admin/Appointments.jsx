@@ -8,9 +8,19 @@ import DataTable from '../../components/admin/DataTable';
 import Modal from '../../components/admin/Modal';
 import StatusPill from '../../components/admin/StatusPill';
 import { formatINR } from '../../utils/adminUtils';
-import { services, artists } from '../../data/appointments';
+import { useServices } from '../../context/ServiceContext';
 
 export default function Appointments() {
+  const { services: liveServices, artists: liveArtists } = useServices();
+  const services = (liveServices || []).map(service => ({
+    id: service.id || service._id,
+    name: service.name,
+    price: Number(service.price) || 0,
+    duration: Number(service.durationMinutes || service.duration) || 60,
+  }));
+  const artists = (liveArtists || []).map(artist => artist.name).filter(Boolean);
+  const defaultService = services[0];
+  const defaultArtist = artists[0] || '';
   const {
     darkMode,
     appointments,
@@ -26,12 +36,12 @@ export default function Appointments() {
   const [formData, setFormData] = useState({
     client: '',
     phone: '',
-    service: services[0].name,
-    price: services[0].price,
+    service: defaultService?.name || '',
+    price: defaultService?.price || 0,
     date: new Date().toISOString().split('T')[0],
     time: '12:00',
-    duration: services[0].duration,
-    artist: artists[0],
+    duration: defaultService?.duration || 60,
+    artist: defaultArtist,
     location: 'At salon – Bandra flagship',
     notes: '',
     status: 'Confirmed',
@@ -126,12 +136,12 @@ export default function Appointments() {
     setFormData({
       client: appointment.client || '',
       phone: appointment.phone || '',
-      service: appointment.service || services[0].name,
+      service: appointment.service || defaultService?.name || '',
       price: appointment.price || 0,
       date: String(appointment.date || new Date().toISOString()).slice(0, 10),
       time: timeInput,
-      duration: appointment.duration || services[0].duration,
-      artist: appointment.artist || artists[0],
+      duration: appointment.duration || defaultService?.duration || 60,
+      artist: appointment.artist || defaultArtist,
       location: appointment.location || appointment.locationDetails || 'At salon',
       notes: appointment.notes || '',
       status: appointment.status || 'Confirmed'
@@ -269,12 +279,12 @@ export default function Appointments() {
             setFormData({
               client: '',
               phone: '',
-              service: services[0].name,
-              price: services[0].price,
+              service: defaultService?.name || '',
+              price: defaultService?.price || 0,
               date: new Date().toISOString().split('T')[0],
               time: '12:00',
-              duration: services[0].duration,
-              artist: artists[0],
+              duration: defaultService?.duration || 60,
+              artist: defaultArtist,
               location: 'At salon – Bandra flagship',
               notes: '',
               status: 'Confirmed',

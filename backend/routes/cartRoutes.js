@@ -19,9 +19,12 @@ async function getUser(req) {
 router.get('/', async (req, res) => {
   try {
     const user = await getUser(req);
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Sign in required' });
+    }
     res.status(200).json({
       success: true,
-      items: user ? (user.cart || []) : []
+      items: user.cart || []
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Could not load cart' });
@@ -31,11 +34,12 @@ router.get('/', async (req, res) => {
 router.put('/', async (req, res) => {
   try {
     const user = await getUser(req);
-    const items = req.body.items || [];
-    if (user) {
-      user.cart = items;
-      await user.save();
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Sign in required' });
     }
+    const items = req.body.items || [];
+    user.cart = items;
+    await user.save();
     res.status(200).json({
       success: true,
       items

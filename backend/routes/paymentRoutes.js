@@ -1,7 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
+
+router.use(auth);
+
+function requireUser(req, res) {
+  if (!req.user) {
+    res.status(401).json({ success: false, message: 'Sign in required' });
+    return false;
+  }
+  return true;
+}
 
 router.post('/create-intent', (req, res) => {
+  if (!requireUser(req, res)) return;
   const { amount } = req.body;
   res.status(200).json({
     success: true,
@@ -15,6 +27,7 @@ router.post('/create-intent', (req, res) => {
 });
 
 router.post('/verify', (req, res) => {
+  if (!requireUser(req, res)) return;
   const { transactionId, paymentMethod } = req.body;
   res.status(200).json({
     success: true,

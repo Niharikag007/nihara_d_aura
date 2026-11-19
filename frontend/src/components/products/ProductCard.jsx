@@ -37,15 +37,18 @@ export default function ProductCard({ product }) {
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    addToCart(product, 1, product.variants?.[0] || 'Standard');
-    showToast(`${product.name} added to bag`, 'success');
+    const added = addToCart(product, 1, product.variants?.[0] || 'Standard');
+    if (added) showToast(`${product.name} added to bag`, 'success');
   };
 
   const handleWishlistToggle = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    toggleWishlist(product.id);
-    showToast(isFavorited ? `Removed from Wishlist` : `Saved to Wishlist`, 'info');
+    toggleWishlist(product.id).then((changed) => {
+      if (changed !== false) {
+        showToast(isFavorited ? `Removed from Wishlist` : `Saved to Wishlist`, 'info');
+      }
+    });
   };
 
   const handleQuickViewOpen = (e) => {

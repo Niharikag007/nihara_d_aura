@@ -17,12 +17,6 @@ async function getAuthenticatedUser(req) {
       }
     } catch (e) {}
   }
-  if (req.body && req.body.email) {
-    return await User.findOne({ email: req.body.email.toLowerCase() });
-  }
-  if (req.query && req.query.email) {
-    return await User.findOne({ email: req.query.email.toLowerCase() });
-  }
   return null;
 }
 

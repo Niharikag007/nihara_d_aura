@@ -49,13 +49,13 @@ export default function ProductDetails() {
   }, [product]);
 
   const handleAddToCart = () => {
-    addToCart(product, quantity, selectedVariant, selectedSize);
-    showToast(`${quantity}x ${product.name} added to bag!`, 'success');
+    const added = addToCart(product, quantity, selectedVariant, selectedSize);
+    if (added) showToast(`${quantity}x ${product.name} added to bag!`, 'success');
   };
 
   const handleBuyNow = () => {
-    addToCart(product, quantity, selectedVariant, selectedSize);
-    navigate('/checkout');
+    const added = addToCart(product, quantity, selectedVariant, selectedSize);
+    if (added) navigate('/checkout');
   };
 
   return (
