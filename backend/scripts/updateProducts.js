@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Product = require('../models/Product');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 async function updateProducts() {
@@ -9,10 +11,90 @@ async function updateProducts() {
 
     const products = await Product.find();
     console.log(`Found ${products.length} products`);
+    const seedPath = path.join(__dirname, '..', 'seeds', 'products.json');
+    const seedProducts = fs.existsSync(seedPath)
+      ? JSON.parse(fs.readFileSync(seedPath, 'utf8'))
+      : [];
+    const seedProductBySlug = new Map(seedProducts.map(product => [product.slug, product]));
+    const jewelleryNameAndImageBySlug = {
+      'nihara-signature-18k-rose-gold-choker': {
+        name: 'Pearl Bloom Choker Set',
+        image: '/images/artificial-jewellery/necklaces/necklace_01.jpeg'
+      },
+      'luminary-diamond-18k-rose-gold-tennis-choker': {
+        name: 'Royal Pearl Collar',
+        image: '/images/artificial-jewellery/necklaces/necklace_02.jpeg'
+      },
+      'blooming-flora-18k-rose-gold-layered-choker': {
+        name: 'Floral Kundan Layer Choker',
+        image: '/images/artificial-jewellery/necklaces/necklace_03.jpeg'
+      },
+      'regal-emerald-drop-18k-rose-gold-collar': {
+        name: 'Emerald Lace Collar',
+        image: '/images/artificial-jewellery/necklaces/necklace_04.jpeg'
+      },
+      'basra-pearl-18k-rose-gold-cascade-choker': {
+        name: 'Pearl Cascade Choker',
+        image: '/images/artificial-jewellery/necklaces/necklace_05.jpeg'
+      },
+      '22k-solid-gold-peacock-temple-jhumkas': {
+        name: '22K Solid Gold Peacock Temple Jhumkas',
+        image: '/images/artificial-jewellery/earrings/earring_01.jpeg'
+      },
+      'royal-jadau-kundan-pearl-chandbalis': {
+        name: 'Royal Jadau Kundan & Pearl Chandbalis',
+        image: '/images/artificial-jewellery/earrings/earring_08.jpeg'
+      },
+      '18k-gold-floral-solitaire-stud-earrings': {
+        name: '18K Gold Floral Solitaire Stud Earrings',
+        image: '/images/artificial-jewellery/earrings/earring_04.jpeg'
+      },
+      'antique-22k-gold-lakshmi-temple-danglers': {
+        name: 'Antique 22K Gold Lakshmi Temple Danglers',
+        image: '/images/artificial-jewellery/earrings/earring_17.jpeg'
+      },
+      'traditional-rajasthani-filigree-22k-gold-jhumkas': {
+        name: 'Traditional Rajasthani Filigree 22K Gold Jhumkas',
+        image: '/images/artificial-jewellery/earrings/earring_09.jpeg'
+      }
+    };
 
     let updated = 0;
     for (const product of products) {
       let needsUpdate = false;
+      const seedMatch = seedProductBySlug.get(product.slug);
+      const seedCategory = seedMatch?.category || seedMatch?.categorySlug || '';
+      if (seedMatch && /jewell/i.test(seedCategory)) {
+        if (product.name !== seedMatch.name) {
+          product.name = seedMatch.name;
+          needsUpdate = true;
+        }
+        if (Array.isArray(seedMatch.images) && seedMatch.images.length > 0) {
+          if (JSON.stringify(product.images) !== JSON.stringify(seedMatch.images)) {
+            product.images = seedMatch.images;
+            needsUpdate = true;
+          }
+          if (product.image !== seedMatch.images[0]) {
+            product.image = seedMatch.images[0];
+            needsUpdate = true;
+          }
+        }
+      }
+      const jewelleryMatch = jewelleryNameAndImageBySlug[product.slug];
+      if (jewelleryMatch) {
+        if (product.name !== jewelleryMatch.name) {
+          product.name = jewelleryMatch.name;
+          needsUpdate = true;
+        }
+        if (!Array.isArray(product.images) || !product.images.includes(jewelleryMatch.image)) {
+          product.images = [jewelleryMatch.image];
+          needsUpdate = true;
+        }
+        if (product.image !== jewelleryMatch.image) {
+          product.image = jewelleryMatch.image;
+          needsUpdate = true;
+        }
+      }
 
       // Set default productCollection based on product name and category
       const name = product.name?.toLowerCase() || '';

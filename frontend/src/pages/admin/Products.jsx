@@ -595,7 +595,7 @@ export default function Products() {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
-              placeholder="e.g. 22K peacock jhumka earrings"
+              placeholder="e.g. 22K Solid Gold Peacock Temple Jhumkas"
               className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
                 darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
               }`}

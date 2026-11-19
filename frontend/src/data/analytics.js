@@ -79,7 +79,7 @@ export const topSellers = [
   { id: 'PRD-014', name: 'Waterproof kajal duo pack', collection: 'Makeup', unitsSold: 45, revenue: 22455 },
   { id: 'PRD-019', name: 'Cuticle oil elixir (15 ml)', collection: 'Nails', unitsSold: 32, revenue: 12768 },
   { id: 'PRD-012', name: 'Rosé blush & highlighter duo', collection: 'Makeup', unitsSold: 27, revenue: 35073 },
-  { id: 'PRD-003', name: '22K peacock jhumka earrings', collection: 'Jewellery', unitsSold: 22, revenue: 391600 },
+  { id: 'PRD-003', name: '22K Solid Gold Peacock Temple Jhumkas', collection: 'Jewellery', unitsSold: 22, revenue: 391600 },
   { id: 'PRD-025', name: 'Lavender room mist (200 ml)', collection: 'Candles', unitsSold: 22, revenue: 13178 },
   { id: 'PRD-018', name: 'French tip soft-gel extensions', collection: 'Nails', unitsSold: 21, revenue: 18879 },
 ];
@@ -97,7 +97,7 @@ export const recentActivities = [
   { id: 2, type: 'booking', title: 'Salon booking #APT-501', subtitle: 'Ananya Verma assigned • Royal bridal glow', time: '18m ago' },
   { id: 3, type: 'order', title: 'New order #ORD-10040', subtitle: 'Meera Reddy • ₹8,499', time: '1h ago' },
   { id: 4, type: 'coupon', title: 'VIP voucher redeemed', subtitle: 'NIHARA10 applied on checkout', time: '2h ago' },
-  { id: 5, type: 'stock', title: 'Low stock warning', subtitle: '22K gold peacock jhumka (2 units left)', time: '4h ago' },
+  { id: 5, type: 'stock', title: 'Low stock warning', subtitle: '22K Solid Gold Peacock Temple Jhumkas (2 units left)', time: '4h ago' },
 ];
 
 export const recentActivity = [
