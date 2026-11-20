@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 // Configure Nodemailer (Hostinger SMTP for official domain / Gmail for personal)
@@ -131,10 +132,11 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// 2. Login: Existing user requests OTP via Email
+// 2. Login: Existing user requests OTP via Email (for regular users)
+// Admin with password skips OTP and gets direct JWT
 router.post('/login', async (req, res) => {
   try {
-    const { email, phone } = req.body;
+    const { email, phone, password, role } = req.body;
     const identifier = (email || phone || '').toLowerCase().trim();
 
     if (!identifier) {
@@ -157,6 +159,39 @@ router.post('/login', async (req, res) => {
       return res.status(403).json({ success: false, error: 'This account has been blocked. Please contact support.', message: 'This account has been blocked. Please contact support.' });
     }
 
+    // Admin password login (skip OTP)
+    if (role === 'admin' && password && user.role === 'admin' && user.password) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (isPasswordValid) {
+        user.isVerified = true;
+        await user.save();
+        const jwtSecret = process.env.JWT_SECRET || 'secret123';
+        const payload = { user: { id: user.id } };
+        const token = jwt.sign(payload, jwtSecret, { expiresIn: '30d' });
+        return res.status(200).json({
+          success: true,
+          message: 'Admin login successful',
+          token,
+          user: {
+            id: user.id,
+            _id: user.id,
+            fullName: user.fullName || user.name,
+            name: user.name || user.fullName,
+            email: user.email,
+            mobileNumber: user.mobileNumber || user.phone || '',
+            phone: user.phone || user.mobileNumber || '',
+            avatar: user.avatar || '',
+            tier: user.tier || 'Royal Member',
+            rewardPoints: user.rewardPoints || 0,
+            role: user.role || 'user',
+            isVerified: user.isVerified
+          }
+        });
+      }
+      return res.status(401).json({ success: false, error: 'Invalid password', message: 'Invalid password' });
+    }
+
+    // Regular OTP flow for non-admin or password-less login
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
