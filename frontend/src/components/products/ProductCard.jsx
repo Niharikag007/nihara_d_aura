@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, ShoppingBag, Star, Eye } from 'lucide-react';
+import { Heart, ShoppingCart, Star, Eye } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useToast } from '../../context/ToastContext';
@@ -8,7 +8,7 @@ import QuickViewModal from './QuickViewModal';
 import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductFallbackImage, getProductImage, getProductImageAlt, isArtificialJewellery } from '../../data/jewelleryCategories';
 
 export default function ProductCard({ product }) {
-  const { addToCart } = useCart();
+  const { addToCart, setIsDrawerOpen } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
 
@@ -38,7 +38,10 @@ export default function ProductCard({ product }) {
     e.preventDefault();
     e.stopPropagation();
     const added = addToCart(product, 1, product.variants?.[0] || 'Standard');
-    if (added) showToast(`${product.name} added to bag`, 'success');
+    if (added) {
+      showToast(`${product.name} added to cart`, 'success');
+      setIsDrawerOpen(true);
+    }
   };
 
   const handleWishlistToggle = (e) => {
@@ -140,10 +143,10 @@ export default function ProductCard({ product }) {
               <button
                 onClick={handleAddToCart}
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-[#DFBC77] bg-[#FCF9F2] text-[#855F14] shadow-sm transition-all duration-200 hover:bg-[#C59B27] hover:text-white active:scale-95"
-                title="Add to shopping bag"
-                aria-label={`Add ${product.name} to shopping bag`}
+                title="Add to cart"
+                aria-label={`Add ${product.name} to cart`}
               >
-                <ShoppingBag className="h-4 w-4" />
+                <ShoppingCart className="h-4 w-4" />
               </button>
             </div>
           </div>

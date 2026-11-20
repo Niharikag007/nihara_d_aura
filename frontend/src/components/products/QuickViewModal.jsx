@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { 
   X, 
   Heart, 
-  ShoppingBag, 
+  ShoppingCart,
   Star, 
   Check, 
   Sparkles, 
@@ -73,12 +73,12 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
   const handleAddToCart = () => {
     addToCart(product, quantity, selectedVariant, selectedSize);
-    showToast(`${quantity}x ${product.name} added to your bag`, 'success');
+    showToast(`${quantity}x ${product.name} added to your cart`, 'success');
   };
 
   const handleAddAndOpenDrawer = () => {
     addToCart(product, quantity, selectedVariant, selectedSize);
-    showToast(`${quantity}x ${product.name} added to your bag`, 'success');
+    showToast(`${quantity}x ${product.name} added to your cart`, 'success');
     onClose();
     setIsDrawerOpen(true);
   };
@@ -268,8 +268,8 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                     onClick={handleAddAndOpenDrawer}
                     className="flex-1 btn-gold py-2.5 rounded-full text-xs uppercase tracking-wider font-extrabold shadow-md flex items-center justify-center gap-2"
                   >
-                    <ShoppingBag className="w-4 h-4" />
-                    <span>Add to Bag</span>
+                    <ShoppingCart className="w-4 h-4" />
+                    <span>Add to Cart</span>
                   </button>
                   <button
                     onClick={() => toggleWishlist(product.id)}

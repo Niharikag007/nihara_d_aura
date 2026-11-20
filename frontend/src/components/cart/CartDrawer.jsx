@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Trash2, ShoppingBag, ArrowRight, Sparkles, Tag } from 'lucide-react';
+import { X, ShoppingCart, ArrowRight, Tag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useOffers } from '../../context/OffersContext';
 import { getProductImage, getProductImageAlt } from '../../data/jewelleryCategories';
@@ -68,8 +68,8 @@ export default function CartDrawer() {
           {/* Header */}
           <div className="p-4 sm:p-5 border-b border-[#E8DFC8] flex items-center justify-between bg-white/90 backdrop-blur-sm">
             <div className="flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5 text-[#C59B27]" />
-              <h2 className="font-serif text-lg font-bold text-[#1C1917]">Shopping Bag</h2>
+              <ShoppingCart className="w-5 h-5 text-[#C59B27]" />
+              <h2 className="font-serif text-lg font-bold text-[#1C1917]">Shopping Cart</h2>
               <span className="text-xs bg-[#FCF9F2] text-[#855F14] font-bold px-2 py-0.5 rounded-full border border-[#DFBC77]/40">
                 {items.length} {items.length === 1 ? 'item' : 'items'}
               </span>
@@ -77,7 +77,7 @@ export default function CartDrawer() {
             <button
               onClick={() => setIsDrawerOpen(false)}
               className="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-full transition-colors"
-              aria-label="Close Shopping Bag"
+              aria-label="Close Shopping Cart"
             >
               <X className="w-5 h-5" />
             </button>
@@ -88,9 +88,9 @@ export default function CartDrawer() {
             {items.length === 0 ? (
               <div className="text-center py-16 px-4">
                 <div className="w-16 h-16 rounded-full bg-[#FCF9F2] border border-[#DFBC77]/40 flex items-center justify-center mx-auto mb-4 text-[#C59B27] shadow-inner">
-                  <ShoppingBag className="w-8 h-8" />
+                  <ShoppingCart className="w-8 h-8" />
                 </div>
-                <h3 className="font-serif text-lg font-bold text-[#1C1917]">Your Bag is Empty</h3>
+                <h3 className="font-serif text-lg font-bold text-[#1C1917]">Your Cart is Empty</h3>
                 <p className="text-xs text-stone-500 mt-1 max-w-xs mx-auto leading-relaxed">
                   Discover our certified Kundan jewellery, silk cosmetics, and salon suites.
                 </p>

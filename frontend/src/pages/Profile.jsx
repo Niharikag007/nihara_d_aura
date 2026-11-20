@@ -749,7 +749,7 @@ export default function Profile() {
               }}
               className="w-full mt-5 py-2.5 rounded-xl bg-[#C59B27] hover:bg-[#A87D17] text-white text-xs font-bold uppercase tracking-wider shadow-md transition-all flex items-center justify-center gap-2"
             >
-              <span>Go to Shopping Bag</span>
+              <span>Go to Shopping Cart</span>
             </button>
           </div>
         </div>

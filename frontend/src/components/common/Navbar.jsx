@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
-  ShoppingBag, 
+  ShoppingCart, 
   Heart, 
   User, 
   Search, 
@@ -206,13 +206,14 @@ export default function Navbar() {
               )}
             </Link>
 
-            {/* Shopping Bag / Cart Trigger */}
+            {/* Shopping Cart Trigger */}
             <button
               onClick={() => setIsDrawerOpen(true)}
               className="relative p-1.5 sm:p-2 text-[#26221F] hover:text-[#C59B27] hover:bg-[#F4ECE1] rounded-full transition-all"
-              title="Shopping Bag"
+              title="Shopping Cart"
+              aria-label="Open Shopping Cart"
             >
-              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
+              <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
               {totalItemCount > 0 && (
                 <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[9px] sm:text-[10px] font-bold text-white bg-[#C59B27] rounded-full animate-scale-in">
                   {totalItemCount}

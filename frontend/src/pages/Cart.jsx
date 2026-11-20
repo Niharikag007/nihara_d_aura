@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShoppingBag, ArrowRight, X, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, ArrowRight, X, ArrowLeft } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useOffers } from '../context/OffersContext';
 import { getProductImage, getProductImageAlt } from '../data/jewelleryCategories';
@@ -34,11 +34,11 @@ export default function Cart() {
     return (
       <div className="flex min-h-[70vh] flex-col items-center justify-center bg-transparent px-4 py-10 text-center">
         <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-[#DFBC77] bg-[#FAF3E8] text-[#C59B27] shadow-inner">
-          <ShoppingBag className="h-10 w-10" />
+          <ShoppingCart className="h-10 w-10" />
         </div>
-        <span className="section-eyebrow">Your bag</span>
+        <span className="section-eyebrow">Your cart</span>
         <h2 className="mt-4 font-serif text-3xl font-bold text-[#1C1917] sm:text-4xl">
-          Your Shopping Bag is Empty
+          Your Shopping Cart is Empty
         </h2>
         <p className="mt-3 max-w-md text-sm text-stone-500 sm:text-base">
           Discover our luxury collections and add your favourites.
@@ -63,9 +63,9 @@ export default function Cart() {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div>
-          <span className="section-eyebrow">Luxury bag</span>
+          <span className="section-eyebrow">Luxury cart</span>
           <h1 className="mt-2 font-serif text-3xl font-bold text-[#1C1917] sm:text-4xl">
-            Shopping Bag
+            Shopping Cart
           </h1>
         </div>
       </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
   Heart, 
-  ShoppingBag, 
+  ShoppingCart, 
   Star, 
   ShieldCheck, 
   Truck, 
@@ -50,7 +50,10 @@ export default function ProductDetails() {
 
   const handleAddToCart = () => {
     const added = addToCart(product, quantity, selectedVariant, selectedSize);
-    if (added) showToast(`${quantity}x ${product.name} added to bag!`, 'success');
+    if (added) {
+      showToast(`${quantity}x ${product.name} added to cart!`, 'success');
+      setIsDrawerOpen(true);
+    }
   };
 
   const handleBuyNow = () => {
@@ -251,13 +254,13 @@ export default function ProductDetails() {
                 </button>
               </div>
 
-              {/* Add to Bag */}
+              {/* Add to Cart */}
               <button
                 onClick={handleAddToCart}
                 className="flex-1 btn-gold py-3 px-6 rounded-xl text-xs uppercase tracking-wider font-extrabold shadow-md hover:shadow-lg flex items-center justify-center gap-2"
               >
-                <ShoppingBag className="w-4 h-4" />
-                <span>Add to Shopping Bag</span>
+                <ShoppingCart className="w-4 h-4" />
+                <span>Add to Cart</span>
               </button>
 
               {/* Buy Now */}
