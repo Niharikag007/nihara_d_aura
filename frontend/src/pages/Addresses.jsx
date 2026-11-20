@@ -54,6 +54,33 @@ export default function Addresses() {
     isDefault: false
   });
 
+  const [fetchingPincode, setFetchingPincode] = useState(false);
+
+  // Fetch city/state from Indian PIN code
+  const handlePincodeLookup = async (pincode, isEdit = false) => {
+    if (!pincode || pincode.length !== 6) return;
+    setFetchingPincode(true);
+    try {
+      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+      const data = await res.json();
+      if (data && data[0] && data[0].Status === 'Success') {
+        const postOffice = data[0].PostOffice?.[0];
+        if (postOffice) {
+          const updater = isEdit ? setEditFormData : setNewAddr;
+          updater(prev => ({
+            ...prev,
+            city: postOffice.District || prev.city,
+            state: postOffice.State || prev.state
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('PIN code lookup failed:', error);
+    } finally {
+      setFetchingPincode(false);
+    }
+  };
+
   const loadAddresses = useCallback(async () => {
     try {
       const res = await api.getAddresses();
@@ -429,14 +456,24 @@ export default function Addresses() {
 
               <div>
                 <label className="text-[11px] font-bold uppercase text-stone-600">PIN Code</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. 400001"
-                  value={editFormData.postalCode}
-                  onChange={(e) => setEditFormData({ ...editFormData, postalCode: e.target.value })}
-                  className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 400001"
+                    maxLength={6}
+                    value={editFormData.postalCode}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                      setEditFormData({ ...editFormData, postalCode: val });
+                      if (val.length === 6) handlePincodeLookup(val, true);
+                    }}
+                    className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
+                  />
+                  {fetchingPincode && (
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-stone-400">Fetching...</span>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center gap-2 pt-1">
@@ -612,14 +649,24 @@ export default function Addresses() {
 
               <div>
                 <label className="text-[11px] font-bold uppercase text-stone-600">PIN Code</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. 400001"
-                  value={newAddr.postalCode}
-                  onChange={(e) => setNewAddr({ ...newAddr, postalCode: e.target.value })}
-                  className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 400001"
+                    maxLength={6}
+                    value={newAddr.postalCode}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                      setNewAddr({ ...newAddr, postalCode: val });
+                      if (val.length === 6) handlePincodeLookup(val, false);
+                    }}
+                    className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
+                  />
+                  {fetchingPincode && (
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-stone-400">Fetching...</span>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center gap-2 pt-1">
