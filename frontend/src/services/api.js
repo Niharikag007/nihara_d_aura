@@ -17,6 +17,12 @@ const getAuthHeaders = () => {
           'Authorization': `Bearer ${parsed.token}`,
           'x-user-role': parsed.user?.role || 'user'
         };
+
+        const normalizeProduct = (product) => {
+          if (!product || typeof product !== 'object') return product;
+          const normalizedId = product.id || product._id?.toString();
+          return normalizedId ? { ...product, id: normalizedId } : product;
+        };
       }
     }
   } catch (e) {}
@@ -52,7 +58,7 @@ export const api = {
     const query = new URLSearchParams(params).toString();
     const serverRes = await request(`/products?${query}`);
     if (serverRes && Array.isArray(serverRes.data)) {
-      return { ...serverRes, products: serverRes.data };
+      return { ...serverRes, products: serverRes.data.map(normalizeProduct) };
     }
     throw new Error(serverRes?.message || 'Could not load products.');
   },
@@ -60,7 +66,7 @@ export const api = {
   async getProductById(id) {
     const serverRes = await request(`/products/${id}`);
     if (serverRes && serverRes.data) {
-      return { ...serverRes, product: serverRes.data };
+      return { ...serverRes, product: normalizeProduct(serverRes.data) };
     }
     throw new Error(serverRes?.message || 'Could not load product.');
   },

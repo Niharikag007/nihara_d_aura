@@ -7,8 +7,16 @@ import { REMOVED_JEWELLERY_PRODUCT_IDS } from '../data/jewelleryCategories.js';
 const ProductContext = createContext();
 const removedProductIds = new Set(REMOVED_JEWELLERY_PRODUCT_IDS);
 
+const normalizeProduct = (product) => {
+  if (!product || typeof product !== 'object') return product;
+  const normalizedId = product.id || product._id?.toString();
+  return normalizedId ? { ...product, id: normalizedId } : product;
+};
+
 const withoutRemovedProducts = (productList) =>
-  productList.filter((product) => !removedProductIds.has(product.id || product._id));
+  productList
+    .map(normalizeProduct)
+    .filter((product) => !removedProductIds.has(product.id || product._id));
 
 const getAuthHeaders = () => {
   try {
@@ -90,6 +98,7 @@ export function ProductProvider({ children }) {
     if (!socket) return;
 
     const handleProductCreated = (newProd) => {
+      newProd = normalizeProduct(newProd);
       if (!newProd || removedProductIds.has(newProd.id || newProd._id)) return;
       setProducts(prev => {
         const prodId = newProd.id || newProd._id;
@@ -103,6 +112,7 @@ export function ProductProvider({ children }) {
     };
 
     const handleProductUpdated = (updatedProd) => {
+      updatedProd = normalizeProduct(updatedProd);
       if (!updatedProd || removedProductIds.has(updatedProd.id || updatedProd._id)) return;
       const targetId = updatedProd.id || updatedProd._id;
       setProducts(prev => {
@@ -217,7 +227,10 @@ export function ProductProvider({ children }) {
   }, [saveToStorage]);
 
   const getProductById = useCallback((idOrSlug) => {
-    return products.find(p => (p.id || p._id) === idOrSlug || p.slug === idOrSlug);
+    return products.find(p =>
+      (p.id || p._id?.toString()) === idOrSlug ||
+      p.slug === idOrSlug
+    );
   }, [products]);
 
   const contextValue = useMemo(() => ({

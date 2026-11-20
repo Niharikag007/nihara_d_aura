@@ -26,8 +26,33 @@ export default function ProductDetails() {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
 
-  const product = products.find(p => p.id === id || p.slug === id) || products[0];
-  const relatedProducts = products.filter(p => p.id !== product.id && p.category === product.category).slice(0, 4);
+  const product = products.find(p =>
+    p.id === id ||
+    p._id?.toString() === id ||
+    p.slug === id
+  );
+
+  if (!product) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center px-4">
+        <div className="text-center">
+          <h1 className="font-serif text-2xl font-bold text-[#1C1917]">Product not found</h1>
+          <p className="mt-2 text-sm text-stone-500">This product may be unavailable or has been removed.</p>
+          <Link
+            to="/products"
+            className="btn-gold mt-5 inline-flex rounded-full px-6 py-2.5 text-xs font-bold uppercase"
+          >
+            Back to Collection
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const relatedProducts = products.filter(p =>
+    (p.id || p._id?.toString()) !== (product.id || product._id?.toString()) &&
+    p.category === product.category
+  ).slice(0, 4);
 
   const [selectedVariant, setSelectedVariant] = useState(product.variants?.[0] || 'Default');
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || 'Standard');
