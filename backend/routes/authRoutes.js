@@ -159,36 +159,42 @@ router.post('/login', async (req, res) => {
       return res.status(403).json({ success: false, error: 'This account has been blocked. Please contact support.', message: 'This account has been blocked. Please contact support.' });
     }
 
-    // Admin password login (skip OTP)
-    if (role === 'admin' && password && user.role === 'admin' && user.password) {
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (isPasswordValid) {
-        user.isVerified = true;
-        await user.save();
-        const jwtSecret = process.env.JWT_SECRET || 'secret123';
-        const payload = { user: { id: user.id } };
-        const token = jwt.sign(payload, jwtSecret, { expiresIn: '30d' });
-        return res.status(200).json({
-          success: true,
-          message: 'Admin login successful',
-          token,
-          user: {
-            id: user.id,
-            _id: user.id,
-            fullName: user.fullName || user.name,
-            name: user.name || user.fullName,
-            email: user.email,
-            mobileNumber: user.mobileNumber || user.phone || '',
-            phone: user.phone || user.mobileNumber || '',
-            avatar: user.avatar || '',
-            tier: user.tier || 'Royal Member',
-            rewardPoints: user.rewardPoints || 0,
-            role: user.role || 'user',
-            isVerified: user.isVerified
-          }
-        });
+    // Admin password login (skip OTP) - auto-detect admin with password
+    if (user.role === 'admin' && user.password) {
+      if (password) {
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (isPasswordValid) {
+          user.isVerified = true;
+          await user.save();
+          const jwtSecret = process.env.JWT_SECRET || 'secret123';
+          const payload = { user: { id: user.id } };
+          const token = jwt.sign(payload, jwtSecret, { expiresIn: '30d' });
+          console.log('[AUTH] Admin login successful with password:', user.email);
+          return res.status(200).json({
+            success: true,
+            message: 'Admin login successful',
+            token,
+            user: {
+              id: user.id,
+              _id: user.id,
+              fullName: user.fullName || user.name,
+              name: user.name || user.fullName,
+              email: user.email,
+              mobileNumber: user.mobileNumber || user.phone || '',
+              phone: user.phone || user.mobileNumber || '',
+              avatar: user.avatar || '',
+              tier: user.tier || 'Royal Member',
+              rewardPoints: user.rewardPoints || 0,
+              role: user.role || 'user',
+              isVerified: user.isVerified
+            }
+          });
+        }
+        console.log('[AUTH] Admin password invalid for:', user.email);
+        return res.status(401).json({ success: false, error: 'Invalid password', message: 'Invalid password' });
       }
-      return res.status(401).json({ success: false, error: 'Invalid password', message: 'Invalid password' });
+      // Admin without password - fall through to OTP
+      console.log('[AUTH] Admin without password, using OTP flow:', user.email);
     }
 
     // Regular OTP flow for non-admin or password-less login
