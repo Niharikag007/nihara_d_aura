@@ -119,8 +119,8 @@ export default function ProductCard({ product }) {
 
             <div className="mt-2 flex items-center gap-1.5 text-xs text-stone-600">
               <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-              <span className="font-semibold text-stone-800">{product.rating || '4.9'}</span>
-              <span className="text-stone-400">({product.reviewCount || 38})</span>
+              <span className="font-semibold text-stone-800">{product.rating || '-'}</span>
+              {product.reviewCount && <span className="text-stone-400">({product.reviewCount})</span>}
             </div>
           </div>
 
