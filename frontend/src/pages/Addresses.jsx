@@ -55,11 +55,13 @@ export default function Addresses() {
   });
 
   const [fetchingPincode, setFetchingPincode] = useState(false);
+  const [pincodeError, setPincodeError] = useState('');
 
   // Fetch city/state from Indian PIN code
   const handlePincodeLookup = async (pincode, isEdit = false) => {
     if (!pincode || pincode.length !== 6) return;
     setFetchingPincode(true);
+    setPincodeError('');
     try {
       const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
       const data = await res.json();
@@ -72,10 +74,15 @@ export default function Addresses() {
             city: postOffice.District || prev.city,
             state: postOffice.State || prev.state
           }));
+        } else {
+          setPincodeError('City/state not found for this PIN code. Please enter manually below.');
         }
+      } else {
+        setPincodeError('Invalid PIN code. Please enter city/state manually below.');
       }
     } catch (error) {
       console.error('PIN code lookup failed:', error);
+      setPincodeError('Network error. Please enter city/state manually below.');
     } finally {
       setFetchingPincode(false);
     }
@@ -128,7 +135,14 @@ export default function Addresses() {
   // Submit Edit Address
   const handleSaveEdit = async (e) => {
     e.preventDefault();
-    if (!editingAddr || !editFormData.fullName || !editFormData.streetAddress) return;
+    if (!editFormData.fullName || !editFormData.streetAddress || !editFormData.postalCode) {
+      showToast('Please fill name, street address, and PIN code', 'error');
+      return;
+    }
+    if (!editFormData.city || !editFormData.state) {
+      showToast('Please fill city and state (auto-filled from PIN code or enter manually)', 'error');
+      return;
+    }
 
     try {
       await api.updateAddress(editingAddr.id, editFormData);
@@ -143,9 +157,11 @@ export default function Addresses() {
       }));
       setIsEditModalOpen(false);
       setEditingAddr(null);
+      setPincodeError('');
       showToast('Address updated successfully', 'success');
     } catch (err) {
-      showToast('Failed to update address', 'error');
+      console.error('Edit address error:', err);
+      showToast(err.message || 'Failed to update address', 'error');
     }
   };
 
@@ -173,7 +189,14 @@ export default function Addresses() {
   // Add Address
   const handleAddAddress = async (e) => {
     e.preventDefault();
-    if (!newAddr.fullName || !newAddr.streetAddress) return;
+    if (!newAddr.fullName || !newAddr.streetAddress || !newAddr.postalCode) {
+      showToast('Please fill name, street address, and PIN code', 'error');
+      return;
+    }
+    if (!newAddr.city || !newAddr.state) {
+      showToast('Please fill city and state (auto-filled from PIN code or enter manually)', 'error');
+      return;
+    }
 
     const payload = {
       isDefault: addresses.length === 0 ? true : newAddr.isDefault,
@@ -188,21 +211,25 @@ export default function Addresses() {
         } else {
           setAddresses(prev => [...prev, res.address]);
         }
+        setIsAddModalOpen(false);
+        setNewAddr({
+          type: 'Home',
+          fullName: '',
+          phone: '',
+          streetAddress: '',
+          city: '',
+          state: '',
+          postalCode: '',
+          isDefault: false
+        });
+        setPincodeError('');
+        showToast('Address saved successfully', 'success');
+      } else {
+        showToast('Server error: could not save address', 'error');
       }
-      setIsAddModalOpen(false);
-      setNewAddr({
-        type: 'Home',
-        fullName: '',
-        phone: '',
-        streetAddress: '',
-        city: '',
-        state: '',
-        postalCode: '',
-        isDefault: false
-      });
-      showToast('New sanctuary address saved', 'success');
     } catch (err) {
-      showToast('Failed to save address', 'error');
+      console.error('Add address error:', err);
+      showToast(err.message || 'Failed to save address', 'error');
     }
   };
 
@@ -434,7 +461,6 @@ export default function Addresses() {
                   <label className="text-[11px] font-bold uppercase text-stone-600">City</label>
                   <input
                     type="text"
-                    required
                     placeholder="e.g. Mumbai"
                     value={editFormData.city}
                     onChange={(e) => setEditFormData({ ...editFormData, city: e.target.value })}
@@ -445,7 +471,6 @@ export default function Addresses() {
                   <label className="text-[11px] font-bold uppercase text-stone-600">State</label>
                   <input
                     type="text"
-                    required
                     placeholder="e.g. Maharashtra"
                     value={editFormData.state}
                     onChange={(e) => setEditFormData({ ...editFormData, state: e.target.value })}
@@ -474,6 +499,7 @@ export default function Addresses() {
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-stone-400">Fetching...</span>
                   )}
                 </div>
+                {pincodeError && <p className="text-[10px] text-amber-700 mt-1">{pincodeError}</p>}
               </div>
 
               <div className="flex items-center gap-2 pt-1">
@@ -627,7 +653,6 @@ export default function Addresses() {
                   <label className="text-[11px] font-bold uppercase text-stone-600">City</label>
                   <input
                     type="text"
-                    required
                     placeholder="e.g. Mumbai"
                     value={newAddr.city}
                     onChange={(e) => setNewAddr({ ...newAddr, city: e.target.value })}
@@ -638,7 +663,6 @@ export default function Addresses() {
                   <label className="text-[11px] font-bold uppercase text-stone-600">State</label>
                   <input
                     type="text"
-                    required
                     placeholder="e.g. Maharashtra"
                     value={newAddr.state}
                     onChange={(e) => setNewAddr({ ...newAddr, state: e.target.value })}
@@ -667,6 +691,7 @@ export default function Addresses() {
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-stone-400">Fetching...</span>
                   )}
                 </div>
+                {pincodeError && <p className="text-[10px] text-amber-700 mt-1">{pincodeError}</p>}
               </div>
 
               <div className="flex items-center gap-2 pt-1">
