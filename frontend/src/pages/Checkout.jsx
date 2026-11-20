@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, ShieldCheck, ChevronRight, Lock, Smartphone, MapPin } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ShieldCheck, ChevronRight, Lock, Smartphone, MapPin, Banknote, CreditCard } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
@@ -29,8 +29,20 @@ export default function Checkout() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [createdOrderDetails, setCreatedOrderDetails] = useState(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('UPI');
+  const [paymentGateway, setPaymentGateway] = useState({ enabled: false, keyId: null });
   const [orderError, setOrderError] = useState('');
   const [addressError, setAddressError] = useState('');
+
+  useEffect(() => {
+    api.getPaymentConfig()
+      .then((res) => {
+        if (res?.gatewayEnabled && res?.keyId) {
+          setPaymentGateway({ enabled: true, keyId: res.keyId });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -60,53 +72,129 @@ export default function Checkout() {
       return;
     }
     setAddressError('');
-    setIsGatewayOpen(true);
+    if (paymentMethod === 'COD') {
+      placeOrder('COD');
+    } else if (paymentMethod === 'ONLINE') {
+      placeOnlineOrder();
+    } else {
+      setIsGatewayOpen(true);
+    }
   };
 
-  const handleUpiSubmitted = async () => {
+  const handleUpiSubmitted = () => {
     setIsGatewayOpen(false);
+    placeOrder('UPI');
+  };
+
+  const buildOrderPayload = (method, razorpayOrderId) => ({
+    items: items.map(i => ({
+      productId: i.product?.id || i.product?._id,
+      name: i.product?.name || 'Product',
+      qty: i.quantity,
+      variant: i.variant,
+      size: i.size,
+      price: (i.product?.price || 0) * i.quantity,
+      image: getProductImage(i.product)
+    })),
+    shippingAddress: {
+      fullName: deliveryAddress.fullName.trim(),
+      phone: deliveryAddress.phone.trim(),
+      street: deliveryAddress.streetAddress.trim(),
+      city: deliveryAddress.city.trim(),
+      state: deliveryAddress.state.trim(),
+      pincode: deliveryAddress.postalCode.trim()
+    },
+    customer: deliveryAddress.fullName.trim(),
+    email: user?.email,
+    phone: deliveryAddress.phone.trim(),
+    paymentMethod: method,
+    paymentStatus: 'Pending',
+    totalAmount,
+    couponCode: coupon?.code || null,
+    ...(razorpayOrderId ? { razorpayOrderId } : {})
+  });
+
+  const placeOrder = async (method) => {
     setIsPlacingOrder(true);
     setOrderError('');
 
-    const orderPayload = {
-      items: items.map(i => ({
-        productId: i.product?.id || i.product?._id,
-        name: i.product?.name || 'Product',
-        qty: i.quantity,
-        variant: i.variant,
-        size: i.size,
-        price: (i.product?.price || 0) * i.quantity,
-        image: getProductImage(i.product)
-      })),
-      shippingAddress: {
-        fullName: deliveryAddress.fullName.trim(),
-        phone: deliveryAddress.phone.trim(),
-        street: deliveryAddress.streetAddress.trim(),
-        city: deliveryAddress.city.trim(),
-        state: deliveryAddress.state.trim(),
-        pincode: deliveryAddress.postalCode.trim()
-      },
-      customer: deliveryAddress.fullName.trim(),
-      email: user?.email,
-      phone: deliveryAddress.phone.trim(),
-      paymentMethod: 'UPI',
-      paymentStatus: 'Pending',
-      totalAmount,
-      couponCode: coupon?.code || null
-    };
-
     try {
-      const res = await api.createOrder(orderPayload);
+      const res = await api.createOrder(buildOrderPayload(method));
       if (res?.order) {
-        setCreatedOrderDetails({ ...res.order, paymentMethod: 'UPI', paymentStatus: 'Pending' });
+        setCreatedOrderDetails({ ...res.order, paymentMethod: method, paymentStatus: 'Pending' });
         setIsSuccessModalOpen(true);
         clearCart();
       } else {
         setOrderError(res?.message || 'Order could not be saved. Please try again when the server is available.');
       }
     } catch (error) {
-      console.error('Failed to create UPI order:', error.message);
+      console.error(`Failed to create ${method} order:`, error.message);
       setOrderError(error.message || 'Order could not be saved. Please try again.');
+    } finally {
+      setIsPlacingOrder(false);
+    }
+  };
+
+  const loadRazorpayScript = () => new Promise((resolve, reject) => {
+    if (window.Razorpay) return resolve();
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Could not load the payment gateway. Check your connection and try again.'));
+    document.body.appendChild(script);
+  });
+
+  const placeOnlineOrder = async () => {
+    setIsPlacingOrder(true);
+    setOrderError('');
+
+    try {
+      const { order: razorpayOrder } = await api.createRazorpayOrder(totalAmount);
+      const res = await api.createOrder(buildOrderPayload('ONLINE', razorpayOrder.id));
+      if (!res?.order) {
+        throw new Error(res?.message || 'Order could not be saved. Please try again.');
+      }
+      const createdOrder = res.order;
+
+      await loadRazorpayScript();
+      const options = {
+        key: paymentGateway.keyId,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency || 'INR',
+        name: "Nihara D'Aura",
+        description: `Order ${createdOrder.orderId || ''}`,
+        order_id: razorpayOrder.id,
+        prefill: {
+          name: deliveryAddress.fullName.trim(),
+          email: user?.email || '',
+          contact: deliveryAddress.phone.trim(),
+        },
+        theme: { color: '#b58a2a' },
+        handler: async (response) => {
+          try {
+            await api.verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+            setCreatedOrderDetails({ ...createdOrder, paymentMethod: 'ONLINE', paymentStatus: 'Paid' });
+            setIsSuccessModalOpen(true);
+            clearCart();
+          } catch (verifyError) {
+            setOrderError(verifyError.message || 'Payment was received but verification failed. Please contact support with your order ID.');
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setOrderError('Payment was cancelled. Your order is saved with payment pending — you can complete payment later or choose another method.');
+          },
+        },
+      };
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error('Online payment failed:', error.message);
+      setOrderError(error.message || 'Online payment could not be started. Please try again.');
     } finally {
       setIsPlacingOrder(false);
     }
@@ -225,7 +313,7 @@ export default function Checkout() {
           </div>
         </div>
 
-        {/* 2. UPI-only Payment */}
+        {/* 2. Payment Method */}
         <div className="rounded-[1.75rem] border border-[#DFBC77]/40 bg-white p-5 shadow-[0_18px_32px_-28px_rgba(78,59,17,0.5)] space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-700">
@@ -233,17 +321,63 @@ export default function Checkout() {
             </h2>
             <div className="flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700">
               <ShieldCheck className="h-3.5 w-3.5" />
-              UPI Only
+              Secure
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-xl border border-[#C59B27] bg-[#FAF3E8] p-3.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#C59B27] text-white">
-              <Smartphone className="h-4 w-4" />
-            </span>
-            <div>
-              <span className="block text-xs font-bold text-stone-800">UPI / Google Pay / PhonePe</span>
-              <span className="text-[10px] text-stone-500">Pay from your UPI app</span>
-            </div>
+          <div className={`grid grid-cols-1 gap-3 ${paymentGateway.enabled ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
+            {paymentGateway.enabled && (
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('ONLINE')}
+                className={`flex items-center gap-3 rounded-xl border p-3.5 text-left transition ${
+                  paymentMethod === 'ONLINE'
+                    ? 'border-[#C59B27] bg-[#FAF3E8]'
+                    : 'border-stone-200 bg-[#FCF9F2] hover:border-[#DFBC77]'
+                }`}
+              >
+                <span className={`flex h-9 w-9 items-center justify-center rounded-lg text-white ${paymentMethod === 'ONLINE' ? 'bg-[#C59B27]' : 'bg-stone-400'}`}>
+                  <CreditCard className="h-4 w-4" />
+                </span>
+                <div>
+                  <span className="block text-xs font-bold text-stone-800">Online Payment</span>
+                  <span className="text-[10px] text-stone-500">UPI, cards, net banking</span>
+                </div>
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setPaymentMethod('UPI')}
+              className={`flex items-center gap-3 rounded-xl border p-3.5 text-left transition ${
+                paymentMethod === 'UPI'
+                  ? 'border-[#C59B27] bg-[#FAF3E8]'
+                  : 'border-stone-200 bg-[#FCF9F2] hover:border-[#DFBC77]'
+              }`}
+            >
+              <span className={`flex h-9 w-9 items-center justify-center rounded-lg text-white ${paymentMethod === 'UPI' ? 'bg-[#C59B27]' : 'bg-stone-400'}`}>
+                <Smartphone className="h-4 w-4" />
+              </span>
+              <div>
+                <span className="block text-xs font-bold text-stone-800">UPI / GPay / PhonePe</span>
+                <span className="text-[10px] text-stone-500">Pay from your UPI app</span>
+              </div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaymentMethod('COD')}
+              className={`flex items-center gap-3 rounded-xl border p-3.5 text-left transition ${
+                paymentMethod === 'COD'
+                  ? 'border-[#C59B27] bg-[#FAF3E8]'
+                  : 'border-stone-200 bg-[#FCF9F2] hover:border-[#DFBC77]'
+              }`}
+            >
+              <span className={`flex h-9 w-9 items-center justify-center rounded-lg text-white ${paymentMethod === 'COD' ? 'bg-[#C59B27]' : 'bg-stone-400'}`}>
+                <Banknote className="h-4 w-4" />
+              </span>
+              <div>
+                <span className="block text-xs font-bold text-stone-800">Cash on Delivery</span>
+                <span className="text-[10px] text-stone-500">Pay when you receive</span>
+              </div>
+            </button>
           </div>
         </div>
 
@@ -286,11 +420,25 @@ export default function Checkout() {
           <Lock className="h-4 w-4" />
           <span>
             {isPlacingOrder
-              ? 'Saving order...'
-              : `Continue with UPI (₹${totalAmount.toLocaleString('en-IN')})`}
+              ? 'Processing...'
+              : paymentMethod === 'COD'
+                ? `Place Order (COD ₹${totalAmount.toLocaleString('en-IN')})`
+                : paymentMethod === 'ONLINE'
+                  ? `Pay Online (₹${totalAmount.toLocaleString('en-IN')})`
+                  : `Continue with UPI (₹${totalAmount.toLocaleString('en-IN')})`}
           </span>
           <ChevronRight className="h-4 w-4" />
         </button>
+        {paymentMethod === 'UPI' && (
+          <p className="mt-2 text-center text-[10px] text-stone-400">
+            UPI payment status is confirmed manually after verification
+          </p>
+        )}
+        {paymentMethod === 'ONLINE' && (
+          <p className="mt-2 text-center text-[10px] text-stone-400">
+            Secure checkout powered by Razorpay — UPI, cards & net banking
+          </p>
+        )}
 
       </div>
 
@@ -327,13 +475,21 @@ export default function Checkout() {
               <div className="flex justify-between text-xs pt-1 border-t border-amber-200">
                 <span className="text-stone-500">Payment:</span>
                 <span className="font-bold text-amber-700">
-                  {createdOrderDetails?.paymentStatus || 'Pending verification'}
+                  {createdOrderDetails?.paymentMethod === 'COD'
+                    ? 'Pay on delivery'
+                    : createdOrderDetails?.paymentStatus === 'Paid'
+                      ? 'Paid'
+                      : createdOrderDetails?.paymentStatus || 'Pending verification'}
                 </span>
               </div>
             </div>
 
             <p className="text-xs text-stone-600 leading-relaxed">
-              Your order is saved. Payment will remain pending until your UPI transfer is verified.
+              {createdOrderDetails?.paymentMethod === 'COD'
+                ? 'Your order is confirmed. Please pay in cash when your order is delivered.'
+                : createdOrderDetails?.paymentStatus === 'Paid'
+                  ? 'Payment received successfully. Your order is confirmed and will be processed shortly.'
+                  : 'Your order is saved. Payment will remain pending until your UPI transfer is verified.'}
             </p>
 
             <button

@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '../config/api.js';
 
-async function request(path, options = {}) {
+async function request(path, options = {}, prefix = '/admin') {
   let session;
   try {
     session = JSON.parse(localStorage.getItem('nihara_auth') || 'null');
@@ -11,7 +11,7 @@ async function request(path, options = {}) {
     throw new Error('Please sign in with an administrator account');
   }
 
-  const response = await fetch(`${API_BASE_URL}/admin${path}`, {
+  const response = await fetch(`${API_BASE_URL}${prefix}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -103,6 +103,38 @@ export const adminApi = {
   },
   async deleteService(id) {
     return request(`/services/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  },
+  async getArtists() {
+    const result = await request('', {}, '/artists');
+    return {
+      ...result,
+      artists: (result.data || []).map((artist) => ({ ...artist, id: artist.id || artist._id }))
+    };
+  },
+  async createArtist(artist) {
+    const result = await request('', json('POST', artist), '/artists');
+    const saved = result.data || result.artist || {};
+    return { ...result, artist: { ...saved, id: saved.id || saved._id } };
+  },
+  async updateArtist(id, patch) {
+    const result = await request(`/${encodeURIComponent(id)}`, json('PUT', patch), '/artists');
+    const saved = result.data || result.artist || {};
+    return { ...result, artist: { ...saved, id: saved.id || saved._id } };
+  },
+  async deleteArtist(id) {
+    return request(`/${encodeURIComponent(id)}`, { method: 'DELETE' }, '/artists');
+  },
+  async getUsers() {
+    return request('/users');
+  },
+  async updateUser(id, patch) {
+    return request(`/users/${encodeURIComponent(id)}`, json('PATCH', patch));
+  },
+  async deleteUser(id) {
+    return request(`/users/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  },
+  async deleteOrder(id) {
+    return request(`/orders/${encodeURIComponent(id)}`, { method: 'DELETE' });
   }
 };
 

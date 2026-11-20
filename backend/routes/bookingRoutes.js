@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Booking = require('../models/Booking');
 const auth = require('../middleware/auth');
+const { notifyNewBooking } = require('../utils/mailer');
 
 router.use(auth);
 
@@ -55,6 +56,7 @@ router.post('/', async (req, res) => {
       totalAmount: Number(req.body.totalPayable || req.body.totalAmount) || 0,
     });
     if (req.io) req.io.emit('booking:created', { id: booking._id });
+    notifyNewBooking(booking, `BK-${String(booking._id).slice(-8).toUpperCase()}`);
     res.status(201).json({
       success: true,
       booking: {

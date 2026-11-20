@@ -22,6 +22,7 @@ const navGroups = [
       { to: '/admin/categories', icon: Layers, label: 'Categories', badgeKey: 'categories' },
       { to: '/admin/inventory', icon: Boxes, label: 'Inventory', badgeKey: 'lowStock' },
       { to: '/admin/services', icon: Scissors, label: 'Services', badgeKey: 'services' },
+      { to: '/admin/artists', icon: Sparkles, label: 'Artists' },
       { to: '/admin/orders', icon: ShoppingBag, label: 'Orders', badgeKey: 'ordersToShip' },
       { to: '/admin/appointments', icon: CalendarDays, label: 'Appointments', badgeKey: 'upcoming' },
       { to: '/admin/coupons', icon: Tag, label: 'Coupons', badgeKey: 'activeCoupons' },

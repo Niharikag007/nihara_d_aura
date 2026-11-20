@@ -153,6 +153,10 @@ router.post('/login', async (req, res) => {
       return res.status(404).json({ success: false, error: 'No account found with this email/phone. Please register first.', message: 'No account found with this email/phone. Please register first.' });
     }
 
+    if (user.isBlocked) {
+      return res.status(403).json({ success: false, error: 'This account has been blocked. Please contact support.', message: 'This account has been blocked. Please contact support.' });
+    }
+
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
@@ -194,6 +198,10 @@ router.post('/verify-otp', async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found', message: 'User not found' });
+    }
+
+    if (user.isBlocked) {
+      return res.status(403).json({ success: false, error: 'This account has been blocked. Please contact support.', message: 'This account has been blocked. Please contact support.' });
     }
 
     if (user.otp !== String(otp).trim() || !user.otpExpires || user.otpExpires < new Date()) {

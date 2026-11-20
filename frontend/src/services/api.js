@@ -182,13 +182,17 @@ export const api = {
   },
 
   // Payment Gateway
-  async createPaymentIntent(payload) {
-    const serverRes = await request('/payment/create-intent', {
+  async getPaymentConfig() {
+    return request('/payment/config');
+  },
+
+  async createRazorpayOrder(amount) {
+    const serverRes = await request('/payment/create-order', {
       method: 'POST',
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ amount })
     });
-    if (serverRes && serverRes.paymentIntent) return serverRes;
-    throw new Error(serverRes?.message || 'Could not create payment.');
+    if (serverRes && serverRes.order) return serverRes;
+    throw new Error(serverRes?.message || 'Could not create payment order.');
   },
 
   async verifyPayment(payload) {
@@ -196,8 +200,30 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(payload)
     });
-    if (serverRes && serverRes.verification) return serverRes;
+    if (serverRes && serverRes.success) return serverRes;
     throw new Error(serverRes?.message || 'Could not verify payment.');
+  },
+
+  // Reviews
+  async getReviews(productId) {
+    const serverRes = await request(`/reviews?productId=${encodeURIComponent(productId)}`);
+    if (serverRes && Array.isArray(serverRes.reviews)) return serverRes;
+    throw new Error(serverRes?.message || 'Could not load reviews.');
+  },
+
+  async submitReview(productId, { rating, comment }) {
+    const serverRes = await request('/reviews', {
+      method: 'POST',
+      body: JSON.stringify({ productId, rating, comment })
+    });
+    if (serverRes && serverRes.review) return serverRes;
+    throw new Error(serverRes?.message || 'Could not save review.');
+  },
+
+  async deleteReview(reviewId) {
+    const serverRes = await request(`/reviews/${reviewId}`, { method: 'DELETE' });
+    if (serverRes) return serverRes;
+    throw new Error(serverRes?.message || 'Could not delete review.');
   },
 
   // Orders

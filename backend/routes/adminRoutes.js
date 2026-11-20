@@ -69,6 +69,8 @@ router.get('/dashboard', async (req, res) => {
         paymentStatus: o.paymentStatus,
         paymentMethod: o.paymentMethod,
         shippingAddress: o.shippingAddress,
+        trackingNumber: o.trackingNumber,
+        carrier: o.carrier,
         createdAt: o.createdAt,
       })),
       appointments: appointments.map(a => ({
@@ -129,6 +131,14 @@ router.get('/dashboard', async (req, res) => {
         storeName: storedSettings?.storeName || "Nihara D'Aura",
         lowStockThreshold: storedSettings?.lowStockThreshold ?? 5,
         targetMargins: storedSettings?.targetMargins || { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 },
+        salonName: storedSettings?.salonName || "Nihara D'Aura Flagship Salon",
+        salonAddress: storedSettings?.salonAddress || "423 A, 4th Floor, Tower 3, NX One Tower, Greater Noida (West), UP - 201306",
+        salonPhone: storedSettings?.salonPhone || "+91 92660 59846",
+        salonEmail: storedSettings?.salonEmail || "support@niharadaura.com",
+        salonHours: storedSettings?.salonHours || "09:00 AM - 08:30 PM (Daily)",
+        salonAmenities: storedSettings?.salonAmenities?.length
+          ? storedSettings.salonAmenities
+          : ["Valet Parking", "Complimentary Kashmiri Kahwa", "Private Bridal Suites", "Sterilized Tools"],
       },
     });
   } catch (error) {
@@ -566,6 +576,30 @@ router.patch('/orders/:id', async (req, res) => {
   }
 });
 
+router.delete('/orders/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedOrder = await Order.findByIdAndDelete(id);
+
+    if (!deletedOrder) {
+      return res.status(404).json({ success: false, message: 'Order not found' });
+    }
+
+    if (req.io) {
+      req.io.to('admin').emit('admin:data:changed', { type: 'order', action: 'delete', data: { id } });
+      req.io.emit('order:deleted', { id });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Order deleted successfully',
+    });
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ success: false, message: 'Error deleting order' });
+  }
+});
+
 // 6. Appointments
 router.post('/appointments', async (req, res) => {
   try {
@@ -744,6 +778,14 @@ router.put('/settings', async (req, res) => {
       storeName: req.body.storeName || "Nihara D'Aura",
       lowStockThreshold: Number(req.body.lowStockThreshold ?? 5),
       targetMargins: req.body.targetMargins || { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 },
+      salonName: req.body.salonName || "Nihara D'Aura Flagship Salon",
+      salonAddress: req.body.salonAddress || "423 A, 4th Floor, Tower 3, NX One Tower, Greater Noida (West), UP - 201306",
+      salonPhone: req.body.salonPhone || "+91 92660 59846",
+      salonEmail: req.body.salonEmail || "support@niharadaura.com",
+      salonHours: req.body.salonHours || "09:00 AM - 08:30 PM (Daily)",
+      salonAmenities: Array.isArray(req.body.salonAmenities)
+        ? req.body.salonAmenities.map((item) => String(item).trim()).filter(Boolean)
+        : ["Valet Parking", "Complimentary Kashmiri Kahwa", "Private Bridal Suites", "Sterilized Tools"],
     };
     const settings = await Setting.findOneAndUpdate(
       { key: 'store' },
@@ -758,6 +800,12 @@ router.put('/settings', async (req, res) => {
         storeName: settings.storeName,
         lowStockThreshold: settings.lowStockThreshold,
         targetMargins: settings.targetMargins,
+        salonName: settings.salonName,
+        salonAddress: settings.salonAddress,
+        salonPhone: settings.salonPhone,
+        salonEmail: settings.salonEmail,
+        salonHours: settings.salonHours,
+        salonAmenities: settings.salonAmenities,
       },
     });
   } catch (error) {
@@ -937,6 +985,141 @@ router.post('/inventory/:id/adjustments', async (req, res) => {
   } catch (error) {
     console.error('Error adjusting inventory:', error);
     res.status(500).json({ success: false, message: 'Error adjusting inventory' });
+  }
+});
+
+// 11. Customer / User Management
+const serializeUser = (u, stats) => ({
+  id: u._id,
+  name: u.fullName || u.name || '',
+  email: u.email,
+  phone: u.mobileNumber || u.phone || '',
+  avatar: u.avatar || '',
+  role: u.role || 'user',
+  tier: u.tier || 'Royal Member',
+  rewardPoints: u.rewardPoints || 0,
+  isBlocked: Boolean(u.isBlocked),
+  blockedReason: u.blockedReason || '',
+  isVerified: Boolean(u.isVerified),
+  orderCount: stats?.orderCount || 0,
+  totalSpent: stats?.totalSpent || 0,
+  createdAt: u.createdAt,
+});
+
+router.get('/users', async (req, res) => {
+  try {
+    const [users, orders] = await Promise.all([
+      User.find().sort({ createdAt: -1 }),
+      Order.find().select('userId totalAmount status'),
+    ]);
+
+    const statsMap = new Map();
+    orders.forEach((order) => {
+      if (!order.userId) return;
+      const key = String(order.userId);
+      const stats = statsMap.get(key) || { orderCount: 0, totalSpent: 0 };
+      if (order.status !== 'Cancelled') {
+        stats.orderCount += 1;
+        stats.totalSpent += Number(order.totalAmount) || 0;
+      }
+      statsMap.set(key, stats);
+    });
+
+    res.status(200).json({
+      success: true,
+      users: users.map((u) => serializeUser(u, statsMap.get(String(u._id)))),
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ success: false, message: 'Error fetching users' });
+  }
+});
+
+router.patch('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const isSelf = String(user._id) === String(req.user._id);
+    const { role, isBlocked, blockedReason, name, fullName, phone, mobileNumber, tier, rewardPoints } = req.body;
+
+    if (isSelf && (role !== undefined && role !== 'admin')) {
+      return res.status(400).json({ success: false, message: 'You cannot remove your own admin role' });
+    }
+    if (isSelf && isBlocked === true) {
+      return res.status(400).json({ success: false, message: 'You cannot block your own account' });
+    }
+
+    if (role !== undefined) {
+      if (!['user', 'admin'].includes(role)) {
+        return res.status(400).json({ success: false, message: 'Invalid role' });
+      }
+      user.role = role;
+    }
+    if (isBlocked !== undefined) {
+      user.isBlocked = Boolean(isBlocked);
+      if (!user.isBlocked) user.blockedReason = '';
+    }
+    if (blockedReason !== undefined) user.blockedReason = String(blockedReason || '');
+    const resolvedName = fullName !== undefined ? fullName : name;
+    if (resolvedName !== undefined) {
+      user.fullName = resolvedName;
+      user.name = resolvedName;
+    }
+    const resolvedPhone = mobileNumber !== undefined ? mobileNumber : phone;
+    if (resolvedPhone !== undefined) {
+      user.mobileNumber = resolvedPhone;
+      user.phone = resolvedPhone;
+    }
+    if (tier !== undefined) user.tier = tier;
+    if (rewardPoints !== undefined) {
+      const points = Number(rewardPoints);
+      if (!Number.isFinite(points) || points < 0) {
+        return res.status(400).json({ success: false, message: 'Reward points must be a non-negative number' });
+      }
+      user.rewardPoints = points;
+    }
+
+    await user.save();
+
+    if (req.io) {
+      req.io.to('admin').emit('admin:data:changed', { type: 'customer', action: 'update', data: serializeUser(user) });
+    }
+
+    res.status(200).json({ success: true, message: 'User updated successfully', user: serializeUser(user) });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ success: false, message: 'Error updating user' });
+  }
+});
+
+router.delete('/users/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    if (String(user._id) === String(req.user._id)) {
+      return res.status(400).json({ success: false, message: 'You cannot delete your own account' });
+    }
+    if (user.role === 'admin') {
+      return res.status(400).json({ success: false, message: 'Admin accounts cannot be deleted from the customer panel' });
+    }
+
+    await User.findByIdAndDelete(id);
+
+    if (req.io) {
+      req.io.to('admin').emit('admin:data:changed', { type: 'customer', action: 'delete', data: { id } });
+    }
+
+    res.status(200).json({ success: true, message: 'User deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ success: false, message: 'Error deleting user' });
   }
 });
 

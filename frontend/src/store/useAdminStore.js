@@ -5,6 +5,12 @@ const DEFAULT_SETTINGS = {
   storeName: "Nihara D'Aura",
   lowStockThreshold: 5,
   targetMargins: { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 },
+  salonName: "Nihara D'Aura Flagship Salon",
+  salonAddress: "423 A, 4th Floor, Tower 3, NX One Tower, Greater Noida (West), UP - 201306",
+  salonPhone: "+91 92660 59846",
+  salonEmail: "support@niharadaura.com",
+  salonHours: "09:00 AM - 08:30 PM (Daily)",
+  salonAmenities: ["Valet Parking", "Complimentary Kashmiri Kahwa", "Private Bridal Suites", "Sterilized Tools"],
 };
 
 const showFailure = (set, error) => {
@@ -32,8 +38,10 @@ const useAdminStore = create((set, get) => ({
   appointments: [],
   coupons: [],
   customers: [],
+  users: [],
   services: [],
   categories: [],
+  artists: [],
   inventoryAdjustments: [],
   settings: DEFAULT_SETTINGS,
   checklist: { date: null, items: {} },
@@ -105,6 +113,29 @@ const useAdminStore = create((set, get) => ({
   deleteService: async (id) => perform(set, () => adminApi.deleteService(id), () => {
     set((state) => ({ services: state.services.filter((item) => item.id !== id) }));
   }),
+  loadUsers: async () => perform(set, () => adminApi.getUsers(), (data) => {
+    set({ users: data.users || [] });
+  }),
+  updateUser: async (id, patch) => perform(set, () => adminApi.updateUser(id, patch), (result) => {
+    set((state) => ({ users: state.users.map((item) => item.id === id ? result.user : item) }));
+  }),
+  deleteUser: async (id) => perform(set, () => adminApi.deleteUser(id), () => {
+    set((state) => ({ users: state.users.filter((item) => item.id !== id) }));
+  }),
+
+  loadArtists: async () => perform(set, () => adminApi.getArtists(), (data) => {
+    set({ artists: data.artists || [] });
+  }),
+  addArtist: async (artist) => perform(set, () => adminApi.createArtist(artist), (result) => {
+    set((state) => ({ artists: [result.artist, ...state.artists] }));
+  }),
+  updateArtist: async (id, patch) => perform(set, () => adminApi.updateArtist(id, patch), (result) => {
+    set((state) => ({ artists: state.artists.map((item) => item.id === id ? result.artist : item) }));
+  }),
+  deleteArtist: async (id) => perform(set, () => adminApi.deleteArtist(id), () => {
+    set((state) => ({ artists: state.artists.filter((item) => item.id !== id) }));
+  }),
+
   addCategory: async (category) => perform(set, () => adminApi.createCategory(category), (result) => {
     set((state) => ({ categories: [...state.categories, result.category] }));
   }),
@@ -164,6 +195,9 @@ const useAdminStore = create((set, get) => ({
   }),
   updateOrderDetails: async (id, patch) => perform(set, () => adminApi.updateOrder(id, patch), (result) => {
     set((state) => ({ orders: state.orders.map((order) => order.id === id ? result.order : order) }));
+  }),
+  deleteOrder: async (id) => perform(set, () => adminApi.deleteOrder(id), () => {
+    set((state) => ({ orders: state.orders.filter((order) => order.id !== id) }));
   }),
 
   addAppointment: async (appointment) => perform(set, () => adminApi.createAppointment(appointment), (result) => {

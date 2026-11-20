@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
   Heart, 
@@ -15,6 +15,8 @@ import { useProducts } from '../context/ProductContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 import ProductCard from '../components/products/ProductCard';
 import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductImage, getProductImageAlt, getProductImages, isArtificialJewellery } from '../data/jewelleryCategories';
 
@@ -25,6 +27,7 @@ export default function ProductDetails() {
   const { addToCart, setIsDrawerOpen } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { showToast } = useToast();
+  const { user } = useAuth();
 
   const product = products.find(p =>
     p.id === id ||
@@ -32,35 +35,79 @@ export default function ProductDetails() {
     p.slug === id
   );
 
-  if (!product) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center px-4">
-        <div className="text-center">
-          <h1 className="font-serif text-2xl font-bold text-[#1C1917]">Product not found</h1>
-          <p className="mt-2 text-sm text-stone-500">This product may be unavailable or has been removed.</p>
-          <Link
-            to="/products"
-            className="btn-gold mt-5 inline-flex rounded-full px-6 py-2.5 text-xs font-bold uppercase"
-          >
-            Back to Collection
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const relatedProducts = products.filter(p =>
+  const relatedProducts = product ? products.filter(p =>
     (p.id || p._id?.toString()) !== (product.id || product._id?.toString()) &&
     p.category === product.category
-  ).slice(0, 4);
+  ).slice(0, 4) : [];
 
-  const [selectedVariant, setSelectedVariant] = useState(product.variants?.[0] || 'Default');
-  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || 'Standard');
+  const [selectedVariant, setSelectedVariant] = useState(product?.variants?.[0] || 'Default');
+  const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || 'Standard');
   const [quantity, setQuantity] = useState(1);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
-  const productImages = getProductImages(product);
+  const productImages = product ? getProductImages(product) : [];
 
-  const isFavorited = isInWishlist(product.id);
+  const isFavorited = isInWishlist(product?.id);
+
+  // Reviews state
+  const productRefId = product?.id || product?._id?.toString();
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [liveRating, setLiveRating] = useState(null);
+  const [liveReviewCount, setLiveReviewCount] = useState(null);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewError, setReviewError] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [hoveredStar, setHoveredStar] = useState(0);
+
+  const loadReviews = async () => {
+    if (!productRefId) return;
+    setReviewsLoading(true);
+    try {
+      const res = await api.getReviews(productRefId);
+      setReviews(res.reviews || []);
+    } catch {
+      setReviews([]);
+    } finally {
+      setReviewsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setLiveRating(null);
+    setLiveReviewCount(null);
+    setReviewRating(5);
+    setReviewComment('');
+    setReviewError('');
+    loadReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productRefId]);
+
+  const handleSubmitReview = async (event) => {
+    event.preventDefault();
+    if (!user) {
+      showToast('Please sign in to write a review', 'error');
+      navigate('/login');
+      return;
+    }
+    setReviewError('');
+    setSubmittingReview(true);
+    try {
+      const res = await api.submitReview(productRefId, {
+        rating: reviewRating,
+        comment: reviewComment.trim()
+      });
+      setLiveRating(res.rating);
+      setLiveReviewCount(res.reviewCount);
+      setReviewComment('');
+      showToast('Thank you! Your review has been published.', 'success');
+      await loadReviews();
+    } catch (error) {
+      setReviewError(error.message || 'Could not save your review.');
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
 
   const cleanCategoryLabel = React.useMemo(() => {
     if (isArtificialJewellery(product)) return `${ARTIFICIAL_JEWELLERY.name} • ${getJewellerySubcategory(product)}`;
@@ -85,6 +132,23 @@ export default function ProductDetails() {
     const added = addToCart(product, quantity, selectedVariant, selectedSize);
     if (added) navigate('/checkout');
   };
+
+  if (!product) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center px-4">
+        <div className="text-center">
+          <h1 className="font-serif text-2xl font-bold text-[#1C1917]">Product not found</h1>
+          <p className="mt-2 text-sm text-stone-500">This product may be unavailable or has been removed.</p>
+          <Link
+            to="/products"
+            className="btn-gold mt-5 inline-flex rounded-full px-6 py-2.5 text-xs font-bold uppercase"
+          >
+            Back to Collection
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-transparent py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -159,10 +223,10 @@ export default function ProductDetails() {
             <div className="flex items-center gap-3">
               <div className="flex items-center text-amber-500 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
                 <Star className="w-4 h-4 fill-amber-400 text-amber-400 mr-1" />
-                <span className="text-xs font-bold text-stone-900">{product.rating}</span>
+                <span className="text-xs font-bold text-stone-900">{liveRating ?? product.rating}</span>
               </div>
               <span className="text-xs text-stone-500 font-medium">
-                ({product.reviewCount} Patron Reviews)
+                ({liveReviewCount ?? product.reviewCount} Patron Reviews)
               </span>
               <span className="text-xs text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold border border-emerald-200">
                 In Stock ({product.stock} units available)
@@ -317,6 +381,112 @@ export default function ProductDetails() {
 
         </div>
 
+      </div>
+
+      {/* Patron Reviews */}
+      <div className="mt-14 rounded-3xl border border-[#DFBC77]/40 bg-white p-6 sm:p-8 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <div>
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#1C1917]">
+              Patron Reviews
+            </h3>
+            <p className="text-xs text-stone-500 mt-1">
+              {liveReviewCount ?? reviews.length ? `${liveReviewCount ?? reviews.length} verified reviews` : 'Be the first to review this piece'}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center text-amber-500 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
+              <Star className="w-4 h-4 fill-amber-400 text-amber-400 mr-1" />
+              <span className="text-xs font-bold text-stone-900">{liveRating ?? product.rating}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Review form */}
+        <form onSubmit={handleSubmitReview} className="mb-8 rounded-2xl border border-[#DFBC77]/30 bg-[#FCF9F2] p-4 space-y-3">
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setReviewRating(star)}
+                onMouseEnter={() => setHoveredStar(star)}
+                onMouseLeave={() => setHoveredStar(0)}
+                aria-label={`Rate ${star} stars`}
+                className="p-0.5"
+              >
+                <Star className={`w-6 h-6 transition-colors ${
+                  star <= (hoveredStar || reviewRating)
+                    ? 'fill-amber-400 text-amber-400'
+                    : 'text-stone-300'
+                }`} />
+              </button>
+            ))}
+            <span className="ml-2 text-xs font-semibold text-stone-600">
+              {reviewRating} / 5
+            </span>
+          </div>
+          <textarea
+            value={reviewComment}
+            onChange={(e) => setReviewComment(e.target.value)}
+            rows={3}
+            maxLength={2000}
+            placeholder={user ? 'Share your experience with this product...' : 'Sign in to write a review'}
+            className="w-full rounded-xl border border-stone-200 bg-white px-3 py-2.5 text-sm text-stone-800 outline-none transition focus:border-[#C59B27] focus:ring-2 focus:ring-[#C59B27]/20"
+          />
+          {reviewError && <p role="alert" className="text-xs text-rose-600">{reviewError}</p>}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              disabled={submittingReview}
+              className="btn-gold rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider disabled:opacity-60"
+            >
+              {submittingReview ? 'Publishing…' : user ? 'Publish review' : 'Sign in to review'}
+            </button>
+          </div>
+        </form>
+
+        {/* Reviews list */}
+        {reviewsLoading ? (
+          <p className="text-xs text-stone-400">Loading reviews…</p>
+        ) : reviews.length === 0 ? (
+          <p className="text-xs text-stone-400">No reviews yet. Your review will appear here.</p>
+        ) : (
+          <ul className="divide-y divide-stone-100">
+            {reviews.map((review) => (
+              <li key={review.id} className="py-4 first:pt-0">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f3e7cf] text-sm font-bold text-[#8d681b]">
+                      {(review.customerName || 'C').charAt(0).toUpperCase()}
+                    </span>
+                    <div>
+                      <span className="block text-sm font-semibold text-stone-800">
+                        {review.customerName || 'Verified customer'}
+                      </span>
+                      <span className="block text-[11px] text-stone-400">
+                        {review.createdAt ? new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : ''}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-3.5 h-3.5 ${star <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-stone-200'}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+                {review.comment && (
+                  <p className="mt-2 text-xs sm:text-sm text-stone-600 leading-relaxed pl-12">
+                    {review.comment}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Related Products */}

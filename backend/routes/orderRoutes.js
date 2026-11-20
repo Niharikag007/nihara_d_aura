@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const Order = require('../models/Order');
 const auth = require('../middleware/auth');
+const { notifyNewOrder } = require('../utils/mailer');
 
 router.use(auth);
 
@@ -37,8 +38,11 @@ router.post('/', async (req, res) => {
     if (!req.user) {
       return res.status(401).json({ success: false, message: 'Sign in required' });
     }
-    if (req.body.paymentMethod !== 'UPI') {
-      return res.status(400).json({ success: false, message: 'Only UPI payments are accepted' });
+    const paymentMethod = ['UPI', 'COD', 'ONLINE'].includes(req.body.paymentMethod)
+      ? req.body.paymentMethod
+      : null;
+    if (!paymentMethod) {
+      return res.status(400).json({ success: false, message: 'paymentMethod must be UPI or COD' });
     }
     const items = (req.body.items || []).map(item => ({
       productId: mongoose.Types.ObjectId.isValid(item.productId) ? item.productId : undefined,
@@ -56,13 +60,15 @@ router.post('/', async (req, res) => {
       totalAmount: Number(req.body.totalAmount) || 0,
       status: 'Pending',
       paymentStatus: 'Pending',
-      paymentMethod: 'UPI',
+      paymentMethod,
+      razorpayOrderId: typeof req.body.razorpayOrderId === 'string' ? req.body.razorpayOrderId : undefined,
       shippingAddress: typeof req.body.shippingAddress === 'string'
         ? { street: req.body.shippingAddress }
         : req.body.shippingAddress,
       notes: req.body.couponCode ? `Coupon: ${req.body.couponCode}` : '',
     });
     if (req.io) req.io.emit('order:created', { id: order._id });
+    notifyNewOrder(order, `ORD-${String(order._id).slice(-8).toUpperCase()}`);
     res.status(201).json({
       success: true,
       order: {
@@ -72,6 +78,7 @@ router.post('/', async (req, res) => {
         items: order.items,
         shippingAddress: order.shippingAddress,
         paymentMethod: order.paymentMethod,
+        paymentStatus: order.paymentStatus,
         totalAmount: order.totalAmount,
         status: order.status,
       },

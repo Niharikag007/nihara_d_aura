@@ -2,25 +2,47 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   ShoppingBag, Search, Eye, Download, CheckCircle, Clock,
-  Truck, XCircle, User, Phone, MapPin, CreditCard, ChevronRight
+  Truck, XCircle, User, Phone, MapPin, CreditCard, ChevronRight, Trash2
 } from 'lucide-react';
 import useAdminStore from '../../store/useAdminStore';
 import DataTable from '../../components/admin/DataTable';
 import Modal from '../../components/admin/Modal';
+import ConfirmDialog from '../../components/admin/ConfirmDialog';
 import StatusPill from '../../components/admin/StatusPill';
 import { formatINR } from '../../utils/adminUtils';
 
 const ORDER_STATUSES = ['All', 'Processing', 'Packed', 'Shipped', 'Delivered', 'Cancelled'];
+const PAYMENT_STATUSES = ['Pending', 'Paid', 'Failed', 'Refunded'];
+
+const orderDisplayId = (order) => order.orderId || `ORD-${String(order.id).slice(-8).toUpperCase()}`;
+const orderDate = (order) => order.date || (order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-IN') : '—');
+const orderCustomer = (order) => order.customer || order.customerName || 'Guest';
+const orderEmail = (order) => order.email || order.customerEmail || '';
+const orderPhone = (order) => order.phone || order.customerPhone || '';
+const orderTotal = (order) => order.total ?? order.totalAmount ?? 0;
+const orderItems = (order) => (order.items || []).map((item) => ({
+  ...item,
+  qty: item.qty ?? item.quantity ?? 1,
+  price: item.price ?? 0,
+}));
+const formatAddress = (address) => {
+  if (!address) return '';
+  if (typeof address === 'string') return address;
+  return [address.street, address.city, address.state, address.pincode || address.postalCode, address.country]
+    .filter(Boolean)
+    .join(', ');
+};
 
 export default function Orders() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { darkMode, orders, updateOrderStatus, updateOrderDetails, addToast } = useAdminStore();
+  const { darkMode, orders, updateOrderStatus, updateOrderDetails, deleteOrder, addToast } = useAdminStore();
 
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [fulfillmentForm, setFulfillmentForm] = useState({ carrier: '', trackingNumber: '', paymentStatus: '' });
   const [savingFulfillment, setSavingFulfillment] = useState(false);
+  const [pendingDelete, setPendingDelete] = useState(null);
 
   // Read URL query params (e.g. from Overview to-do link)
   useEffect(() => {
@@ -30,22 +52,32 @@ export default function Orders() {
     }
   }, [searchParams]);
 
+  // Orders with derived display fields so search/sort work on real API shape
+  const displayOrders = useMemo(() => orders.map((order) => ({
+    ...order,
+    customer: orderCustomer(order),
+    phone: orderPhone(order),
+    email: orderEmail(order),
+    total: orderTotal(order),
+    date: orderDate(order),
+  })), [orders]);
+
   // Counts by status
   const statusCounts = useMemo(() => {
-    const counts = { All: orders.length };
+    const counts = { All: displayOrders.length };
     ORDER_STATUSES.forEach(st => {
       if (st !== 'All') {
-        counts[st] = orders.filter(o => o.status === st).length;
+        counts[st] = displayOrders.filter(o => o.status === st).length;
       }
     });
     return counts;
-  }, [orders]);
+  }, [displayOrders]);
 
   // Filtered orders
   const filteredOrders = useMemo(() => {
-    if (statusFilter === 'All') return orders;
-    return orders.filter(o => o.status === statusFilter);
-  }, [orders, statusFilter]);
+    if (statusFilter === 'All') return displayOrders;
+    return displayOrders.filter(o => o.status === statusFilter);
+  }, [displayOrders, statusFilter]);
 
   const handleStatusChange = async (orderId, newStatus) => {
     const updated = await updateOrderStatus(orderId, newStatus);
@@ -63,9 +95,19 @@ export default function Orders() {
     setFulfillmentForm({
       carrier: order.carrier || '',
       trackingNumber: order.trackingNumber || '',
-      paymentStatus: order.paymentStatus || 'Processing'
+      paymentStatus: PAYMENT_STATUSES.includes(order.paymentStatus) ? order.paymentStatus : 'Pending'
     });
     setDetailsModalOpen(true);
+  };
+
+  const confirmDeleteOrder = async () => {
+    if (!pendingDelete) return;
+    const deleted = await deleteOrder(pendingDelete.id);
+    if (deleted) {
+      addToast({ type: 'success', message: `Order ${orderDisplayId(pendingDelete)} deleted` });
+      if (selectedOrder?.id === pendingDelete.id) setDetailsModalOpen(false);
+    }
+    setPendingDelete(null);
   };
 
   const saveFulfillment = async () => {
@@ -85,10 +127,10 @@ export default function Orders() {
       render: (val, row) => (
         <div>
           <span className="font-mono font-bold text-xs text-[#b58a2a] block">
-            {val}
+            {orderDisplayId(row)}
           </span>
           <span className="text-[11px] text-stone-400">
-            {row.date}
+            {orderDate(row)}
           </span>
         </div>
       ),
@@ -100,10 +142,10 @@ export default function Orders() {
       render: (val, row) => (
         <div>
           <span className="font-semibold block text-stone-900 dark:text-white">
-            {val}
+            {orderCustomer(row)}
           </span>
           <span className="text-[11px] text-stone-400 block">
-            {row.phone || row.email}
+            {orderPhone(row) || orderEmail(row)}
           </span>
         </div>
       ),
@@ -111,24 +153,27 @@ export default function Orders() {
     {
       key: 'items',
       header: 'Items purchased',
-      render: (val) => (
-        <div className="max-w-[220px]">
-          <span className="font-medium text-xs block truncate">
-            {val.map(i => `${i.name} (×${i.qty})`).join(', ')}
-          </span>
-          <span className="text-[11px] text-stone-400">
-            {val.reduce((a, c) => a + c.qty, 0)} total items
-          </span>
-        </div>
-      ),
+      render: (_, row) => {
+        const items = orderItems(row);
+        return (
+          <div className="max-w-[220px]">
+            <span className="font-medium text-xs block truncate">
+              {items.map(i => `${i.name} (×${i.qty})`).join(', ')}
+            </span>
+            <span className="text-[11px] text-stone-400">
+              {items.reduce((a, c) => a + c.qty, 0)} total items
+            </span>
+          </div>
+        );
+      },
     },
     {
       key: 'total',
       header: 'Amount',
       sortable: true,
-      render: (val) => (
+      render: (_, row) => (
         <span className="font-serif font-bold text-sm text-[#1e1519] dark:text-stone-100">
-          {formatINR(val, { compact: false })}
+          {formatINR(orderTotal(row), { compact: false })}
         </span>
       ),
     },
@@ -170,14 +215,24 @@ export default function Orders() {
       key: 'actions',
       header: '',
       render: (_, row) => (
-        <button
-          type="button"
-          aria-label={`View details of order ${row.id}`}
-          onClick={() => openOrderDetails(row)}
-          className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-white/5 transition-colors"
-        >
-          <Eye className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            aria-label={`View details of order ${orderDisplayId(row)}`}
+            onClick={() => openOrderDetails(row)}
+            className="p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-white/5 transition-colors"
+          >
+            <Eye className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            aria-label={`Delete order ${orderDisplayId(row)}`}
+            onClick={() => setPendingDelete(row)}
+            className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       ),
     },
   ];
@@ -254,8 +309,8 @@ export default function Orders() {
       <Modal
         open={detailsModalOpen}
         onClose={() => setDetailsModalOpen(false)}
-        title={`Order details • ${selectedOrder?.id}`}
-        subtitle={`Placed on ${selectedOrder?.date} • Status: ${selectedOrder?.status}`}
+        title={`Order details • ${selectedOrder ? orderDisplayId(selectedOrder) : ''}`}
+        subtitle={`Placed on ${selectedOrder ? orderDate(selectedOrder) : ''} • Status: ${selectedOrder?.status}`}
       >
         {selectedOrder && (
           <div className="space-y-6">
@@ -270,9 +325,9 @@ export default function Orders() {
                   <User className="w-3.5 h-3.5" />
                   Customer details
                 </div>
-                <div className="text-sm font-semibold">{selectedOrder.customer}</div>
-                <div className="text-xs text-stone-500 mt-0.5">{selectedOrder.email}</div>
-                <div className="text-xs text-stone-500">{selectedOrder.phone}</div>
+                <div className="text-sm font-semibold">{orderCustomer(selectedOrder)}</div>
+                <div className="text-xs text-stone-500 mt-0.5">{orderEmail(selectedOrder)}</div>
+                <div className="text-xs text-stone-500">{orderPhone(selectedOrder)}</div>
               </div>
 
               <div
@@ -285,7 +340,7 @@ export default function Orders() {
                   Delivery address
                 </div>
                 <div className="text-xs text-stone-700 dark:text-stone-300">
-                  {selectedOrder.shippingAddress || '14 Silver Crest Road, Defence Colony, New Delhi - 110024'}
+                  {formatAddress(selectedOrder.shippingAddress) || '14 Silver Crest Road, Defence Colony, New Delhi - 110024'}
                 </div>
                 <div className="mt-2 text-[11px] text-stone-500 flex items-center gap-1.5">
                   <CreditCard className="w-3.5 h-3.5" />
@@ -308,7 +363,7 @@ export default function Orders() {
                 Order line items
               </h4>
               <div className="divide-y divide-inherit border rounded-xl overflow-hidden">
-                {selectedOrder.items.map((item, idx) => (
+                {orderItems(selectedOrder).map((item, idx) => (
                   <div
                     key={idx}
                     className="p-3 flex items-center justify-between text-xs"
@@ -327,6 +382,11 @@ export default function Orders() {
                   </div>
                 ))}
               </div>
+              {selectedOrder?.paymentMethod === 'COD' && selectedOrder?.paymentStatus !== 'Paid' && selectedOrder?.paymentStatus !== 'Refunded' && (
+                <p className="mt-2 text-[11px] text-amber-600">
+                  COD order — collect payment on delivery, then mark payment as Paid.
+                </p>
+              )}
             </div>
 
             <section className={`space-y-3 rounded-xl border p-4 ${darkMode ? 'border-white/10 bg-[#121010]' : 'border-stone-200 bg-stone-50'}`}>
@@ -343,12 +403,9 @@ export default function Orders() {
                 <label className="text-xs font-semibold">
                   <span className="mb-1 block">Payment status</span>
                   <select value={fulfillmentForm.paymentStatus} onChange={(event) => setFulfillmentForm((form) => ({ ...form, paymentStatus: event.target.value }))} className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-xs dark:border-white/10 dark:bg-[#181416] dark:text-white">
-                    <option value="Processing">Processing</option>
-                    <option value="Pending (COD)">Pending (COD)</option>
-                    <option value="Paid (Online Gateway)">Paid (Online Gateway)</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Failed">Failed</option>
-                    <option value="Refund requested">Refund requested</option>
+                    {PAYMENT_STATUSES.map((status) => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
                   </select>
                 </label>
               </div>
@@ -363,7 +420,7 @@ export default function Orders() {
             <div className="pt-3 border-t border-inherit flex flex-col items-end gap-1 text-xs">
               <div className="flex justify-between w-48 text-stone-500">
                 <span>Subtotal:</span>
-                <span>{formatINR(selectedOrder.total, { compact: false })}</span>
+                <span>{formatINR(orderTotal(selectedOrder), { compact: false })}</span>
               </div>
               <div className="flex justify-between w-48 text-stone-500">
                 <span>Shipping:</span>
@@ -371,7 +428,7 @@ export default function Orders() {
               </div>
               <div className="flex justify-between w-48 text-sm font-bold pt-2 border-t border-inherit font-serif">
                 <span>Total amount:</span>
-                <span className="text-[#b58a2a]">{formatINR(selectedOrder.total, { compact: false })}</span>
+                <span className="text-[#b58a2a]">{formatINR(orderTotal(selectedOrder), { compact: false })}</span>
               </div>
             </div>
 
@@ -393,17 +450,37 @@ export default function Orders() {
                   <option value="Cancelled">Cancelled</option>
                 </select>
               </div>
-              <button
-                type="button"
-                onClick={() => setDetailsModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-stone-200 dark:bg-stone-800"
-              >
-                Close
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPendingDelete(selectedOrder)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-rose-600 border border-rose-200 hover:bg-rose-50 dark:border-rose-900/40 dark:hover:bg-rose-950/30"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete order
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setDetailsModalOpen(false)}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold bg-stone-200 dark:bg-stone-800"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         )}
       </Modal>
+
+      {/* ── Delete Order Confirmation ── */}
+      <ConfirmDialog
+        open={Boolean(pendingDelete)}
+        onClose={() => setPendingDelete(null)}
+        onConfirm={confirmDeleteOrder}
+        title={`Delete order ${pendingDelete ? orderDisplayId(pendingDelete) : ''}?`}
+        message="This permanently removes the order record. This cannot be undone."
+        confirmText="Delete order"
+      />
     </div>
   );
 }

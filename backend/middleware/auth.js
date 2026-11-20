@@ -11,7 +11,7 @@ module.exports = async function (req, res, next) {
         const decoded = jwt.verify(token, jwtSecret);
         const userId = decoded.user?.id || decoded.id;
         const user = await User.findById(userId).select('-password -otp -otpExpires');
-        if (user) {
+        if (user && !user.isBlocked) {
           req.user = user;
         }
       } catch (err) {

@@ -24,11 +24,27 @@ export default function Settings() {
   const [targetMargins, setTargetMargins] = useState(
     settings.targetMargins || { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 }
   );
+  const [salon, setSalon] = useState({
+    salonName: settings.salonName || "Nihara D'Aura Flagship Salon",
+    salonAddress: settings.salonAddress || '',
+    salonPhone: settings.salonPhone || '',
+    salonEmail: settings.salonEmail || '',
+    salonHours: settings.salonHours || '',
+    salonAmenities: (settings.salonAmenities || []).join('\n'),
+  });
 
   useEffect(() => {
     setStoreName(settings.storeName || "Nihara D'Aura");
     setLowStockThreshold(settings.lowStockThreshold || 5);
     setTargetMargins(settings.targetMargins || { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 });
+    setSalon({
+      salonName: settings.salonName || "Nihara D'Aura Flagship Salon",
+      salonAddress: settings.salonAddress || '',
+      salonPhone: settings.salonPhone || '',
+      salonEmail: settings.salonEmail || '',
+      salonHours: settings.salonHours || '',
+      salonAmenities: (settings.salonAmenities || []).join('\n'),
+    });
   }, [settings]);
 
   const handleSaveSettings = async (e) => {
@@ -42,6 +58,12 @@ export default function Settings() {
         Nails: parseFloat(targetMargins.Nails) || 55,
         Candles: parseFloat(targetMargins.Candles) || 60,
       },
+      salonName: salon.salonName.trim(),
+      salonAddress: salon.salonAddress.trim(),
+      salonPhone: salon.salonPhone.trim(),
+      salonEmail: salon.salonEmail.trim(),
+      salonHours: salon.salonHours.trim(),
+      salonAmenities: salon.salonAmenities.split('\n').map((item) => item.trim()).filter(Boolean),
     });
     if (updated) addToast({ type: 'success', message: 'Settings saved successfully' });
   };
@@ -179,6 +201,96 @@ export default function Settings() {
                 >
                   <Save className="w-4 h-4" />
                   Save settings
+                </button>
+              </div>
+            </form>
+          </ChartCard>
+
+          {/* Salon contact & hours */}
+          <ChartCard
+            title="Salon contact & hours"
+            subtitle="Shown on the public site contact/booking sections"
+          >
+            <form onSubmit={handleSaveSettings} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">Salon name</label>
+                  <input
+                    type="text"
+                    value={salon.salonName}
+                    onChange={(e) => setSalon((s) => ({ ...s, salonName: e.target.value }))}
+                    className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                      darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                    }`}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">Address</label>
+                  <input
+                    type="text"
+                    value={salon.salonAddress}
+                    onChange={(e) => setSalon((s) => ({ ...s, salonAddress: e.target.value }))}
+                    className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                      darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                    }`}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">Phone</label>
+                  <input
+                    type="text"
+                    value={salon.salonPhone}
+                    onChange={(e) => setSalon((s) => ({ ...s, salonPhone: e.target.value }))}
+                    className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                      darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                    }`}
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">Email</label>
+                  <input
+                    type="email"
+                    value={salon.salonEmail}
+                    onChange={(e) => setSalon((s) => ({ ...s, salonEmail: e.target.value }))}
+                    className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                      darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                    }`}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">Opening hours</label>
+                  <input
+                    type="text"
+                    value={salon.salonHours}
+                    onChange={(e) => setSalon((s) => ({ ...s, salonHours: e.target.value }))}
+                    placeholder="09:00 AM - 08:30 PM (Daily)"
+                    className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                      darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                    }`}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                    Amenities <span className="font-normal text-stone-400">(one per line)</span>
+                  </label>
+                  <textarea
+                    rows={4}
+                    value={salon.salonAmenities}
+                    onChange={(e) => setSalon((s) => ({ ...s, salonAmenities: e.target.value }))}
+                    className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                      darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                    }`}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold text-white shadow-sm hover:opacity-90 transition-opacity"
+                  style={{ background: 'linear-gradient(135deg, #d9b45b, #b58a2a)' }}
+                >
+                  <Save className="w-4 h-4" />
+                  Save salon info
                 </button>
               </div>
             </form>
