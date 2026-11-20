@@ -153,6 +153,7 @@ Before starting the backend, configure `backend/.env` with:
 - `CORS_ORIGINS` listing the exact frontend origins, comma-separated
 - `PORT=5000` to match the local frontend API/socket defaults, or set `VITE_API_BASE_URL` (include `/api`) and `VITE_SOCKET_URL` to match another port
 - In Vercel, set `VITE_API_BASE_URL=https://api.niharadaura.com/api` and `VITE_SOCKET_URL=https://api.niharadaura.com` for the frontend project and redeploy after changing them. Deploy the backend from this repository as well so cart, offer, salon, and Socket.IO routes are available. If the storefront uses a different domain, add that exact origin to the backend `CORS_ORIGINS`.
+- Set `VITE_UPI_ID` in the frontend environment to the business UPI ID used for UPI payment links. Orders remain payment-pending until a verified payment-gateway integration is configured; the app does not simulate or automatically confirm payment.
 
 Only the email configured in `ADMIN_EMAIL` can authenticate as an administrator; admin sign-in also requires the matching private `ADMIN_PASSWORD`. Admin tokens for other email addresses are rejected by protected APIs and the admin Socket.IO room. The values in `.env.example` are placeholders.
 

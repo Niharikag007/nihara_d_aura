@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, ShoppingBag, ShieldCheck, ChevronRight, Lock, Truck, CreditCard, Smartphone } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ShieldCheck, ChevronRight, Lock, Smartphone, MapPin } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import PaymentGatewayModal from '../components/common/PaymentGatewayModal';
 import { getProductImage } from '../data/jewelleryCategories';
 
+const createDeliveryAddress = (address, user) => ({
+  fullName: address?.fullName || user?.fullName || user?.name || '',
+  phone: address?.phone || user?.phone || user?.mobileNumber || '',
+  streetAddress: address?.streetAddress || address?.street || '',
+  city: address?.city || '',
+  state: address?.state || '',
+  postalCode: address?.postalCode || address?.pincode || ''
+});
+
 export default function Checkout() {
   const navigate = useNavigate();
   const { items, totalAmount, coupon, clearCart } = useCart();
   const { user } = useAuth();
-
-  // Delivery Address form / state matching APK
-  const [deliveryAddress, setDeliveryAddress] = useState({
-    fullName: 'Ananya Roy',
-    phone: '+91 98765 43210',
-    streetAddress: 'Flat 402, Rosewood Villa, Worli, Mumbai, Maharashtra - 400018'
-  });
-
-  // Payment Method selection
-  const [paymentMethod, setPaymentMethod] = useState('UPI / GPay / PhonePe');
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState('');
+  const [deliveryAddress, setDeliveryAddress] = useState(() => createDeliveryAddress(null, user));
 
   // Gateway Modal & Order state
   const [isGatewayOpen, setIsGatewayOpen] = useState(false);
@@ -28,23 +30,43 @@ export default function Checkout() {
   const [createdOrderDetails, setCreatedOrderDetails] = useState(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [orderError, setOrderError] = useState('');
+  const [addressError, setAddressError] = useState('');
 
-  const paymentOptions = [
-    { label: 'UPI / GPay / PhonePe', type: 'Online Instant', icon: Smartphone },
-    { label: 'Credit / Debit Card', type: 'Online Instant', icon: CreditCard },
-    { label: 'Net Banking', type: 'Online Instant', icon: ShieldCheck },
-    { label: 'Cash on Delivery', type: 'Doorstep Payment', icon: Truck }
-  ];
+  useEffect(() => {
+    let active = true;
+    api.getAddresses().then((res) => {
+      if (!active) return;
+      const savedAddresses = Array.isArray(res.addresses) ? res.addresses : [];
+      setAddresses(savedAddresses);
+      const preferredAddress = savedAddresses.find((address) => address.isDefault) || savedAddresses[0];
+      if (preferredAddress) {
+        setSelectedAddressId(String(preferredAddress.id || preferredAddress._id || ''));
+        setDeliveryAddress(createDeliveryAddress(preferredAddress, user));
+      } else {
+        setDeliveryAddress(createDeliveryAddress(null, user));
+      }
+    }).catch((error) => {
+      console.error('Failed to load checkout addresses:', error.message);
+      if (active) setDeliveryAddress(createDeliveryAddress(null, user));
+    });
+    return () => { active = false; };
+  }, [user]);
 
-  // Trigger Payment Gateway modal
   const handleInitiatePayment = () => {
+    const requiredFields = ['fullName', 'phone', 'streetAddress', 'city', 'state', 'postalCode'];
+    const missingField = requiredFields.some((field) => !deliveryAddress[field].trim());
+    if (missingField) {
+      setAddressError('Please complete all delivery address fields before continuing.');
+      return;
+    }
+    setAddressError('');
     setIsGatewayOpen(true);
   };
 
-  // Called when Payment Gateway finishes transaction or confirms COD
-  const handlePaymentSuccess = async (paymentResult) => {
+  const handleUpiSubmitted = async () => {
     setIsGatewayOpen(false);
     setIsPlacingOrder(true);
+    setOrderError('');
 
     const orderPayload = {
       items: items.map(i => ({
@@ -56,31 +78,37 @@ export default function Checkout() {
         price: (i.product?.price || 0) * i.quantity,
         image: getProductImage(i.product)
       })),
-      shippingAddress: `${deliveryAddress.fullName}, ${deliveryAddress.streetAddress}`,
-      customer: user?.name,
+      shippingAddress: {
+        fullName: deliveryAddress.fullName.trim(),
+        phone: deliveryAddress.phone.trim(),
+        street: deliveryAddress.streetAddress.trim(),
+        city: deliveryAddress.city.trim(),
+        state: deliveryAddress.state.trim(),
+        pincode: deliveryAddress.postalCode.trim()
+      },
+      customer: deliveryAddress.fullName.trim(),
       email: user?.email,
-      phone: deliveryAddress.phone || user?.phone,
-      paymentMethod: paymentResult.paymentMethod || paymentMethod,
-      transactionId: paymentResult.transactionId || null,
-      paymentStatus: paymentResult.paymentStatus || 'Processing',
+      phone: deliveryAddress.phone.trim(),
+      paymentMethod: 'UPI',
+      paymentStatus: 'Pending',
       totalAmount,
       couponCode: coupon?.code || null
     };
 
-    const res = await api.createOrder(orderPayload);
-    setIsPlacingOrder(false);
-
-    if (res && res.order) {
-      setOrderError('');
-      setCreatedOrderDetails({
-        ...res.order,
-        transactionId: paymentResult.transactionId,
-        paymentStatus: paymentResult.paymentStatus
-      });
-      setIsSuccessModalOpen(true);
-      clearCart();
-    } else {
-      setOrderError(res?.message || 'Order could not be saved. Please try again when the server is available.');
+    try {
+      const res = await api.createOrder(orderPayload);
+      if (res?.order) {
+        setCreatedOrderDetails({ ...res.order, paymentMethod: 'UPI', paymentStatus: 'Pending' });
+        setIsSuccessModalOpen(true);
+        clearCart();
+      } else {
+        setOrderError(res?.message || 'Order could not be saved. Please try again when the server is available.');
+      }
+    } catch (error) {
+      console.error('Failed to create UPI order:', error.message);
+      setOrderError(error.message || 'Order could not be saved. Please try again.');
+    } finally {
+      setIsPlacingOrder(false);
     }
   };
 
@@ -98,7 +126,7 @@ export default function Checkout() {
           <h1 className="mt-2 font-serif text-3xl font-bold text-[#1C1917] sm:text-4xl">
             Checkout & Secure Payment
           </h1>
-          <p className="mt-1 text-xs text-stone-500">Fast 256-Bit SSL Encrypted Checkout</p>
+          <p className="mt-1 text-xs text-stone-500">Pay securely using UPI</p>
         </div>
       </div>
 
@@ -109,15 +137,33 @@ export default function Checkout() {
           </div>
         )}
         
-        {/* 1. Delivery Address Card matching APK */}
+        {/* 1. Delivery Address */}
         <div className="rounded-[1.75rem] border border-[#DFBC77]/40 bg-white p-5 shadow-[0_18px_32px_-28px_rgba(78,59,17,0.5)] space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-700">
+              <MapPin className="h-3.5 w-3.5" />
               <span>Delivery Address</span>
             </h2>
-            <span className="rounded-full border border-[#DFBC77]/40 bg-[#FCF9F2] px-2.5 py-0.5 text-[11px] font-semibold text-[#855F14]">
-              Verified Location
-            </span>
+            {addresses.length > 0 && (
+              <select
+                aria-label="Choose a saved address"
+                value={selectedAddressId}
+                onChange={(event) => {
+                  const address = addresses.find((item) => String(item.id || item._id) === event.target.value);
+                  if (address) {
+                    setSelectedAddressId(String(address.id || address._id));
+                    setDeliveryAddress(createDeliveryAddress(address, user));
+                  }
+                }}
+                className="max-w-[55%] rounded-lg border border-[#DFBC77]/50 bg-[#FCF9F2] px-2.5 py-1.5 text-xs text-stone-700"
+              >
+                {addresses.map((address) => (
+                  <option key={address.id || address._id} value={String(address.id || address._id)}>
+                    {address.tag || address.type || 'Saved address'}{address.isDefault ? ' (Default)' : ''}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
 
           <div className="space-y-3">
@@ -126,6 +172,8 @@ export default function Checkout() {
               <input
                 type="text"
                 value={deliveryAddress.fullName}
+                required
+                autoComplete="name"
                 onChange={(e) => setDeliveryAddress({ ...deliveryAddress, fullName: e.target.value })}
                 className="w-full mt-0.5 p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 bg-[#FCF9F2] focus:outline-none focus:border-[#C59B27]"
               />
@@ -136,6 +184,8 @@ export default function Checkout() {
               <input
                 type="text"
                 value={deliveryAddress.phone}
+                required
+                autoComplete="tel"
                 onChange={(e) => setDeliveryAddress({ ...deliveryAddress, phone: e.target.value })}
                 className="w-full mt-0.5 p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 bg-[#FCF9F2] focus:outline-none focus:border-[#C59B27]"
               />
@@ -146,60 +196,54 @@ export default function Checkout() {
               <textarea
                 rows={2}
                 value={deliveryAddress.streetAddress}
+                required
+                autoComplete="street-address"
                 onChange={(e) => setDeliveryAddress({ ...deliveryAddress, streetAddress: e.target.value })}
                 className="w-full mt-0.5 p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 bg-[#FCF9F2] focus:outline-none focus:border-[#C59B27]"
               />
             </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              {[
+                ['city', 'City'],
+                ['state', 'State'],
+                ['postalCode', 'PIN code']
+              ].map(([field, label]) => (
+                <div key={field}>
+                  <label className="text-[11px] text-stone-500 font-medium">{label}</label>
+                  <input
+                    type="text"
+                    value={deliveryAddress[field]}
+                    required
+                    autoComplete={field === 'postalCode' ? 'postal-code' : 'address-level2'}
+                    onChange={(event) => setDeliveryAddress({ ...deliveryAddress, [field]: event.target.value })}
+                    className="w-full mt-0.5 p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 bg-[#FCF9F2] focus:outline-none focus:border-[#C59B27]"
+                  />
+                </div>
+              ))}
+            </div>
+            {addressError && <p role="alert" className="text-xs text-rose-700">{addressError}</p>}
           </div>
         </div>
 
-        {/* 2. Payment Method Card (Online + COD) */}
+        {/* 2. UPI-only Payment */}
         <div className="rounded-[1.75rem] border border-[#DFBC77]/40 bg-white p-5 shadow-[0_18px_32px_-28px_rgba(78,59,17,0.5)] space-y-3">
           <div className="flex items-center justify-between">
             <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-700">
-              Select Payment Gateway / Option
+              Payment Method
             </h2>
             <div className="flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700">
               <ShieldCheck className="h-3.5 w-3.5" />
-              100% Safe Payment
+              UPI Only
             </div>
           </div>
-
-          <div className="space-y-2.5 pt-1">
-            {paymentOptions.map((opt) => {
-              const isSelected = paymentMethod === opt.label;
-              const Icon = opt.icon;
-
-              return (
-                <div
-                  key={opt.label}
-                  onClick={() => setPaymentMethod(opt.label)}
-                  className={`cursor-pointer rounded-xl p-3.5 border transition-all flex items-center justify-between text-xs font-medium ${
-                    isSelected
-                      ? 'bg-[#FAF3E8] border-[#C59B27] text-stone-900 shadow-sm ring-1 ring-[#C59B27]'
-                      : 'bg-white border-stone-200 text-stone-600 hover:border-[#DFBC77]'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      isSelected ? 'bg-[#C59B27] text-white' : 'bg-stone-100 text-stone-500'
-                    }`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <span className="font-bold text-stone-800 block">{opt.label}</span>
-                      <span className="text-[10px] text-stone-500">{opt.type}</span>
-                    </div>
-                  </div>
-
-                  <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                    isSelected ? 'border-[#855F14] bg-[#855F14]' : 'border-stone-300'
-                  }`}>
-                    {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                  </div>
-                </div>
-              );
-            })}
+          <div className="flex items-center gap-3 rounded-xl border border-[#C59B27] bg-[#FAF3E8] p-3.5">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#C59B27] text-white">
+              <Smartphone className="h-4 w-4" />
+            </span>
+            <div>
+              <span className="block text-xs font-bold text-stone-800">UPI / Google Pay / PhonePe</span>
+              <span className="text-[10px] text-stone-500">Pay from your UPI app</span>
+            </div>
           </div>
         </div>
 
@@ -241,9 +285,9 @@ export default function Checkout() {
         >
           <Lock className="h-4 w-4" />
           <span>
-            {paymentMethod === 'Cash on Delivery'
-              ? `Confirm Cash on Delivery Order (₹${totalAmount.toLocaleString('en-IN')})`
-              : `Proceed to Pay (₹${totalAmount.toLocaleString('en-IN')})`}
+            {isPlacingOrder
+              ? 'Saving order...'
+              : `Continue with UPI (₹${totalAmount.toLocaleString('en-IN')})`}
           </span>
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -255,8 +299,7 @@ export default function Checkout() {
         isOpen={isGatewayOpen}
         onClose={() => setIsGatewayOpen(false)}
         amount={totalAmount}
-        paymentMethod={paymentMethod}
-        onPaymentSuccess={handlePaymentSuccess}
+        onPaymentSubmitted={handleUpiSubmitted}
       />
 
       {/* ================= ORDER SUCCESS RECEIPT MODAL ================= */}
@@ -269,7 +312,7 @@ export default function Checkout() {
             </div>
 
             <h3 className="font-serif text-xl font-bold text-[#1C1917]">
-              Order Confirmed!
+              Order Received
             </h3>
 
             <div className="bg-[#FAF3E8] p-3 rounded-2xl border border-[#DFBC77]/40 space-y-1 text-left">
@@ -278,25 +321,19 @@ export default function Checkout() {
                 <span className="font-bold text-[#855F14]">{createdOrderDetails?.orderId}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-stone-500">Payment Option:</span>
+                <span className="text-stone-500">Payment Method:</span>
                 <span className="font-semibold text-stone-800">{createdOrderDetails?.paymentMethod}</span>
               </div>
-              {createdOrderDetails?.transactionId && (
-                <div className="flex justify-between text-xs">
-                  <span className="text-stone-500">Transaction Ref:</span>
-                  <span className="font-mono text-[10px] text-stone-700">{createdOrderDetails.transactionId}</span>
-                </div>
-              )}
               <div className="flex justify-between text-xs pt-1 border-t border-amber-200">
-                <span className="text-stone-500">Status:</span>
-                <span className="font-bold text-emerald-700">
-                  {createdOrderDetails?.paymentStatus || 'Processing'}
+                <span className="text-stone-500">Payment:</span>
+                <span className="font-bold text-amber-700">
+                  {createdOrderDetails?.paymentStatus || 'Pending verification'}
                 </span>
               </div>
             </div>
 
             <p className="text-xs text-stone-600 leading-relaxed">
-              Thank you for shopping with Nihara. Your luxury order receipt has been sent to your registered phone and email.
+              Your order is saved. Payment will remain pending until your UPI transfer is verified.
             </p>
 
             <button

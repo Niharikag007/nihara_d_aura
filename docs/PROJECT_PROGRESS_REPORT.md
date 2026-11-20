@@ -33,11 +33,11 @@ The project has a complete primary full-stack structure and a working frontend b
 
 - Cart server synchronization for authenticated users
 - Coupon validation and coupon application
-- Checkout payment-method selection
-- Cash on Delivery support
-- Order creation after checkout
-- Payment gateway UI for UPI, card, and net banking
-- Payment intent and verification API endpoints
+- Checkout now uses the customer's saved address/profile data, with blank editable fields when no saved address exists
+- Checkout accepts UPI only; card, net banking, and Cash on Delivery options have been removed
+- Orders are saved with payment status pending until a real UPI verification integration is configured
+- Fake transaction IDs, demo card data, and simulated payment-success responses have been removed
+- `VITE_UPI_ID` configures the business UPI ID for app deep links; this value still needs to be set in each deployment environment
 
 ### Salon booking
 

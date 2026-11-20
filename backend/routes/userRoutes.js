@@ -163,7 +163,12 @@ router.get('/addresses', async (req, res) => {
     const user = await getAuthenticatedUser(req);
     res.status(200).json({
       success: true,
-      addresses: user ? (user.addresses || []) : []
+      addresses: user ? (user.addresses || []).map((address) => ({
+        ...address.toObject(),
+        streetAddress: address.street,
+        postalCode: address.pincode,
+        type: address.tag
+      })) : []
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Could not load addresses' });
@@ -180,7 +185,10 @@ router.post('/addresses', async (req, res) => {
     const newAddress = {
       id: `addr_${Date.now()}`,
       isDefault: user.addresses.length === 0,
-      ...req.body
+      ...req.body,
+      street: req.body.street || req.body.streetAddress,
+      pincode: req.body.pincode || req.body.postalCode,
+      tag: req.body.tag || req.body.type || 'Home'
     };
 
     if (newAddress.isDefault) {
@@ -214,7 +222,13 @@ router.put('/addresses/:id', async (req, res) => {
       user.addresses.forEach(a => a.isDefault = false);
     }
 
-    user.addresses[index] = { ...user.addresses[index].toObject(), ...req.body };
+    user.addresses[index] = {
+      ...user.addresses[index].toObject(),
+      ...req.body,
+      street: req.body.street || req.body.streetAddress || user.addresses[index].street,
+      pincode: req.body.pincode || req.body.postalCode || user.addresses[index].pincode,
+      tag: req.body.tag || req.body.type || user.addresses[index].tag
+    };
     await user.save();
 
     res.status(200).json({ success: true, address: user.addresses[index] });

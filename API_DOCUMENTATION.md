@@ -160,8 +160,8 @@
 
 | Method | Endpoint | Kya karta hai | Request mein kya bhejo | Test Result | Speed |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/api/payment/create-intent` | Razorpay / UPI ke liye payment order intent banana | `{ amount: 2850 }` | `✅ 200 OK` | ~16ms |
-| `POST` | `/api/payment/verify` | Payment gateway signature aur transaction verify karna | `{ paymentId, orderId }` | `✅ 200 OK` | ~19ms |
+| `POST` | `/api/payment/create-intent` | UPI provider configure hone tak unavailable | Auth required | `⚠️ 503` | — |
+| `POST` | `/api/payment/verify` | Verified UPI provider configure hone tak unavailable; payment ko paid mark nahi karta | Auth required | `⚠️ 503` | — |
 
 ---
 

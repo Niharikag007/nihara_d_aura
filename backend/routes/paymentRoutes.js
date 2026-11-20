@@ -14,29 +14,17 @@ function requireUser(req, res) {
 
 router.post('/create-intent', (req, res) => {
   if (!requireUser(req, res)) return;
-  const { amount } = req.body;
-  res.status(200).json({
-    success: true,
-    paymentIntent: {
-      intentId: 'pay_intent_' + Math.floor(10000000 + Math.random() * 90000000),
-      amount: amount || 0,
-      currency: 'INR',
-      merchantName: "Nihara D'Aura Studio"
-    }
+  res.status(503).json({
+    success: false,
+    message: 'A verified UPI payment gateway is not configured. Orders must remain payment-pending until UPI transfers can be verified.'
   });
 });
 
 router.post('/verify', (req, res) => {
   if (!requireUser(req, res)) return;
-  const { transactionId, paymentMethod } = req.body;
-  res.status(200).json({
-    success: true,
-    verification: {
-      success: true,
-      transactionId: transactionId || 'TXN_' + Math.floor(100000000 + Math.random() * 900000000),
-      paymentMethod: paymentMethod || 'Online Payment Gateway',
-      status: 'PAID'
-    }
+  res.status(503).json({
+    success: false,
+    message: 'UPI payment verification is not configured. No payment has been marked as paid.'
   });
 });
 

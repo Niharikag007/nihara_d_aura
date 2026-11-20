@@ -17,7 +17,7 @@ This document outlines the complete information architecture, page routing, quer
 | `/services/:id` | `ServiceDetails.jsx` | Public | Service breakdown with duration, inclusions, specialist options, and direct booking trigger. | None |
 | `/book` | `BookingWizard.jsx` | Customer / Guest | 5-step multi-step beauty booking flow (Services → Date/Time → Location → Specialist → Summary/Payment). | `?serviceId=...` |
 | `/cart` | `Cart.jsx` | Public / Customer | Luxury shopping bag with item counters, promo code discounts (`NIHARA10`, `GLOW20`), and price totals. | None |
-| `/checkout` | `Checkout.jsx` | Customer (Auth/Guest) | Delivery address selector, payment gateway options (UPI, Card, NetBanking, COD), order preview, and order confirmation. | None |
+| `/checkout` | `Checkout.jsx` | Customer (Auth/Guest) | Saved or manually entered delivery address, UPI-only payment link, order preview, and pending-payment order receipt. | None |
 | `/wishlist` | `Wishlist.jsx` | Customer | Saved luxury beauty and jewellery items with 1-click move to bag. | None |
 | `/profile` | `Profile.jsx` | Customer (Protected) | Account dashboard with user info, order stats, address management, and quick navigation. | None |
 | `/profile/edit` | `EditProfileModal.jsx` | Customer (Protected) | Profile editor for name, email, phone, and avatar selector. | None |

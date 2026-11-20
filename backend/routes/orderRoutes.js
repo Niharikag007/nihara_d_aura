@@ -37,6 +37,9 @@ router.post('/', async (req, res) => {
     if (!req.user) {
       return res.status(401).json({ success: false, message: 'Sign in required' });
     }
+    if (req.body.paymentMethod !== 'UPI') {
+      return res.status(400).json({ success: false, message: 'Only UPI payments are accepted' });
+    }
     const items = (req.body.items || []).map(item => ({
       productId: mongoose.Types.ObjectId.isValid(item.productId) ? item.productId : undefined,
       name: item.name,
@@ -52,8 +55,8 @@ router.post('/', async (req, res) => {
       items,
       totalAmount: Number(req.body.totalAmount) || 0,
       status: 'Pending',
-      paymentStatus: req.body.paymentStatus || 'Pending',
-      paymentMethod: req.body.paymentMethod,
+      paymentStatus: 'Pending',
+      paymentMethod: 'UPI',
       shippingAddress: typeof req.body.shippingAddress === 'string'
         ? { street: req.body.shippingAddress }
         : req.body.shippingAddress,
