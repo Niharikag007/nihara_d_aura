@@ -11,13 +11,14 @@ async function setAdminPassword() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
 
-    const user = await User.findOne({ email: ADMIN_EMAIL.toLowerCase() });
+    const adminEmail = ADMIN_EMAIL.toLowerCase();
+    let user = await User.findOne({ email: adminEmail });
+
     if (!user) {
-      console.error(`Admin user not found with email: ${ADMIN_EMAIL}`);
-      console.log('Creating new admin user...');
+      console.log(`Creating new admin user: ${adminEmail}`);
       const hashedPassword = await bcrypt.hash(NEW_PASSWORD, 10);
       const newUser = new User({
-        email: ADMIN_EMAIL.toLowerCase(),
+        email: adminEmail,
         fullName: 'Niharika Gautam',
         name: 'Niharika Gautam',
         password: hashedPassword,
@@ -25,20 +26,25 @@ async function setAdminPassword() {
         isVerified: true
       });
       await newUser.save();
-      console.log(`New admin user created: ${ADMIN_EMAIL}`);
+      console.log(`New admin user created: ${adminEmail}`);
+      console.log(`Password: ${NEW_PASSWORD}`);
+      console.log(`Role: admin`);
       process.exit(0);
     }
 
+    // Update existing user to admin
     const hashedPassword = await bcrypt.hash(NEW_PASSWORD, 10);
     user.password = hashedPassword;
     user.role = 'admin';
     user.fullName = 'Niharika Gautam';
     user.name = 'Niharika Gautam';
+    user.isVerified = true;
     await user.save();
 
-    console.log(`Admin password set successfully for ${ADMIN_EMAIL}`);
-    console.log(`Role set to: admin`);
-    console.log(`Name updated to: Niharika Gautam`);
+    console.log(`Admin updated: ${adminEmail}`);
+    console.log(`Password: ${NEW_PASSWORD}`);
+    console.log(`Role: admin`);
+    console.log(`Name: Niharika Gautam`);
     process.exit(0);
   } catch (error) {
     console.error('Error:', error);

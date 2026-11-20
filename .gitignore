@@ -33,6 +33,10 @@ build/
 # Local API comparison document
 /Nihara API_DOCUMENTATION.md
 
+# Admin Guide (contains credentials)
+ADMIN_GUIDE.md
+*.md
+
 # OS and Editor files
 .DS_Store
 Thumbs.db
