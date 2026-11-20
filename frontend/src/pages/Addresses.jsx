@@ -37,8 +37,8 @@ export default function Addresses() {
     fullName: '',
     phone: '',
     streetAddress: '',
-    city: 'Mumbai',
-    state: 'Maharashtra',
+    city: '',
+    state: '',
     postalCode: '',
     isDefault: false
   });
@@ -48,8 +48,8 @@ export default function Addresses() {
     fullName: '',
     phone: '',
     streetAddress: '',
-    city: 'Mumbai',
-    state: 'Maharashtra',
+    city: '',
+    state: '',
     postalCode: '',
     isDefault: false
   });
@@ -90,8 +90,8 @@ export default function Addresses() {
       fullName: addr.fullName || '',
       phone: addr.phone || '',
       streetAddress: addr.streetAddress || '',
-      city: addr.city || 'Mumbai',
-      state: addr.state || 'Maharashtra',
+      city: addr.city || '',
+      state: addr.state || '',
       postalCode: addr.postalCode || '',
       isDefault: !!addr.isDefault
     });
@@ -168,8 +168,8 @@ export default function Addresses() {
         fullName: '',
         phone: '',
         streetAddress: '',
-        city: 'Mumbai',
-        state: 'Maharashtra',
+        city: '',
+        state: '',
         postalCode: '',
         isDefault: false
       });
@@ -395,9 +395,46 @@ export default function Addresses() {
                 <textarea
                   rows={2}
                   required
-                  placeholder="Apartment, building, street, area, city, pincode"
+                  placeholder="Apartment, building, street, area"
                   value={editFormData.streetAddress}
                   onChange={(e) => setEditFormData({ ...editFormData, streetAddress: e.target.value })}
+                  className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] font-bold uppercase text-stone-600">City</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Mumbai"
+                    value={editFormData.city}
+                    onChange={(e) => setEditFormData({ ...editFormData, city: e.target.value })}
+                    className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold uppercase text-stone-600">State</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Maharashtra"
+                    value={editFormData.state}
+                    onChange={(e) => setEditFormData({ ...editFormData, state: e.target.value })}
+                    className="w-full mt-1 p-2.2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold uppercase text-stone-600">PIN Code</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 400001"
+                  value={editFormData.postalCode}
+                  onChange={(e) => setEditFormData({ ...editFormData, postalCode: e.target.value })}
                   className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
                 />
               </div>
@@ -541,9 +578,46 @@ export default function Addresses() {
                 <textarea
                   rows={2}
                   required
-                  placeholder="Apartment, building, street, area, city, pincode"
+                  placeholder="Apartment, building, street, area"
                   value={newAddr.streetAddress}
                   onChange={(e) => setNewAddr({ ...newAddr, streetAddress: e.target.value })}
+                  className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[11px] font-bold uppercase text-stone-600">City</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Mumbai"
+                    value={newAddr.city}
+                    onChange={(e) => setNewAddr({ ...newAddr, city: e.target.value })}
+                    className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-[11px] font-bold uppercase text-stone-600">State</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Maharashtra"
+                    value={newAddr.state}
+                    onChange={(e) => setNewAddr({ ...newAddr, state: e.target.value })}
+                    className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-bold uppercase text-stone-600">PIN Code</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 400001"
+                  value={newAddr.postalCode}
+                  onChange={(e) => setNewAddr({ ...newAddr, postalCode: e.target.value })}
                   className="w-full mt-1 p-2.5 rounded-xl border border-stone-300 text-xs bg-[#FCF9F2] focus:ring-1 focus:ring-[#DFBC77] focus:outline-none"
                 />
               </div>

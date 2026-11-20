@@ -23,6 +23,7 @@ export default function Checkout() {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState(() => createDeliveryAddress(null, user));
+  const [isUsingSavedAddress, setIsUsingSavedAddress] = useState(false);
 
   // Gateway Modal & Order state
   const [isGatewayOpen, setIsGatewayOpen] = useState(false);
@@ -54,8 +55,10 @@ export default function Checkout() {
       if (preferredAddress) {
         setSelectedAddressId(String(preferredAddress.id || preferredAddress._id || ''));
         setDeliveryAddress(createDeliveryAddress(preferredAddress, user));
+        setIsUsingSavedAddress(true);
       } else {
         setDeliveryAddress(createDeliveryAddress(null, user));
+        setIsUsingSavedAddress(false);
       }
     }).catch((error) => {
       console.error('Failed to load checkout addresses:', error.message);
@@ -66,12 +69,13 @@ export default function Checkout() {
 
   const handleInitiatePayment = () => {
     const requiredFields = ['fullName', 'phone', 'streetAddress', 'city', 'state', 'postalCode'];
-    const missingField = requiredFields.some((field) => !deliveryAddress[field].trim());
+    const missingField = requiredFields.some((field) => !deliveryAddress[field]?.trim());
     if (missingField) {
       setAddressError('Please complete all delivery address fields before continuing.');
       return;
     }
     setAddressError('');
+    // If using saved address and all fields are present, treat as valid
     if (paymentMethod === 'COD') {
       placeOrder('COD');
     } else if (paymentMethod === 'ONLINE') {
@@ -241,6 +245,9 @@ export default function Checkout() {
                   if (address) {
                     setSelectedAddressId(String(address.id || address._id));
                     setDeliveryAddress(createDeliveryAddress(address, user));
+                    setIsUsingSavedAddress(true);
+                  } else {
+                    setIsUsingSavedAddress(false);
                   }
                 }}
                 className="max-w-[55%] rounded-lg border border-[#DFBC77]/50 bg-[#FCF9F2] px-2.5 py-1.5 text-xs text-stone-700"
@@ -262,7 +269,7 @@ export default function Checkout() {
                 value={deliveryAddress.fullName}
                 required
                 autoComplete="name"
-                onChange={(e) => setDeliveryAddress({ ...deliveryAddress, fullName: e.target.value })}
+                onChange={(e) => { setDeliveryAddress({ ...deliveryAddress, fullName: e.target.value }); setIsUsingSavedAddress(false); }}
                 className="w-full mt-0.5 p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 bg-[#FCF9F2] focus:outline-none focus:border-[#C59B27]"
               />
             </div>
@@ -274,7 +281,7 @@ export default function Checkout() {
                 value={deliveryAddress.phone}
                 required
                 autoComplete="tel"
-                onChange={(e) => setDeliveryAddress({ ...deliveryAddress, phone: e.target.value })}
+                onChange={(e) => { setDeliveryAddress({ ...deliveryAddress, phone: e.target.value }); setIsUsingSavedAddress(false); }}
                 className="w-full mt-0.5 p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 bg-[#FCF9F2] focus:outline-none focus:border-[#C59B27]"
               />
             </div>
@@ -286,7 +293,7 @@ export default function Checkout() {
                 value={deliveryAddress.streetAddress}
                 required
                 autoComplete="street-address"
-                onChange={(e) => setDeliveryAddress({ ...deliveryAddress, streetAddress: e.target.value })}
+                onChange={(e) => { setDeliveryAddress({ ...deliveryAddress, streetAddress: e.target.value }); setIsUsingSavedAddress(false); }}
                 className="w-full mt-0.5 p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 bg-[#FCF9F2] focus:outline-none focus:border-[#C59B27]"
               />
             </div>
@@ -303,7 +310,7 @@ export default function Checkout() {
                     value={deliveryAddress[field]}
                     required
                     autoComplete={field === 'postalCode' ? 'postal-code' : 'address-level2'}
-                    onChange={(event) => setDeliveryAddress({ ...deliveryAddress, [field]: event.target.value })}
+                    onChange={(event) => { setDeliveryAddress({ ...deliveryAddress, [field]: event.target.value }); setIsUsingSavedAddress(false); }}
                     className="w-full mt-0.5 p-2.5 rounded-xl border border-stone-200 text-xs text-stone-800 bg-[#FCF9F2] focus:outline-none focus:border-[#C59B27]"
                   />
                 </div>
