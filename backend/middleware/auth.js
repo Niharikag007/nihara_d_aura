@@ -13,14 +13,17 @@ module.exports = async function (req, res, next) {
         const user = await User.findById(userId).select('-password -otp -otpExpires');
         if (user && !user.isBlocked) {
           req.user = user;
+          return next();
+        } else if (user && user.isBlocked) {
+          return res.status(403).json({ success: false, message: 'Account is blocked' });
         }
       } catch (err) {
-        // Invalid token
+        return res.status(401).json({ success: false, message: 'Invalid or expired token' });
       }
     }
-    next();
+    return res.status(401).json({ success: false, message: 'Authentication required' });
   } catch (err) {
-    next();
+    return res.status(500).json({ success: false, message: 'Authentication error' });
   }
 };
 

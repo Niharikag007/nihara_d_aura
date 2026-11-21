@@ -51,6 +51,13 @@ export default function Checkout() {
       if (!active) return;
       const savedAddresses = Array.isArray(res.addresses) ? res.addresses : [];
       setAddresses(savedAddresses);
+
+      // If no saved addresses, redirect to address page
+      if (savedAddresses.length === 0) {
+        navigate('/addresses');
+        return;
+      }
+
       const preferredAddress = savedAddresses.find((address) => address.isDefault) || savedAddresses[0];
       if (preferredAddress) {
         setSelectedAddressId(String(preferredAddress.id || preferredAddress._id || ''));
@@ -62,10 +69,13 @@ export default function Checkout() {
       }
     }).catch((error) => {
       console.error('Failed to load checkout addresses:', error.message);
-      if (active) setDeliveryAddress(createDeliveryAddress(null, user));
+      if (active) {
+        // If error loading addresses, redirect to address page
+        navigate('/addresses');
+      }
     });
     return () => { active = false; };
-  }, [user]);
+  }, [user, navigate]);
 
   const handleInitiatePayment = () => {
     const requiredFields = ['fullName', 'phone', 'streetAddress', 'city', 'state', 'postalCode'];
@@ -92,7 +102,7 @@ export default function Checkout() {
 
   const buildOrderPayload = (method, razorpayOrderId) => ({
     items: items.map(i => ({
-      productId: i.product?.id || i.product?._id,
+      productId: i.product?.id || i.product?._id || i.productId,
       name: i.product?.name || 'Product',
       qty: i.quantity,
       variant: i.variant,
