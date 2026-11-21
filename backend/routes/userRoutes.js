@@ -161,14 +161,15 @@ router.post('/wishlist/:id', async (req, res) => {
 router.get('/addresses', async (req, res) => {
   try {
     const user = await getAuthenticatedUser(req);
+    const addresses = user ? (user.addresses || []).map((address) => ({
+      ...address.toObject(),
+      streetAddress: address.street || address.streetAddress,
+      postalCode: address.pincode || address.postalCode,
+      type: address.tag || address.type
+    })) : [];
     res.status(200).json({
       success: true,
-      addresses: user ? (user.addresses || []).map((address) => ({
-        ...address.toObject(),
-        streetAddress: address.street,
-        postalCode: address.pincode,
-        type: address.tag
-      })) : []
+      addresses
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Could not load addresses' });
@@ -198,7 +199,14 @@ router.post('/addresses', async (req, res) => {
     user.addresses.push(newAddress);
     await user.save();
 
-    res.status(200).json({ success: true, address: newAddress });
+    // Return address with frontend-compatible field names
+    const responseAddress = {
+      ...newAddress,
+      streetAddress: newAddress.street,
+      postalCode: newAddress.pincode,
+      type: newAddress.tag
+    };
+    res.status(200).json({ success: true, address: responseAddress });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Could not add address' });
   }
@@ -231,7 +239,14 @@ router.put('/addresses/:id', async (req, res) => {
     };
     await user.save();
 
-    res.status(200).json({ success: true, address: user.addresses[index] });
+    // Return address with frontend-compatible field names
+    const responseAddress = {
+      ...user.addresses[index].toObject(),
+      streetAddress: user.addresses[index].street,
+      postalCode: user.addresses[index].pincode,
+      type: user.addresses[index].tag
+    };
+    res.status(200).json({ success: true, address: responseAddress });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Could not update address' });
   }

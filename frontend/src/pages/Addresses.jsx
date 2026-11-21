@@ -120,13 +120,13 @@ export default function Addresses() {
   const handleOpenEdit = (addr) => {
     setEditingAddr(addr);
     setEditFormData({
-      type: addr.type || 'Home',
+      type: addr.type || addr.tag || 'Home',
       fullName: addr.fullName || '',
       phone: addr.phone || '',
-      streetAddress: addr.streetAddress || '',
+      streetAddress: addr.streetAddress || addr.street || '',
       city: addr.city || '',
       state: addr.state || '',
-      postalCode: addr.postalCode || '',
+      postalCode: addr.postalCode || addr.pincode || '',
       isDefault: !!addr.isDefault
     });
     setIsEditModalOpen(true);
@@ -350,7 +350,7 @@ export default function Addresses() {
                   {addr.fullName}
                 </p>
                 <p className="text-xs text-stone-600 leading-relaxed break-words pt-0.5">
-                  {addr.streetAddress}
+                  {addr.streetAddress || addr.street}
                 </p>
                 <p className="text-xs text-stone-500 font-mono pt-1 flex items-center gap-2">
                   <span>Phone: {addr.phone}</span>
@@ -556,7 +556,7 @@ export default function Addresses() {
             </div>
 
             <div className="bg-stone-50 p-3 rounded-xl border border-stone-200 text-left text-xs text-stone-600 truncate">
-              {deletingAddr.streetAddress}
+              {deletingAddr.streetAddress || deletingAddr.street}
             </div>
 
             <div className="flex items-center justify-center gap-2 pt-2">
