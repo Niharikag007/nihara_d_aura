@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { useNavigate } from 'react-router-dom';
 import { useOffers } from './OffersContext';
 import { useAuth } from './AuthContext';
+import { useProducts } from './ProductContext';
 import { api } from '../services/api';
 import { REMOVED_JEWELLERY_PRODUCT_IDS } from '../data/jewelleryCategories.js';
 
@@ -11,10 +12,25 @@ const isRemovedProduct = (item) => removedProductIds.has(
   item.productId || item.product?.id || item.product?._id
 );
 
+// Helper to enrich cart items with product details and filter invalid items
+const enrichCartItems = (cartItems, products) => {
+  return cartItems
+    .map(item => {
+      if (item.product) return item; // Already has product details
+      const product = products.find(p => (p.id || p._id?.toString()) === item.productId);
+      if (product) {
+        return { ...item, product };
+      }
+      return item;
+    })
+    .filter(item => item.product && (item.product.price || item.product.price === 0)); // Only keep items with valid product
+};
+
 export function CartProvider({ children }) {
   const navigate = useNavigate();
   const { offers, validateCoupon } = useOffers();
   const { token, isAuthenticated } = useAuth();
+  const { products } = useProducts();
 
   // Load saved cart from localStorage or start with empty bag
   const [items, setItems] = useState(() => {
@@ -76,20 +92,40 @@ export function CartProvider({ children }) {
           mergedItems.push(localItem);
         }
       }
-      setItems(mergedItems);
+      // Enrich cart items with product details from ProductContext
+      const enrichedItems = enrichCartItems(mergedItems, products);
+      setItems(enrichedItems);
       try {
-        localStorage.setItem('nihara_cart', JSON.stringify(mergedItems));
+        localStorage.setItem('nihara_cart', JSON.stringify(enrichedItems));
       } catch (error) {
         console.warn('Failed to save the server cart locally:', error);
       }
-      api.updateCartOnServer(mergedItems).catch((error) => {
+      api.updateCartOnServer(enrichedItems).catch((error) => {
         console.error('Failed to sync the local cart with the server:', error.message);
       });
     }).catch((error) => {
       console.error('Failed to load the signed-in cart:', error.message);
     });
     return () => { active = false; };
-  }, [token]);
+  }, [token, products]);
+
+  // Enrich items with product details when products are loaded (for local cart items)
+  useEffect(() => {
+    if (products.length === 0) return;
+    setItems(prev => {
+      const enriched = enrichCartItems(prev, products);
+      // Only update if something changed
+      if (JSON.stringify(prev) !== JSON.stringify(enriched)) {
+        try {
+          localStorage.setItem('nihara_cart', JSON.stringify(enriched));
+        } catch (e) {
+          console.warn('Failed to save enriched cart:', e);
+        }
+        return enriched;
+      }
+      return prev;
+    });
+  }, [products]);
 
   // Calculations
   const subtotal = useMemo(() => {
