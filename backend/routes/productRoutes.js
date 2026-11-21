@@ -21,7 +21,14 @@ router.get('/', async (req, res) => {
 
     const query = {};
 
+    // Only filter by status if it's explicitly set in query
+    // Don't force 'Live' by default - this could exclude products without status field
+    if (req.query.status) {
+      query.status = req.query.status;
+    }
+
     if (category) {
+      // Use case-insensitive match for category
       query.category = new RegExp(`^${category}$`, 'i');
     }
     if (categorySlug) {
@@ -44,6 +51,10 @@ router.get('/', async (req, res) => {
       ];
     }
 
+    // Log the query for debugging
+    console.log('[DEBUG] Products query:', JSON.stringify(query));
+    console.log('[DEBUG] Query params:', req.query);
+
     let sortOptions = { createdAt: -1 };
     if (sort === 'price_asc') sortOptions = { price: 1 };
     else if (sort === 'price_desc') sortOptions = { price: -1 };
@@ -58,6 +69,16 @@ router.get('/', async (req, res) => {
       Product.find(query).sort(sortOptions).skip(skip).limit(parsedLimit),
       Product.countDocuments(query),
     ]);
+
+    console.log('[DEBUG] Products found:', products.length, 'Total:', total);
+    if (products.length > 0) {
+      console.log('[DEBUG] Sample product:', {
+        name: products[0].name,
+        category: products[0].category,
+        categorySlug: products[0].categorySlug,
+        status: products[0].status
+      });
+    }
 
     res.status(200).json({
       success: true,

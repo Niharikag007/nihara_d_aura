@@ -195,7 +195,7 @@ export default function Home() {
             <h2 className="section-title">Crafted for your most precious moments</h2>
           </div>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="mt-8 grid gap-6 md:grid-cols-3 max-w-6xl mx-auto">
             {[
               {
                 icon: Crown,
@@ -212,65 +212,49 @@ export default function Home() {
                 title: 'Thoughtful Details',
                 text: 'Carefully selected fashion jewellery and premium beauty products make every order feel special.'
               },
-              {
-                icon: Truck,
-                title: 'Seamless Delivery',
-                text: 'Pan-India care, insured shipping and expert support keep every luxury purchase stress-free.'
-              }
             ].map(({ icon: Icon, title, text }) => (
-              <div key={title} className="premium-card">
+              <div key={title} className="premium-card h-full">
                 <span className="premium-card-icon">
                   <Icon className="w-5 h-5" />
                 </span>
-                <h3>{title}</h3>
-                <p>{text}</p>
+                <h3 className="text-lg font-serif font-bold text-stone-900 mb-2">{title}</h3>
+                <p className="text-sm text-stone-600 leading-relaxed">{text}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 2. Luxury Guarantees & Perks Bar */}
-      <section className="bg-stone-900 border-y border-[#DFBC77]/30 text-amber-100 py-4 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center md:text-left">
+      <section className="bg-stone-900 border-y border-[#DFBC77]/30 text-amber-100 py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
           
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 flex-shrink-0">
-              <Award className="w-5 h-5" />
+          <div className="flex items-center justify-center md:justify-start gap-4 px-4">
+            <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-400/20 flex items-center justify-center text-amber-300 flex-shrink-0 shadow-lg">
+              <Award className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-200">Statement Fashion Jewellery</h4>
-              <p className="text-[10px] text-stone-400 font-light">Styles for everyday and special occasions</p>
+              <h4 className="text-sm font-bold uppercase tracking-wider text-amber-200">Statement Jewellery</h4>
+              <p className="text-[11px] text-stone-400 font-medium mt-0.5">Styles for every occasion</p>
             </div>
           </div>
 
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 flex-shrink-0">
-              <Truck className="w-5 h-5" />
+          <div className="flex items-center justify-center md:justify-start gap-4 px-4 border-y md:border-y-0 md:border-x border-white/5 py-6 md:py-0">
+            <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-400/20 flex items-center justify-center text-amber-300 flex-shrink-0 shadow-lg">
+              <UserCheck className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-200">Free Insured Shipping</h4>
-              <p className="text-[10px] text-stone-400 font-light">Pan-India Express Door Delivery</p>
+              <h4 className="text-sm font-bold uppercase tracking-wider text-amber-200">Master Makeup Artists</h4>
+              <p className="text-[11px] text-stone-400 font-medium mt-0.5">Salon & At-Home Specialists</p>
             </div>
           </div>
 
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 flex-shrink-0">
-              <UserCheck className="w-5 h-5" />
+          <div className="flex items-center justify-center md:justify-start gap-4 px-4">
+            <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-400/20 flex items-center justify-center text-amber-300 flex-shrink-0 shadow-lg">
+              <RotateCcw className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-200">Master Makeup Artists</h4>
-              <p className="text-[10px] text-stone-400 font-light">Salon & At-Home Specialists</p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center md:justify-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/30 flex items-center justify-center text-amber-300 flex-shrink-0">
-              <RotateCcw className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-amber-200">Easy Returns & Exchange</h4>
-              <p className="text-[10px] text-stone-400 font-light">Lifetime Gold Guarantee</p>
+              <h4 className="text-sm font-bold uppercase tracking-wider text-amber-200">Easy Returns & Exchange</h4>
+              <p className="text-[11px] text-stone-400 font-medium mt-0.5">Lifetime Gold Guarantee</p>
             </div>
           </div>
 
@@ -563,39 +547,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Signature Salon Services (Elevated to showcase dual identity: Haute Jewellery & Premier Salon) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="w-6 h-0.5 bg-[#C59B27]" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#A87D17]">
-                SALON & AT-HOME ARTISTRY
-              </span>
-            </div>
-            <h2 className="font-serif text-2xl sm:text-3xl font-extrabold text-[#1C1917] tracking-tight">
-              Signature Salon Services
-            </h2>
-            <p className="text-xs sm:text-sm text-stone-500 font-light mt-1 max-w-xl">
-              Real high-definition bridal transformations, red carpet glam, and bespoke nail couture by master artists at our flagship salon or your home.
-            </p>
-          </div>
-          <Link
-            to="/services"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-[#DFBC77] bg-white text-xs font-bold text-[#855F14] hover:bg-[#FAF6EE] hover:text-[#523A0B] transition-all shadow-xs group flex-shrink-0"
-          >
-            <span>Explore All Services</span>
-            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </div>
-
-        {/* 3-Column Luxury Real-Photography Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-          {signatureServices.map((service) => (
-            <ServiceCard key={service.id} service={service} />
-          ))}
-        </div>
-      </section>
 
       {/* 6. Heritage Collections & Patron Favorites (Unified Tabbed Showcase) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14">

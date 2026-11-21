@@ -8,37 +8,6 @@ export default function Footer() {
     <footer className="relative bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#362F27] via-[#1A1815] to-[#0A0908] text-stone-300 pt-16 pb-24 md:pb-12 border-t-2 border-[#D4AF37]/50 shadow-[0_-10px_35px_rgba(212,175,55,0.12)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Value Props Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-12 border-b border-[#D4AF37]/20 text-stone-200 text-sm">
-          <div className="flex items-center gap-3">
-            <Award className="w-6 h-6 text-[#DFBC77] flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-white">Certified Authenticity</p>
-              <p className="text-xs text-stone-200 font-medium">100% hallmarked & certified jewellery</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Sparkles className="w-6 h-6 text-[#DFBC77] flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-white">Clean Formulations</p>
-              <p className="text-xs text-stone-200 font-medium">Dermatologist-approved botanicals</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Clock className="w-6 h-6 text-[#DFBC77] flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-white">Master Salon Stylists</p>
-              <p className="text-xs text-stone-200 font-medium">Flagship salon & at-home appointments</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <ShieldCheck className="w-6 h-6 text-[#DFBC77] flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-white">Guaranteed Safe Delivery</p>
-              <p className="text-xs text-stone-200 font-medium">Complimentary velvet gift packing</p>
-            </div>
-          </div>
-        </div>
 
         {/* Main Footer Links */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 py-12">

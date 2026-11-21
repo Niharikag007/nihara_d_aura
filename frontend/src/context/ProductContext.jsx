@@ -77,8 +77,10 @@ export function ProductProvider({ children }) {
     try {
       setLoading(true);
       const res = await api.getProducts();
+      console.log('[ProductContext] API Response:', res);
       if (res && Array.isArray(res.products)) {
         const currentProducts = withoutRemovedProducts(res.products);
+        console.log('[ProductContext] Products after filtering:', currentProducts.length);
         setProducts(currentProducts);
         saveToStorage(currentProducts);
       }
