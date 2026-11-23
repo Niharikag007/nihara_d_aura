@@ -164,6 +164,7 @@ router.get('/addresses', async (req, res) => {
     const addresses = user ? (user.addresses || []).map((address) => ({
       ...address.toObject(),
       streetAddress: address.street || address.streetAddress,
+      area: address.area || '',
       postalCode: address.pincode || address.postalCode,
       type: address.tag || address.type
     })) : [];
@@ -188,6 +189,7 @@ router.post('/addresses', async (req, res) => {
       isDefault: user.addresses.length === 0,
       ...req.body,
       street: req.body.street || req.body.streetAddress,
+      area: req.body.area || '',
       pincode: req.body.pincode || req.body.postalCode,
       tag: req.body.tag || req.body.type || 'Home'
     };
@@ -203,6 +205,7 @@ router.post('/addresses', async (req, res) => {
     const responseAddress = {
       ...newAddress,
       streetAddress: newAddress.street,
+      area: newAddress.area || '',
       postalCode: newAddress.pincode,
       type: newAddress.tag
     };
@@ -234,6 +237,7 @@ router.put('/addresses/:id', async (req, res) => {
       ...user.addresses[index].toObject(),
       ...req.body,
       street: req.body.street || req.body.streetAddress || user.addresses[index].street,
+      area: req.body.area || user.addresses[index].area || '',
       pincode: req.body.pincode || req.body.postalCode || user.addresses[index].pincode,
       tag: req.body.tag || req.body.type || user.addresses[index].tag
     };
@@ -243,6 +247,7 @@ router.put('/addresses/:id', async (req, res) => {
     const responseAddress = {
       ...user.addresses[index].toObject(),
       streetAddress: user.addresses[index].street,
+      area: user.addresses[index].area || '',
       postalCode: user.addresses[index].pincode,
       type: user.addresses[index].tag
     };

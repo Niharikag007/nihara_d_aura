@@ -36,6 +36,8 @@ const Addresses = lazy(() => import('./pages/Addresses'));
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const VerifyOTP = lazy(() => import('./pages/VerifyOTP'));
+const About = lazy(() => import('./pages/About'));
+const HelpCenter = lazy(() => import('./pages/HelpCenter'));
 
 // Admin Console Layout & Pages
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
@@ -112,6 +114,8 @@ function AppLayout() {
             <Route path="/categories/:slug" element={<Products />} />
             <Route path="/services" element={<Services />} />
             <Route path="/services/:id" element={<Services />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/help" element={<HelpCenter />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/verify-otp" element={<VerifyOTP />} />

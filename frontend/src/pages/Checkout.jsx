@@ -11,6 +11,7 @@ const createDeliveryAddress = (address, user) => ({
   fullName: address?.fullName || user?.fullName || user?.name || '',
   phone: address?.phone || user?.phone || user?.mobileNumber || '',
   streetAddress: address?.streetAddress || address?.street || '',
+  area: address?.area || '',
   city: address?.city || '',
   state: address?.state || '',
   postalCode: address?.postalCode || address?.pincode || ''

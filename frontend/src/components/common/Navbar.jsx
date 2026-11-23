@@ -76,7 +76,8 @@ export default function Navbar() {
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'Shop', path: '/products' },
-    { label: 'Categories', path: '/categories' }
+    { label: 'Categories', path: '/categories' },
+    { label: 'About', path: '/about' }
   ];
   const bookingLink = { label: 'Book Appointment', path: '/book' };
   const isServicesActive = location.pathname.startsWith('/services');

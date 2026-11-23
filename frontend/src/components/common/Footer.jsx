@@ -59,6 +59,7 @@ export default function Footer() {
                 <li><Link to="/services" className="hover:text-[#DFBC77] transition-colors">Gel Nail Extensions & Art</Link></li>
                 <li><Link to="/services" className="hover:text-[#DFBC77] transition-colors">Jewellery & Silhouette Trial</Link></li>
                 <li><Link to="/bookings" className="hover:text-[#DFBC77] transition-colors">Track My Appointments</Link></li>
+                <li><Link to="/about" className="hover:text-[#DFBC77] transition-colors">About Nihara D'Aura</Link></li>
               </ul>
             </div>
           </div>
