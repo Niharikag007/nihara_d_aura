@@ -52,7 +52,7 @@ export default function Products() {
   // Form state for Add/Edit
   const [formData, setFormData] = useState({
     name: '',
-    collection: 'Jewellery',
+    categories: 'Jewellery',
     subcategory: '',
     cost: '',
     price: '',
@@ -60,11 +60,15 @@ export default function Products() {
     stockReason: '',
     status: 'Live',
     image: '',
+    imageFile: null,
   });
   const [formErrors, setFormErrors] = useState({});
 
-  // Subcategories for each collection
-  const subcategoriesByCollection = {
+  // Categories for product form - matching shop page categories
+  const productCategories = ['Jewellery', 'Makeup', 'Nails', 'Candles'];
+
+  // Subcategories for each category
+  const subcategoriesByCategory = {
     Jewellery: ['Rings', 'Earrings', 'Necklaces', 'Bangles', 'Bracelets', 'Pendants', 'Anklets', 'Maang Tikka', 'Nose Pins', 'Chokers'],
     Makeup: ['Lipsticks', 'Foundations', 'Eyeshadows', 'Mascaras', 'Blush', 'Highlighters', 'Setting Sprays', 'Primers'],
     Nails: ['Press-on Nails', 'Nail Art Kits', 'Nail Polish', 'Nail Care', 'Manicure Sets'],
@@ -77,7 +81,7 @@ export default function Products() {
   const liveCost = parseFloat(formData.cost) || 0;
   const livePrice = parseFloat(formData.price) || 0;
   const currentMargin = livePrice > 0 ? ((livePrice - liveCost) / livePrice) * 100 : 0;
-  const targetForCollection = targetMargins[formData.collection] || 25;
+  const targetForCollection = targetMargins[formData.categories] || 25;
 
   // Price suggestion from cost formula: price = cost / (1 - targetMargin / 100)
   const handleSuggestPrice = () => {
@@ -85,7 +89,7 @@ export default function Products() {
       setFormErrors(prev => ({ ...prev, cost: 'Enter a valid cost first' }));
       return;
     }
-    const target = targetMargins[formData.collection] || 25;
+    const target = targetMargins[formData.categories] || 25;
     const suggested = Math.round(liveCost / (1 - target / 100));
     setFormData(prev => ({ ...prev, price: String(suggested) }));
     setFormErrors(prev => ({ ...prev, price: undefined }));
@@ -95,7 +99,7 @@ export default function Products() {
     setEditingProduct(null);
     setFormData({
       name: '',
-      collection: categories[0]?.name || 'Jewellery',
+      categories: productCategories[0],
       subcategory: '',
       cost: '',
       price: '',
@@ -103,6 +107,7 @@ export default function Products() {
       stockReason: '',
       status: 'Live',
       image: '',
+      imageFile: null,
     });
     setFormErrors({});
     setEditModalOpen(true);
@@ -112,7 +117,7 @@ export default function Products() {
     setEditingProduct(p);
     setFormData({
       name: p.name,
-      collection: p.collection,
+      categories: p.productCollection || p.categories || p.collection || 'Jewellery',
       subcategory: p.subcategory || '',
       cost: String(p.cost),
       price: String(p.price),
@@ -120,6 +125,7 @@ export default function Products() {
       stockReason: '',
       status: p.status,
       image: p.image || '',
+      imageFile: null,
     });
     setFormErrors({});
     setEditModalOpen(true);
@@ -143,7 +149,9 @@ export default function Products() {
 
     const payload = {
       name: formData.name.trim(),
-      collection: formData.collection,
+      productCollection: formData.categories,
+      category: formData.categories,
+      categorySlug: formData.categories.toLowerCase(),
       subcategory: formData.subcategory.trim(),
       cost: parseFloat(formData.cost),
       price: parseFloat(formData.price),
@@ -224,7 +232,8 @@ export default function Products() {
     const lowStockThreshold = settings.lowStockThreshold || 5;
     return products.filter(p => {
       // Collection filter
-      if (collectionFilter !== 'All' && p.collection !== collectionFilter) {
+      const productCategory = p.productCollection || p.categories || p.collection;
+      if (collectionFilter !== 'All' && productCategory !== collectionFilter) {
         return false;
       }
 
@@ -243,7 +252,8 @@ export default function Products() {
       }
       if (statusFilter === 'below_margin') {
         const m = calcMargin(p.cost, p.price);
-        const target = targetMargins[p.collection] || 25;
+        const productCategory = p.productCollection || p.categories || p.collection;
+        const target = targetMargins[productCategory] || 25;
         return m < target;
       }
       return true;
@@ -287,14 +297,17 @@ export default function Products() {
       },
     },
     {
-      key: 'collection',
-      header: 'Collection',
+      key: 'productCollection',
+      header: 'Categories',
       sortable: true,
-      render: (val) => (
-        <span className="text-xs px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-medium">
-          {val}
-        </span>
-      ),
+      render: (val, row) => {
+        const productCategory = row.productCollection || row.categories || row.collection;
+        return (
+          <span className="text-xs px-2 py-0.5 rounded-md bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-medium">
+            {productCategory}
+          </span>
+        );
+      },
     },
     {
       key: 'stock',
@@ -334,7 +347,8 @@ export default function Products() {
       sortable: true,
       render: (_, row) => {
         const m = calcMargin(row.cost, row.price);
-        const target = targetMargins[row.collection] || 25;
+        const productCategory = row.productCollection || row.categories || row.collection;
+        const target = targetMargins[productCategory] || 25;
         const isHealthy = m >= target;
         const isClose = m >= target - 5;
         const color = isHealthy ? '#1d8f6a' : isClose ? '#d9801a' : '#c4425e';
@@ -405,7 +419,7 @@ export default function Products() {
             Product inventory
           </h1>
           <p className={`text-xs sm:text-sm mt-0.5 ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-            Manage collection stock, pricing margins, and catalog statuses
+            Manage categories stock, pricing margins, and catalog statuses
           </p>
         </div>
         <button
@@ -586,7 +600,7 @@ export default function Products() {
           }
         }}
         searchPlaceholder="Search product by name or ID..."
-        searchKeys={['name', 'id', 'collection']}
+        searchKeys={['name', 'id', 'productCollection', 'categories', 'collection']}
         pageSize={10}
         emptyMessage="No products match the selected filters."
       />
@@ -618,20 +632,20 @@ export default function Products() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
-                Collection
+                Categories *
               </label>
               <select
-                value={formData.collection}
+                value={formData.categories}
                 onChange={(e) => {
-                  setFormData(p => ({ ...p, collection: e.target.value, subcategory: '' }));
+                  setFormData(p => ({ ...p, categories: e.target.value, subcategory: '' }));
                 }}
                 className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
                   darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
                 }`}
               >
-                {categories.map((category) => (
-                  <option key={category.id} value={category.name}>
-                    {category.name} (Tgt {targetMargins[category.name] || 25}%)
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
                   </option>
                 ))}
               </select>
@@ -644,13 +658,13 @@ export default function Products() {
               <select
                 value={formData.subcategory}
                 onChange={(e) => setFormData(p => ({ ...p, subcategory: e.target.value }))}
-                disabled={!formData.collection}
+                disabled={!formData.categories}
                 className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
                   darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
-                } ${!formData.collection ? 'opacity-50 cursor-not-allowed' : ''}`}
+                } ${!formData.categories ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <option value="">Select subcategory</option>
-                {(subcategoriesByCollection[formData.collection] || []).map((sub) => (
+                {(subcategoriesByCategory[formData.categories] || []).map((sub) => (
                   <option key={sub} value={sub}>
                     {sub}
                   </option>
@@ -764,7 +778,7 @@ export default function Products() {
               </span>
             </div>
             <div className="text-[11px] text-stone-500">
-              Target for {formData.collection}: {targetForCollection}%
+              Target for {formData.categories}: {targetForCollection}%
             </div>
           </div>
 
@@ -787,17 +801,40 @@ export default function Products() {
 
             <div>
               <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
-                Image URL (optional)
+                Product Image (optional)
               </label>
-              <input
-                type="text"
-                value={formData.image}
-                onChange={(e) => setFormData(p => ({ ...p, image: e.target.value }))}
-                placeholder="https://..."
-                className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
-                  darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
-                }`}
-              />
+              <div className="space-y-2">
+                {formData.image && (
+                  <div className="relative w-full h-32 rounded-xl overflow-hidden border border-stone-200 dark:border-white/10">
+                    <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setFormData(p => ({ ...p, image: '', imageFile: null }))}
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        setFormData(p => ({ ...p, image: event.target.result, imageFile: file }));
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#C59B27] file:text-white hover:file:bg-[#A87D17] ${
+                    darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                  }`}
+                />
+                <p className="text-[10px] text-stone-500">Supports JPG, PNG, WebP, GIF, BMP, HEIC formats</p>
+              </div>
             </div>
           </div>
 
