@@ -5,6 +5,7 @@ import { ProductProvider } from './context/ProductContext';
 import { OffersProvider } from './context/OffersContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
+import { NotificationProvider } from './context/NotificationContext';
 import { ToastProvider } from './context/ToastContext';
 import { SocketProvider } from './context/SocketContext';
 import { ServiceProvider } from './context/ServiceContext';
@@ -38,6 +39,7 @@ const Register = lazy(() => import('./pages/Register'));
 const VerifyOTP = lazy(() => import('./pages/VerifyOTP'));
 const About = lazy(() => import('./pages/About'));
 const HelpCenter = lazy(() => import('./pages/HelpCenter'));
+const Notifications = lazy(() => import('./pages/Notifications'));
 
 // Admin Console Layout & Pages
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
@@ -116,6 +118,7 @@ function AppLayout() {
             <Route path="/services/:id" element={<Services />} />
             <Route path="/about" element={<About />} />
             <Route path="/help" element={<HelpCenter />} />
+            <Route path="/notifications" element={<Notifications />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/verify-otp" element={<VerifyOTP />} />
@@ -184,11 +187,13 @@ export default function App() {
               <OffersProvider>
                 <CartProvider>
                   <WishlistProvider>
-                    <ServiceProvider>
-                      <ErrorBoundary>
-                        <AppLayout />
-                      </ErrorBoundary>
-                    </ServiceProvider>
+                    <NotificationProvider>
+                      <ServiceProvider>
+                        <ErrorBoundary>
+                          <AppLayout />
+                        </ErrorBoundary>
+                      </ServiceProvider>
+                    </NotificationProvider>
                   </WishlistProvider>
                 </CartProvider>
               </OffersProvider>

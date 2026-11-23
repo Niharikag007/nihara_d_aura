@@ -28,12 +28,14 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { useNotifications } from '../context/NotificationContext';
 import { api } from '../services/api';
 
 export default function Profile() {
   const navigate = useNavigate();
   const { user, isAuthenticated, isAdmin, updateProfile, logout } = useAuth();
   const { showToast } = useToast();
+  const { addNotification } = useNotifications();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
@@ -50,6 +52,49 @@ export default function Profile() {
   const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [language, setLanguage] = useState('EN');
+  
+  // Language translations - Only for Support & Preferences section
+  const translations = {
+    EN: {
+      language: 'Language',
+      darkMode: 'Dark Mode',
+      helpCenter: 'Help Center',
+      aboutNihara: 'About Nihara D\'Aura'
+    },
+    HI: {
+      language: 'भाषा',
+      darkMode: 'डार्क मोड',
+      helpCenter: 'सहायता केंद्र',
+      aboutNihara: 'निहारा डी ऑरा के बारे में'
+    }
+  };
+  
+  const t = translations[language] || translations.EN;
+  
+  // Dark mode effect
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    return () => {
+      document.documentElement.classList.remove('dark');
+    };
+  }, [isDarkMode]);
+
+  // Add sample website update notification on first visit
+  useEffect(() => {
+    const hasSeenWebsiteUpdate = localStorage.getItem('nihara_website_update_seen');
+    if (!hasSeenWebsiteUpdate) {
+      addNotification({
+        type: 'offer',
+        title: 'Welcome to Nihara D\'Aura',
+        message: 'Discover our luxury jewellery, silk makeup, and home fragrance collections.'
+      });
+      localStorage.setItem('nihara_website_update_seen', 'true');
+    }
+  }, [addNotification]);
 
   const fileInputRef = useRef(null);
 
@@ -188,6 +233,11 @@ export default function Profile() {
       await updateProfile({ avatar: previewPhoto });
       setIsPhotoModalOpen(false);
       showToast('Profile photo updated successfully!', 'success');
+      addNotification({
+        type: 'profile',
+        title: 'Profile Photo Updated',
+        message: 'Your profile photo has been successfully updated.'
+      });
     } catch (error) {
       showToast(error.message || 'Could not update your profile photo.', 'error');
     }
@@ -203,6 +253,11 @@ export default function Profile() {
       });
       setIsEditModalOpen(false);
       showToast('Profile details updated successfully!', 'success');
+      addNotification({
+        type: 'profile',
+        title: 'Profile Updated',
+        message: 'Your profile details have been successfully updated.'
+      });
     } catch (error) {
       showToast(error.message || 'Could not update your profile details.', 'error');
     }
@@ -234,14 +289,14 @@ export default function Profile() {
 
   const supportItems = [
     {
-      title: 'Language',
+      title: t.language,
       icon: Globe,
       rightContent: (
         <div className="flex items-center gap-3">
-          <span className="text-base font-semibold text-stone-700">{language}</span>
+          <span className={`text-base font-semibold transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-700'}`}>{language}</span>
           <button
             onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
-            className="text-base font-bold text-[#C59B27] bg-[#FAF3E8] px-4 py-2 rounded-full hover:bg-[#C59B27] hover:text-white transition-all"
+            className={`text-base font-bold px-4 py-2 rounded-full transition-all hover:bg-[#C59B27] hover:text-white ${isDarkMode ? 'text-[#C59B27] bg-[#2C2318]' : 'text-[#C59B27] bg-[#FAF3E8]'}`}
           >
             {language === 'EN' ? '→ HI' : '→ EN'}
           </button>
@@ -249,7 +304,7 @@ export default function Profile() {
       )
     },
     {
-      title: 'Dark Mode',
+      title: t.darkMode,
       icon: isDarkMode ? Moon : Sun,
       rightContent: (
         <button
@@ -261,23 +316,23 @@ export default function Profile() {
       )
     },
     {
-      title: 'Help Center',
+      title: t.helpCenter,
       icon: HelpCircle,
       link: '/help'
     },
     {
-      title: 'About Nihara D\'Aura',
+      title: t.aboutNihara,
       icon: Info,
       link: '/about'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#FFFDF9] to-[#F9F5EE] px-4 py-10 flex items-center justify-center">
-      <div className="w-full max-w-2xl">
+    <div className={`min-h-screen px-4 py-10 flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-b from-[#1C1917] to-[#0A0908]' : 'bg-gradient-to-b from-[#FFFDF9] to-[#F9F5EE]'}`}>
+      <div className={`w-full max-w-2xl transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
       
       {/* Profile Header */}
-      <div className="bg-white rounded-3xl border border-stone-200 p-7 shadow-sm mb-6">
+      <div className={`rounded-3xl border p-7 shadow-sm mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}>
         <div className="flex items-center gap-5">
           {/* Profile Picture */}
           <div 
@@ -295,7 +350,7 @@ export default function Profile() {
                 className="w-24 h-24 rounded-full object-cover border-2 border-[#C59B27] group-hover:border-[#A87D17] group-hover:opacity-90 transition-all"
               />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-[#FAF3E8] border-2 border-[#C59B27] text-[#855F14] flex items-center justify-center font-semibold text-xl group-hover:bg-[#C59B27] group-hover:text-white group-hover:border-[#A87D17] transition-all">
+              <div className={`w-24 h-24 rounded-full border-2 border-[#C59B27] flex items-center justify-center font-semibold text-xl group-hover:bg-[#C59B27] group-hover:text-white group-hover:border-[#A87D17] transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
                 {avatarInitials || <User className="w-10 h-10" />}
               </div>
             )}
@@ -308,14 +363,14 @@ export default function Profile() {
 
           {/* User Details */}
           <div className="flex-1 min-w-0">
-            <h2 className="font-bold text-xl text-[#1C1917] truncate">
+            <h2 className={`font-bold text-xl truncate transition-colors duration-300 ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
               {user?.name || 'Name not provided'}
             </h2>
-            <p className="text-base text-stone-500 mt-1.5 truncate">
+            <p className={`text-base mt-1.5 truncate transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>
               {user?.email || 'Email not provided'}
             </p>
             {user?.phone && (
-              <p className="text-base text-stone-500 mt-1.5">
+              <p className={`text-base mt-1.5 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>
                 {user.phone}
               </p>
             )}
@@ -342,21 +397,21 @@ export default function Profile() {
       <div className="grid grid-cols-3 gap-5 mb-6">
         <div 
           onClick={() => navigate('/orders')}
-          className="bg-white rounded-3xl border border-stone-200 p-7 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-lg hover:scale-105 transition-all group"
+          className={`rounded-3xl border p-7 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-lg hover:scale-105 transition-all group ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}
         >
-          <span className="font-bold text-3xl text-[#1C1917] group-hover:text-[#C59B27] transition-colors">
+          <span className={`font-bold text-3xl group-hover:text-[#C59B27] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
             {ordersStat.userId === user?.id ? ordersStat.count : '—'}
           </span>
-          <p className="text-base text-stone-500 mt-3 group-hover:text-[#855F14] transition-colors">Orders</p>
+          <p className={`text-base mt-3 group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>Orders</p>
         </div>
         <div 
           onClick={() => navigate('/wishlist')}
-          className="bg-white rounded-3xl border border-stone-200 p-7 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-lg hover:scale-105 transition-all group"
+          className={`rounded-3xl border p-7 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-lg hover:scale-105 transition-all group ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}
         >
-          <span className="font-bold text-3xl text-[#1C1917] group-hover:text-[#C59B27] transition-colors">
+          <span className={`font-bold text-3xl group-hover:text-[#C59B27] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
             {wishlistStat.userId === user?.id ? wishlistStat.count : '—'}
           </span>
-          <p className="text-base text-stone-500 mt-3 group-hover:text-[#855F14] transition-colors">Wishlist</p>
+          <p className={`text-base mt-3 group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>Wishlist</p>
         </div>
         <div 
           onClick={() => {
@@ -367,34 +422,34 @@ export default function Profile() {
               navigate('/cart');
             }
           }}
-          className="bg-white rounded-3xl border border-stone-200 p-7 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-lg hover:scale-105 transition-all group"
+          className={`rounded-3xl border p-7 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-lg hover:scale-105 transition-all group ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}
         >
-          <span className="font-bold text-3xl text-[#1C1917] group-hover:text-[#C59B27] transition-colors">
+          <span className={`font-bold text-3xl group-hover:text-[#C59B27] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
             {couponsLoaded ? availableCoupons.length : '—'}
           </span>
-          <p className="text-base text-stone-500 mt-3 group-hover:text-[#855F14] transition-colors">Coupons</p>
+          <p className={`text-base mt-3 group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>Coupons</p>
         </div>
       </div>
 
       {/* Account Settings Section */}
       <div className="mb-6">
-        <h3 className="text-base font-bold text-stone-400 uppercase tracking-wider mb-5 px-1">
+        <h3 className={`text-base font-bold uppercase tracking-wider mb-5 px-1 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`}>
           Account Settings
         </h3>
-        <div className="bg-white rounded-3xl border border-stone-200 overflow-hidden">
+        <div className={`rounded-3xl border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}>
           {accountSettingsItems.map((item, idx) => {
             const Icon = item.icon;
             const content = (
               <div 
                 key={idx}
                 onClick={item.onClick}
-                className="flex items-center justify-between p-6 border-b border-stone-100 last:border-b-0 cursor-pointer hover:bg-[#FAF3E8] hover:border-l-4 hover:border-l-[#C59B27] transition-all group"
+                className={`flex items-center justify-between p-6 border-b last:border-b-0 cursor-pointer hover:bg-[#FAF3E8] hover:border-l-4 hover:border-l-[#C59B27] transition-all group ${isDarkMode ? 'border-[#3E2F1E]' : 'border-stone-100'}`}
               >
                 <div className="flex items-center gap-5">
-                  <div className="w-7 h-7 rounded-full bg-[#FAF3E8] text-[#855F14] flex items-center justify-center group-hover:bg-[#C59B27] group-hover:text-white transition-all">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center group-hover:bg-[#C59B27] group-hover:text-white transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="text-lg font-medium text-[#1C1917] group-hover:text-[#855F14] transition-colors">{item.title}</span>
+                  <span className={`text-lg font-medium group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>{item.title}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   {item.badge && (
@@ -402,7 +457,7 @@ export default function Profile() {
                       {item.badge}
                     </span>
                   )}
-                  <ChevronRight className="w-6 h-6 text-stone-400 group-hover:text-[#C59B27] group-hover:translate-x-1 transition-all" />
+                  <ChevronRight className={`w-6 h-6 group-hover:text-[#C59B27] group-hover:translate-x-1 transition-all ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`} />
                 </div>
               </div>
             );
@@ -417,24 +472,24 @@ export default function Profile() {
 
       {/* Support & Preferences Section */}
       <div className="mb-6">
-        <h3 className="text-base font-bold text-stone-400 uppercase tracking-wider mb-5 px-1">
+        <h3 className={`text-base font-bold uppercase tracking-wider mb-5 px-1 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`}>
           Support & Preferences
         </h3>
-        <div className="bg-white rounded-3xl border border-stone-200 overflow-hidden">
+        <div className={`rounded-3xl border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}>
           {supportItems.map((item, idx) => {
             const Icon = item.icon;
             const content = (
               <div 
                 key={idx}
-                className="flex items-center justify-between p-6 border-b border-stone-100 last:border-b-0 hover:bg-[#FAF3E8] hover:border-l-4 hover:border-l-[#C59B27] transition-all group"
+                className={`flex items-center justify-between p-6 border-b last:border-b-0 hover:bg-[#FAF3E8] hover:border-l-4 hover:border-l-[#C59B27] transition-all group ${isDarkMode ? 'border-[#3E2F1E]' : 'border-stone-100'}`}
               >
                 <div className="flex items-center gap-5">
-                  <div className="w-7 h-7 rounded-full bg-[#FAF3E8] text-[#855F14] flex items-center justify-center group-hover:bg-[#C59B27] group-hover:text-white transition-all">
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center group-hover:bg-[#C59B27] group-hover:text-white transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="text-lg font-medium text-[#1C1917] group-hover:text-[#855F14] transition-colors">{item.title}</span>
+                  <span className={`text-lg font-medium group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>{item.title}</span>
                 </div>
-                {item.rightContent || <ChevronRight className="w-6 h-6 text-stone-400 group-hover:text-[#C59B27] group-hover:translate-x-1 transition-all" />}
+                {item.rightContent || <ChevronRight className={`w-6 h-6 group-hover:text-[#C59B27] group-hover:translate-x-1 transition-all ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`} />}
               </div>
             );
 
@@ -456,7 +511,7 @@ export default function Profile() {
       </button>
 
       {/* Footer */}
-      <div className="text-center mt-10 text-base text-stone-400 font-medium">
+      <div className={`text-center mt-10 text-base font-medium transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`}>
         NIHARA D'AURA • JEWELLERY & MAKEUP
       </div>
 
@@ -473,10 +528,10 @@ export default function Profile() {
       {/* ================= PHOTO UPLOAD MODAL ================= */}
       {isPhotoModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-stone-200 animate-scale-in relative">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100 mb-5">
-              <h3 className="font-serif text-lg font-bold text-[#1C1917]">Upload Photo</h3>
-              <button onClick={() => setIsPhotoModalOpen(false)} className="p-1 rounded-full text-stone-400 hover:text-stone-700">
+          <div className={`rounded-3xl p-6 max-w-md w-full shadow-2xl animate-scale-in relative transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border border-[#3E2F1E]' : 'bg-white border border-stone-200'}`}>
+            <div className={`flex items-center justify-between pb-3 border-b mb-5 transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E]' : 'border-stone-100'}`}>
+              <h3 className={`font-serif text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>Upload Photo</h3>
+              <button onClick={() => setIsPhotoModalOpen(false)} className={`p-1 rounded-full transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C] hover:text-[#FAF3E8]' : 'text-stone-400 hover:text-stone-700'}`}>
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -485,14 +540,14 @@ export default function Profile() {
               {previewPhoto ? (
                 <img src={previewPhoto} alt="Preview" className="w-24 h-24 rounded-full object-cover border-2 border-[#C59B27]" />
               ) : (
-                <div className="w-24 h-24 rounded-full bg-[#FAF3E8] border-2 border-[#C59B27] text-[#855F14] flex items-center justify-center font-semibold text-2xl">
+                <div className={`w-24 h-24 rounded-full border-2 border-[#C59B27] flex items-center justify-center font-semibold text-2xl transition-colors duration-300 ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
                   {avatarInitials || <User className="w-8 h-8" />}
                 </div>
               )}
             </div>
 
             <div className="flex gap-3">
-              <button onClick={() => setIsPhotoModalOpen(false)} className="flex-1 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-stone-700">
+              <button onClick={() => setIsPhotoModalOpen(false)} className={`flex-1 py-2.5 rounded-xl border text-xs font-bold transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#B5A98C] hover:bg-[#2C2318]' : 'border-stone-300 text-stone-700'}`}>
                 Cancel
               </button>
               <button onClick={handleApplyPhoto} className="flex-1 py-2.5 rounded-xl bg-[#C59B27] text-white text-xs font-bold">
@@ -506,46 +561,46 @@ export default function Profile() {
       {/* ================= EDIT PROFILE MODAL ================= */}
       {isEditModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-stone-200 animate-scale-in relative">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100 mb-5">
-              <h3 className="font-serif text-lg font-bold text-[#1C1917]">Edit Profile</h3>
-              <button onClick={() => setIsEditModalOpen(false)} className="p-1 rounded-full text-stone-400 hover:text-stone-700">
+          <div className={`rounded-3xl p-6 max-w-md w-full shadow-2xl animate-scale-in relative transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border border-[#3E2F1E]' : 'bg-white border border-stone-200'}`}>
+            <div className={`flex items-center justify-between pb-3 border-b mb-5 transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E]' : 'border-stone-100'}`}>
+              <h3 className={`font-serif text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>Edit Profile</h3>
+              <button onClick={() => setIsEditModalOpen(false)} className={`p-1 rounded-full transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C] hover:text-[#FAF3E8]' : 'text-stone-400 hover:text-stone-700'}`}>
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleSaveProfile} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-stone-700 block mb-1.5">Full Name</label>
+                <label className={`text-xs font-semibold block mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-700'}`}>Full Name</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm text-stone-900"
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#FAF3E8] bg-[#2C2318]' : 'border-stone-300 text-stone-900'}`}
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-stone-700 block mb-1.5">Email</label>
+                <label className={`text-xs font-semibold block mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-700'}`}>Email</label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value.toLowerCase() })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm text-stone-900"
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#FAF3E8] bg-[#2C2318]' : 'border-stone-300 text-stone-900'}`}
                 />
               </div>
               <div>
-                <label className="text-xs font-semibold text-stone-700 block mb-1.5">Phone</label>
+                <label className={`text-xs font-semibold block mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-700'}`}>Phone</label>
                 <input
                   type="tel"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-sm text-stone-900"
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#FAF3E8] bg-[#2C2318]' : 'border-stone-300 text-stone-900'}`}
                 />
               </div>
               <div className="flex gap-3 pt-2">
-                <button onClick={() => setIsEditModalOpen(false)} className="flex-1 py-2.5 rounded-xl border border-stone-300 text-xs font-bold text-stone-700">
+                <button onClick={() => setIsEditModalOpen(false)} className={`flex-1 py-2.5 rounded-xl border text-xs font-bold transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#B5A98C] hover:bg-[#2C2318]' : 'border-stone-300 text-stone-700'}`}>
                   Cancel
                 </button>
                 <button type="submit" className="flex-1 py-2.5 rounded-xl bg-[#C59B27] text-white text-xs font-bold">
@@ -560,10 +615,10 @@ export default function Profile() {
       {/* ================= COUPONS MODAL ================= */}
       {isCouponModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-stone-200 animate-scale-in relative">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100 mb-4">
-              <h3 className="font-serif text-lg font-bold text-[#1C1917]">My Coupons</h3>
-              <button onClick={() => setIsCouponModalOpen(false)} className="p-1 rounded-full text-stone-400 hover:text-stone-700">
+          <div className={`rounded-3xl p-6 max-w-md w-full shadow-2xl animate-scale-in relative transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border border-[#3E2F1E]' : 'bg-white border border-stone-200'}`}>
+            <div className={`flex items-center justify-between pb-3 border-b mb-4 transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E]' : 'border-stone-100'}`}>
+              <h3 className={`font-serif text-lg font-bold transition-colors duration-300 ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>My Coupons</h3>
+              <button onClick={() => setIsCouponModalOpen(false)} className={`p-1 rounded-full transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C] hover:text-[#FAF3E8]' : 'text-stone-400 hover:text-stone-700'}`}>
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -571,12 +626,12 @@ export default function Profile() {
             <div className="space-y-3 max-h-72 overflow-y-auto">
               {availableCoupons.length > 0 ? (
                 availableCoupons.map((c, idx) => (
-                  <div key={idx} className="p-3.5 rounded-2xl bg-[#FAF3E8] border border-[#DFBC77]/50 flex items-center justify-between gap-3">
+                  <div key={idx} className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 transition-colors duration-300 ${isDarkMode ? 'bg-[#2C2318] border-[#3E2F1E]' : 'bg-[#FAF3E8] border-[#DFBC77]/50'}`}>
                     <div>
                       <span className="font-mono font-bold text-xs uppercase bg-[#C59B27] text-white px-2 py-0.5 rounded-md">
                         {c.code}
                       </span>
-                      <p className="text-[11px] text-stone-600 mt-1">
+                      <p className={`text-[11px] mt-1 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-600'}`}>
                         {c.description || c.name}
                       </p>
                     </div>
@@ -585,14 +640,14 @@ export default function Profile() {
                         navigator.clipboard?.writeText(c.code);
                         showToast(`Coupon ${c.code} copied!`, 'success');
                       }}
-                      className="px-3 py-1.5 rounded-xl bg-white text-[#855F14] border border-[#DFBC77] text-xs font-bold"
+                      className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] text-[#C59B27] border-[#3E2F1E] hover:bg-[#2C2318]' : 'bg-white text-[#855F14] border-[#DFBC77]'}`}
                     >
                       Copy
                     </button>
                   </div>
                 ))
               ) : (
-                <div className="text-center py-6 text-xs text-stone-500">No active coupons</div>
+                <div className={`text-center py-6 text-xs transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>No active coupons</div>
               )}
             </div>
 

@@ -9,7 +9,11 @@ export default function Wishlist() {
   const { products } = useProducts();
   const { wishlistIds } = useWishlist();
 
-  const wishlistedProducts = products.filter(p => wishlistIds.includes(p.id));
+  // Get product IDs that match either id or _id field
+  const wishlistedProducts = products.filter(p => {
+    const productId = p.id || p._id;
+    return wishlistIds.includes(productId) || wishlistIds.includes(p.id) || wishlistIds.includes(p._id);
+  });
 
   return (
     <div className="min-h-screen bg-transparent py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">

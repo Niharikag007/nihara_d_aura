@@ -10,10 +10,12 @@ import {
   Phone,
   Calendar,
   ShieldCheck,
-  ChevronDown
+  ChevronDown,
+  Bell
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useNotifications } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
 
 import Logo from './Logo';
@@ -23,6 +25,7 @@ export default function Navbar() {
   const location = useLocation();
   const { totalItemCount, setIsDrawerOpen } = useCart();
   const { count: wishlistCount } = useWishlist();
+  const { unreadCount } = useNotifications();
   const { user, isAuthenticated, isAdmin } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -206,6 +209,20 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
+
+            {/* Notification Bell */}
+            <button
+              onClick={() => navigate('/notifications')}
+              className="relative p-1.5 sm:p-2 text-[#26221F] hover:text-[#C59B27] hover:bg-[#F4ECE1] rounded-full transition-all"
+              title="Notifications"
+            >
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center w-4 h-4 text-[9px] sm:text-[10px] font-bold text-white bg-red-500 rounded-full">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
 
             {/* Shopping Cart Trigger */}
             <button

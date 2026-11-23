@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback, use
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 import { useAuth } from './AuthContext';
+import { useProducts } from './ProductContext';
 import { REMOVED_JEWELLERY_PRODUCT_IDS } from '../data/jewelleryCategories.js';
 
 const WishlistContext = createContext();
@@ -10,6 +11,7 @@ const removedProductIds = new Set(REMOVED_JEWELLERY_PRODUCT_IDS);
 export function WishlistProvider({ children }) {
   const navigate = useNavigate();
   const { token, isAuthenticated } = useAuth();
+  const { products } = useProducts();
   const [wishlistIds, setWishlistIds] = useState(() => {
     try {
       const saved = localStorage.getItem('nihara_wishlist');
@@ -23,6 +25,25 @@ export function WishlistProvider({ children }) {
       return [];
     }
   });
+
+  // Filter out invalid product IDs when products are loaded
+  useEffect(() => {
+    if (products.length === 0) return;
+    
+    const validProductIds = new Set(
+      products.map(p => p.id || p._id).filter(Boolean)
+    );
+    
+    setWishlistIds(prev => {
+      const filtered = prev.filter(id => validProductIds.has(id));
+      if (filtered.length !== prev.length) {
+        try {
+          localStorage.setItem('nihara_wishlist', JSON.stringify(filtered));
+        } catch {}
+      }
+      return filtered;
+    });
+  }, [products]);
 
   // Sync with server wishlist on mount
   useEffect(() => {
