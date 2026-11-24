@@ -135,6 +135,9 @@ export default function Products() {
 
   const handleSaveProduct = async (e) => {
     e.preventDefault();
+    console.log('=== Form Submit Called ===');
+    console.log('FormData:', formData);
+
     const errors = {};
     const stockQuantity = Number(formData.stock);
     if (!formData.name.trim()) errors.name = 'Product name is required';
@@ -146,8 +149,10 @@ export default function Products() {
     const stockChanged = editingProduct && stockQuantity !== Number(editingProduct.stock);
     if (stockChanged && !formData.stockReason.trim()) errors.stockReason = 'Add a reason for changing stock.';
 
+    console.log('Validation Errors:', errors);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
+      console.log('Validation failed, stopping');
       return;
     }
 
@@ -167,17 +172,31 @@ export default function Products() {
       ...(stockChanged && { stockAdjustmentReason: formData.stockReason.trim() }),
     };
 
-    if (editingProduct) {
-      const updated = await updateProduct(editingProduct.id, payload);
-      if (!updated) return;
-      addToast({ type: 'success', message: `Updated "${payload.name}" successfully` });
-    } else {
-      const added = await addProduct(payload);
-      if (!added) return;
-      addToast({ type: 'success', message: `Added "${payload.name}" to catalog` });
-    }
+    console.log('Payload to send:', payload);
 
-    setEditModalOpen(false);
+    try {
+      if (editingProduct) {
+        console.log('Updating product ID:', editingProduct.id);
+        const updated = await updateProduct(editingProduct.id, payload);
+        if (!updated) {
+          console.log('Update failed');
+          return;
+        }
+        addToast({ type: 'success', message: `Updated "${payload.name}" successfully` });
+      } else {
+        console.log('Creating new product...');
+        const added = await addProduct(payload);
+        console.log('Add result:', added);
+        if (!added) {
+          console.log('Add failed');
+          return;
+        }
+        addToast({ type: 'success', message: `Added "${payload.name}" to catalog` });
+      }
+      setEditModalOpen(false);
+    } catch (err) {
+      console.error('Error in handleSaveProduct:', err);
+    }
   };
 
   // Single delete with 8-second undo toast
