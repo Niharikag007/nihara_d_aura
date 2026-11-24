@@ -190,20 +190,36 @@ router.get('/products', async (req, res) => {
 
 router.post('/products', upload.single('image'), async (req, res) => {
   try {
-    const productData = req.body;
+    console.log('[DEBUG] POST /admin/products - Body:', req.body);
+    console.log('[DEBUG] POST /admin/products - File:', req.file ? req.file.filename : 'No file');
+    
+    const productData = { ...req.body };
+
+    // Handle FormData fields - convert strings to proper types
+    if (productData.name) productData.name = String(productData.name);
+    if (productData.cost) productData.cost = Number(productData.cost);
+    if (productData.price) productData.price = Number(productData.price);
+    if (productData.stock) productData.stock = Number(productData.stock);
+    if (productData.status) productData.status = String(productData.status);
+    if (productData.description) productData.description = String(productData.description);
+    if (productData.category) productData.category = String(productData.category);
+    if (productData.categorySlug) productData.categorySlug = String(productData.categorySlug);
+    if (productData.subcategory) productData.subcategory = String(productData.subcategory);
+    if (productData.productCollection) productData.productCollection = String(productData.productCollection);
+    if (productData.slug) productData.slug = String(productData.slug);
 
     // If file was uploaded, add image URL
     if (req.file) {
       productData.image = `/uploads/${req.file.filename}`;
+      console.log('[DEBUG] Image saved:', productData.image);
     }
 
-    // Map 'collection' from frontend to 'productCollection' in database
-    if (productData.collection) {
-      productData.productCollection = productData.collection;
-      delete productData.collection;
-    }
+    console.log('[DEBUG] Product data to save:', productData);
+
     const product = new Product(productData);
     const savedProduct = await product.save();
+
+    console.log('[DEBUG] Product saved successfully:', savedProduct._id);
 
     // Emit socket event for real-time update
     if (req.io) {
@@ -246,8 +262,9 @@ router.post('/products', upload.single('image'), async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Error creating product:', error);
-    res.status(500).json({ success: false, message: 'Error creating product' });
+    console.error('[ERROR] Error creating product:', error);
+    console.error('[ERROR] Error details:', error.message);
+    res.status(500).json({ success: false, message: 'Error creating product: ' + error.message });
   }
 });
 

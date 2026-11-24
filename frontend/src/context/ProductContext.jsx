@@ -37,40 +37,9 @@ const getAuthHeaders = () => {
 
 export function ProductProvider({ children }) {
   const { socket } = useSocket();
-  const STORAGE_KEY = 'nihara_products_v4';
 
-  const [products, setProducts] = useState(() => {
-    try {
-      localStorage.removeItem('nihara_products');
-      localStorage.removeItem('nihara_products_v2');
-      localStorage.removeItem('nihara_products_v3');
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const currentProducts = withoutRemovedProducts(parsed);
-          if (currentProducts.length !== parsed.length) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(currentProducts));
-          }
-          return currentProducts;
-        }
-      }
-    } catch (e) {
-      console.warn('Error loading products from localStorage', e);
-    }
-    return [];
-  });
-
-  const [loading, setLoading] = useState(products.length === 0);
-
-  // Sync state to localStorage safely only when modified
-  const saveToStorage = useCallback((productList) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(productList));
-    } catch (e) {
-      console.warn('Failed to persist products to localStorage:', e);
-    }
-  }, []);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Fetch live products directly from MongoDB backend API on mount
   const fetchLiveProducts = useCallback(async () => {
@@ -82,14 +51,13 @@ export function ProductProvider({ children }) {
         const currentProducts = withoutRemovedProducts(res.products);
         console.log('[ProductContext] Products after filtering:', currentProducts.length);
         setProducts(currentProducts);
-        saveToStorage(currentProducts);
       }
     } catch (err) {
       console.warn('[ProductContext] Live MongoDB fetch error:', err.message);
     } finally {
       setLoading(false);
     }
-  }, [saveToStorage]);
+  }, []);
 
   useEffect(() => {
     fetchLiveProducts();
@@ -107,9 +75,7 @@ export function ProductProvider({ children }) {
         if (prev.some(p => (p.id || p._id) === prodId || p.slug === newProd.slug)) {
           return prev;
         }
-        const next = [newProd, ...prev];
-        saveToStorage(next);
-        return next;
+        return [newProd, ...prev];
       });
     };
 
@@ -118,23 +84,19 @@ export function ProductProvider({ children }) {
       if (!updatedProd || removedProductIds.has(updatedProd.id || updatedProd._id)) return;
       const targetId = updatedProd.id || updatedProd._id;
       setProducts(prev => {
-        const next = prev.map(p => {
+        return prev.map(p => {
           if ((p.id || p._id) === targetId || p.slug === updatedProd.slug) {
             return { ...p, ...updatedProd };
           }
           return p;
         });
-        saveToStorage(next);
-        return next;
       });
     };
 
     const handleProductDeleted = ({ id }) => {
       if (!id) return;
       setProducts(prev => {
-        const next = prev.filter(p => (p.id || p._id) !== id && p.slug !== id);
-        saveToStorage(next);
-        return next;
+        return prev.filter(p => (p.id || p._id) !== id && p.slug !== id);
       });
     };
 
@@ -153,7 +115,7 @@ export function ProductProvider({ children }) {
       socket.off('product:deleted', handleProductDeleted);
       socket.off('category:updated', handleCategoryUpdate);
     };
-  }, [socket, saveToStorage, fetchLiveProducts]);
+  }, [socket, fetchLiveProducts]);
 
   const addProduct = useCallback(async (productData) => {
     if (!productData.name || !productData.price) {
@@ -169,11 +131,7 @@ export function ProductProvider({ children }) {
       const data = await res.json();
       if (res.ok && data?.product) {
         const newProduct = data.product;
-        setProducts(prev => {
-          const next = [newProduct, ...prev.filter(p => (p.id || p._id) !== (newProduct.id || newProduct._id))];
-          saveToStorage(next);
-          return next;
-        });
+        setProducts(prev => [newProduct, ...prev.filter(p => (p.id || p._id) !== (newProduct.id || newProduct._id))]);
         return { success: true, message: `Product "${newProduct.name}" added to MongoDB!`, product: newProduct };
       }
     } catch (e) {
@@ -181,7 +139,7 @@ export function ProductProvider({ children }) {
     }
 
     return { success: false, message: 'Failed to create product in MongoDB.' };
-  }, [saveToStorage]);
+  }, []);
 
   const updateProduct = useCallback(async (id, updateData) => {
     try {
@@ -193,11 +151,7 @@ export function ProductProvider({ children }) {
       const data = await res.json();
       if (res.ok && data?.product) {
         const updated = data.product;
-        setProducts(prev => {
-          const next = prev.map(p => ((p.id || p._id) === id || p.slug === id ? updated : p));
-          saveToStorage(next);
-          return next;
-        });
+        setProducts(prev => prev.map(p => ((p.id || p._id) === id || p.slug === id ? updated : p)));
         return { success: true, message: 'Product updated successfully in MongoDB!', product: updated };
       }
     } catch (e) {
@@ -205,7 +159,7 @@ export function ProductProvider({ children }) {
     }
 
     return { success: false, message: 'Product update failed.' };
-  }, [saveToStorage]);
+  }, []);
 
   const deleteProduct = useCallback(async (id) => {
     try {
@@ -214,19 +168,15 @@ export function ProductProvider({ children }) {
         headers: getAuthHeaders()
       });
       if (res.ok) {
-        setProducts(prev => {
-          const next = prev.filter(p => (p.id || p._id) !== id && p.slug !== id);
-          saveToStorage(next);
-          return next;
-        });
+        setProducts(prev => prev.filter(p => (p.id || p._id) !== id && p.slug !== id));
         return { success: true, message: 'Product deleted successfully from MongoDB!' };
       }
     } catch (e) {
-      console.error('Failed to delete product from MongoDB:', e);
+      console.error('Failed to delete product in MongoDB:', e);
     }
 
     return { success: false, message: 'Failed to delete product.' };
-  }, [saveToStorage]);
+  }, []);
 
   const getProductById = useCallback((idOrSlug) => {
     return products.find(p =>
