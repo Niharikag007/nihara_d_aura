@@ -80,14 +80,23 @@ export default function Cart() {
               className="flex flex-col justify-between gap-4 rounded-[1.75rem] border border-stone-200/90 bg-white p-4 shadow-[0_18px_32px_-28px_rgba(78,59,17,0.5)] transition-all hover:border-[#0A6847]/40 hover:shadow-[0_24px_36px_-28px_rgba(78,59,17,0.5)] sm:flex-row sm:items-center sm:p-5"
             >
               <div className="flex items-center gap-4">
-                {getProductImage(item.product) && (
+                {getProductImage(item.product) ? (
                   <img
                     src={getProductImage(item.product)}
                     alt={getProductImageAlt(item.product)}
-                    onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      if (e.currentTarget.nextSibling) e.currentTarget.nextSibling.style.display = 'flex';
+                    }}
                     className="h-16 w-16 flex-shrink-0 rounded-2xl border border-stone-200 bg-stone-100 object-cover sm:h-20 sm:w-20"
                   />
-                )}
+                ) : null}
+                <div
+                  style={{ display: getProductImage(item.product) ? 'none' : 'flex' }}
+                  className="h-16 w-16 flex-shrink-0 rounded-2xl border border-stone-200 bg-stone-100 flex items-center justify-center text-xs font-bold text-stone-400 sm:h-20 sm:w-20"
+                >
+                  {item.product?.name?.charAt(0) || 'P'}
+                </div>
                 <div>
                   <h3 className="font-serif text-base font-bold text-[#1C1917] sm:text-lg">
                     {item.product?.name}

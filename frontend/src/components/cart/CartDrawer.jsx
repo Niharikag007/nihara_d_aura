@@ -103,14 +103,23 @@ export default function CartDrawer() {
           ) : (
             items.map((item, idx) => (
               <div key={idx} className="bg-white rounded-2xl p-3.5 border border-[#DFBC77]/35 flex gap-3 shadow-sm hover:shadow-md transition-shadow">
-                {getProductImage(item.product) && (
+                {getProductImage(item.product) ? (
                   <img
                     src={getProductImage(item.product)}
                     alt={getProductImageAlt(item.product)}
-                    onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      if (e.currentTarget.nextSibling) e.currentTarget.nextSibling.style.display = 'flex';
+                    }}
                     className="w-16 h-16 rounded-xl object-cover bg-stone-50 border border-[#E8DFC8] flex-shrink-0"
                   />
-                )}
+                ) : null}
+                <div
+                  style={{ display: getProductImage(item.product) ? 'none' : 'flex' }}
+                  className="w-16 h-16 rounded-xl bg-stone-100 border border-[#E8DFC8] flex-shrink-0 flex items-center justify-center text-xs font-bold text-stone-400"
+                >
+                  {item.product?.name?.charAt(0) || 'P'}
+                </div>
                 <div className="flex-1 min-w-0 flex flex-col justify-between">
                   <div>
                     <div className="flex items-start justify-between gap-1">

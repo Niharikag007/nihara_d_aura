@@ -233,57 +233,35 @@ export function getJewellerySubcategory(product) {
     : 'Necklaces & Sets';
 }
 
+// --- REAL IMAGE PRIORITY: Always show uploaded image first, no dummy fallbacks ---
+
 export function getProductImages(product) {
+  // 1. Uploaded single image (from admin panel upload / backend)
+  if (product?.image && typeof product.image === 'string' && product.image.trim()) {
+    return [product.image.trim()];
+  }
+
+  // 2. Uploaded images array
   const productImages = Array.isArray(product?.images)
     ? product.images.filter((image) => typeof image === 'string' && image.trim())
     : [];
-  if (isArtificialJewellery(product)) {
-    const subcategory = getJewellerySubcategory(product);
-    const folderBySubcategory = {
-      Earrings: 'earrings',
-      'Necklaces & Sets': 'necklaces',
-      Rings: 'rings',
-      Pendants: 'pendants',
-      'Bangles & Bracelets': 'bracelets'
-    };
-    const folder = folderBySubcategory[subcategory];
-    if (folder) {
-      const folderPath = `/images/artificial-jewellery/${folder}/`;
-      const sectionImages = productImages.filter((image) => image.startsWith(folderPath));
-      if (sectionImages.length > 0) return sectionImages;
-
-      const legacyImageReplacement = seedImageReplacementsBySlug[product?.slug]
-        || seedImageReplacements[product?.id || product?._id];
-      if (legacyImageReplacement?.replacement?.startsWith(folderPath)) {
-        return [legacyImageReplacement.replacement];
-      }
-    }
-
-    const fallbackImage = getProductFallbackImage(product);
-    return fallbackImage ? [fallbackImage] : [];
-  }
 
   if (productImages.length > 0) return productImages;
 
-  const fallbackImage = getProductFallbackImage(product);
-  return fallbackImage ? [fallbackImage] : [];
+  // 3. No image at all — return empty so caller shows "No Image" placeholder
+  return [];
 }
 
-export function getProductFallbackImage(product) {
-  if (isArtificialJewellery(product)) {
-    return ARTIFICIAL_JEWELLERY_IMAGES[getJewellerySubcategory(product)] || '';
-  }
-
-  return '/hero-slide-1.jpg';
+export function getProductFallbackImage() {
+  // Intentionally returns null — no dummy/stock fallback images
+  return null;
 }
 
 export function getProductImage(product, index = 0) {
   const images = getProductImages(product);
-  return images[index] || images[0];
+  return images[index] || images[0] || null;
 }
 
 export function getProductImageAlt(product) {
-  return isArtificialJewellery(product)
-    ? `Illustrative stock photo of ${getJewellerySubcategory(product)}; actual item may differ`
-    : product?.name || 'Product image';
+  return product?.name || 'Product image';
 }

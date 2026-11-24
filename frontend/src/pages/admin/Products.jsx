@@ -291,17 +291,28 @@ export default function Products() {
       header: 'Product',
       sortable: true,
       render: (val, row) => {
-        const image = isArtificialJewellery(row) ? getProductImage(row) : row.image;
+        const image = row.image || (Array.isArray(row.images) && row.images[0]) || getProductImage(row);
         return (
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 flex-shrink-0 border border-inherit">
+            <div className="w-10 h-10 rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 flex-shrink-0 border border-inherit relative">
               {image ? (
-                <img src={image} alt={row.name} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-xs font-bold text-stone-400">
-                  {row.name.charAt(0)}
-                </div>
-              )}
+                <img
+                  src={image}
+                  alt={row.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    if (e.currentTarget.nextSibling) e.currentTarget.nextSibling.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div
+                style={{ display: image ? 'none' : 'flex' }}
+                className="w-full h-full flex flex-col items-center justify-center text-[9px] font-bold text-stone-400 bg-stone-100 dark:bg-stone-800 text-center px-0.5"
+                title={image ? `Image Error: ${image}` : 'No image uploaded'}
+              >
+                {image ? 'ERR' : (row.name ? row.name.charAt(0) : '?')}
+              </div>
             </div>
             <div className="min-w-0">
               <span className="font-semibold block truncate text-stone-900 dark:text-white">

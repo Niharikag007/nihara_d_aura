@@ -179,14 +179,28 @@ export default function ProductDetails() {
             >
               <Heart className={`w-5 h-5 ${isFavorited ? 'fill-[#C59B27] text-[#C59B27]' : 'text-stone-500'}`} />
             </button>
-            {getProductImage(product, activeImageIdx) && (
+            {getProductImage(product, activeImageIdx) ? (
               <img
                 src={getProductImage(product, activeImageIdx)}
                 alt={getProductImageAlt(product)}
-                onError={(e) => { e.currentTarget.src = '/hero-slide-1.jpg'; }}
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  if (e.currentTarget.nextSibling) e.currentTarget.nextSibling.style.display = 'flex';
+                }}
                 className="w-full h-full object-cover object-center"
               />
-            )}
+            ) : null}
+            <div
+              style={{ display: getProductImage(product, activeImageIdx) ? 'none' : 'flex' }}
+              className="w-full h-full flex flex-col items-center justify-center bg-stone-100 text-stone-400 p-6"
+            >
+              <span className="text-sm font-mono font-bold">No Image Available</span>
+              {getProductImage(product, activeImageIdx) && (
+                <span className="mt-2 text-xs font-mono text-rose-400 text-center break-all">
+                  Load Error: {getProductImage(product, activeImageIdx)}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Thumbnails */}

@@ -57,10 +57,7 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   if (!isOpen || !product) return null;
 
   const isFavorited = isInWishlist(product.id);
-  const fallbackImg = getProductFallbackImage(product);
-  const displayImage = imgError 
-    ? fallbackImg 
-    : getProductImage(product, activeImageIdx);
+  const displayImage = getProductImage(product, activeImageIdx);
   const displayImages = getProductImages(product);
 
   const cleanCategoryLabel = (() => {
@@ -119,13 +116,22 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                   </span>
                 )}
 
-                {displayImage && (
+                {displayImage && !imgError ? (
                   <img
                     src={displayImage}
                     alt={getProductImageAlt(product)}
                     onError={() => setImgError(true)}
                     className="w-full h-full object-cover object-center transition-transform duration-500"
                   />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-stone-100 text-stone-400 p-4">
+                    <span className="text-xs font-mono font-bold">No Image</span>
+                    {displayImage && (
+                      <span className="mt-1 text-[9px] font-mono text-rose-400 text-center break-all">
+                        Load Error: {displayImage.length > 50 ? displayImage.slice(0, 50) + '…' : displayImage}
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
 

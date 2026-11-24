@@ -1,11 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, ShoppingCart, Star, Eye } from 'lucide-react';
+import { useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useToast } from '../../context/ToastContext';
 import QuickViewModal from './QuickViewModal';
-import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductFallbackImage, getProductImage, getProductImageAlt, isArtificialJewellery } from '../../data/jewelleryCategories';
+import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductImage, getProductImageAlt, isArtificialJewellery } from '../../data/jewelleryCategories';
 
 export default function ProductCard({ product }) {
   const { addToCart, setIsDrawerOpen } = useCart();
@@ -13,7 +14,7 @@ export default function ProductCard({ product }) {
   const { showToast } = useToast();
 
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
-  const [imgError, setImgError] = useState(false);
+  const [imgBroken, setImgBroken] = useState(false);
 
   const isFavorited = isInWishlist(product.id);
 
@@ -21,18 +22,17 @@ export default function ProductCard({ product }) {
   const categoryLabel = useMemo(() => {
     if (isArtificialJewellery(product)) return `${ARTIFICIAL_JEWELLERY.name} • ${getJewellerySubcategory(product)}`;
     if (!product.category) return 'Luxury';
-    if (!product.subcategory || 
-        product.subcategory.toLowerCase().startsWith('all') || 
+    if (!product.subcategory ||
+        product.subcategory.toLowerCase().startsWith('all') ||
         product.subcategory.toLowerCase() === product.category.toLowerCase()) {
       return product.category;
     }
     return `${product.category} • ${product.subcategory}`;
   }, [product]);
 
-  const fallbackImg = getProductFallbackImage(product);
-  const displayImage = imgError 
-    ? fallbackImg 
-    : getProductImage(product);
+  // Always use the real uploaded image — no dummy/stock fallback
+  const displayImage = getProductImage(product);
+  const showPlaceholder = !displayImage || imgBroken;
 
   const handleAddToCart = (e) => {
     e.preventDefault();
@@ -65,17 +65,31 @@ export default function ProductCard({ product }) {
       <div className="group relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-[#DFBC77]/40 bg-white shadow-[0_14px_32px_-24px_rgba(88,64,22,0.45)] transition-all duration-300 hover:-translate-y-1 hover:border-[#C59B27]/75 hover:shadow-[0_24px_42px_-24px_rgba(88,64,22,0.6)] will-change-transform transform-gpu">
         <div className="relative aspect-square overflow-hidden bg-[#FBF8F2]">
           <Link to={`/products/${product.id}`} className="block w-full h-full">
-            {displayImage && (
+            {/* Real uploaded image */}
+            {displayImage && !imgBroken ? (
               <img
                 src={displayImage}
                 alt={getProductImageAlt(product)}
-                onError={() => {
-                  if (displayImage !== fallbackImg) setImgError(true);
-                }}
+                onError={() => setImgBroken(true)}
                 className="h-full w-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105 will-change-transform"
                 loading="lazy"
                 decoding="async"
               />
+            ) : null}
+
+            {/* No Image / Broken Image Placeholder — no dummy stock photos */}
+            {showPlaceholder && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-stone-100">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mb-2 text-stone-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="text-[11px] font-mono font-bold text-stone-400">No Image</span>
+                {imgBroken && displayImage && (
+                  <span className="mt-1 text-[9px] font-mono text-rose-400 px-2 text-center break-all line-clamp-2">
+                    404 · {displayImage.length > 40 ? displayImage.slice(0, 40) + '…' : displayImage}
+                  </span>
+                )}
+              </div>
             )}
           </Link>
 
