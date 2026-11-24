@@ -268,10 +268,29 @@ router.post('/products', upload.single('image'), async (req, res) => {
   }
 });
 
-router.patch('/products/:id', async (req, res) => {
+router.patch('/products/:id', upload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = { ...req.body };
+
+    // Handle FormData fields - convert strings to proper types
+    if (updateData.name) updateData.name = String(updateData.name);
+    if (updateData.cost) updateData.cost = Number(updateData.cost);
+    if (updateData.price) updateData.price = Number(updateData.price);
+    if (updateData.stock) updateData.stock = Number(updateData.stock);
+    if (updateData.status) updateData.status = String(updateData.status);
+    if (updateData.description) updateData.description = String(updateData.description);
+    if (updateData.category) updateData.category = String(updateData.category);
+    if (updateData.categorySlug) updateData.categorySlug = String(updateData.categorySlug);
+    if (updateData.subcategory) updateData.subcategory = String(updateData.subcategory);
+    if (updateData.productCollection) updateData.productCollection = String(updateData.productCollection);
+    if (updateData.slug) updateData.slug = String(updateData.slug);
+
+    // If file was uploaded, add image URL
+    if (req.file) {
+      updateData.image = `/uploads/${req.file.filename}`;
+    }
+
     // Map 'collection' from frontend to 'productCollection' in database
     if (updateData.collection) {
       updateData.productCollection = updateData.collection;

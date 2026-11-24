@@ -45,9 +45,17 @@ export const adminApi = {
     return request('/dashboard');
   },
   async createProduct(product) {
+    // Handle FormData for file uploads
+    if (product instanceof FormData) {
+      return request('/products', { method: 'POST', body: product });
+    }
     return request('/products', json('POST', product));
   },
   async updateProduct(id, patch) {
+    // Handle FormData for file uploads
+    if (patch instanceof FormData) {
+      return request(`/products/${encodeURIComponent(id)}`, { method: 'PATCH', body: patch });
+    }
     return request(`/products/${encodeURIComponent(id)}`, json('PATCH', patch));
   },
   async deleteProduct(id) {
