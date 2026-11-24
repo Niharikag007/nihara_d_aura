@@ -1,5 +1,11 @@
 import { API_BASE_URL } from '../config/api.js';
 
+const normalizeProduct = (product) => {
+  if (!product || typeof product !== 'object') return product;
+  const normalizedId = product.id || product._id?.toString();
+  return normalizedId ? { ...product, id: normalizedId } : product;
+};
+
 const authRequestError = (error) => ({
   success: false,
   message: error instanceof TypeError
@@ -16,12 +22,6 @@ const getAuthHeaders = () => {
         return {
           'Authorization': `Bearer ${parsed.token}`,
           'x-user-role': parsed.user?.role || 'user'
-        };
-
-        const normalizeProduct = (product) => {
-          if (!product || typeof product !== 'object') return product;
-          const normalizedId = product.id || product._id?.toString();
-          return normalizedId ? { ...product, id: normalizedId } : product;
         };
       }
     }
