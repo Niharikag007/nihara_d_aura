@@ -860,14 +860,40 @@ export default function Products() {
                 <input
                   type="file"
                   accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif"
-                  onChange={(e) => {
+                  onChange={async (e) => {
                     const file = e.target.files[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        setFormData(p => ({ ...p, image: event.target.result, imageFile: file }));
-                      };
-                      reader.readAsDataURL(file);
+                    if (!file) return;
+
+                    // Show local preview immediately
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      setFormData(p => ({ ...p, image: event.target.result, imageFile: file }));
+                    };
+                    reader.readAsDataURL(file);
+
+                    // Upload to Cloudinary (unsigned upload preset)
+                    try {
+                      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+                      const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+                      if (cloudName && uploadPreset) {
+                        const fd = new FormData();
+                        fd.append('file', file);
+                        fd.append('upload_preset', uploadPreset);
+                        fd.append('folder', 'nihara_products');
+
+                        const res = await fetch(
+                          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+                          { method: 'POST', body: fd }
+                        );
+                        const data = await res.json();
+                        if (data.secure_url) {
+                          setFormData(p => ({ ...p, image: data.secure_url, imageFile: null }));
+                        }
+                      }
+                      // If no Cloudinary config, base64 preview stays (small images only)
+                    } catch (err) {
+                      console.warn('Cloudinary upload failed, using local preview:', err);
                     }
                   }}
                   className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#C59B27] file:text-white hover:file:bg-[#A87D17] ${
