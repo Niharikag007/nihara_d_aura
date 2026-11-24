@@ -18,7 +18,6 @@ export default function Products() {
   const {
     darkMode,
     products,
-    categories,
     addProduct,
     updateProduct,
     deleteProduct,
@@ -643,7 +642,7 @@ export default function Products() {
                   darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
                 }`}
               >
-                {categories.map((cat) => (
+                {productCategories.map((cat) => (
                   <option key={cat} value={cat}>
                     {cat}
                   </option>

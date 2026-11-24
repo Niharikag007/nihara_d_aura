@@ -74,8 +74,8 @@ export const api = {
   // Categories
   async getCategories() {
     const serverRes = await request('/categories');
-    if (serverRes && Array.isArray(serverRes.data)) {
-      return { ...serverRes, categories: serverRes.data };
+    if (serverRes && Array.isArray(serverRes.categories)) {
+      return { ...serverRes, categories: serverRes.categories };
     }
     throw new Error(serverRes?.message || 'Could not load categories.');
   },
