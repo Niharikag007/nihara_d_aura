@@ -132,6 +132,7 @@ export default function Products() {
 
   const handleSaveProduct = async (e) => {
     e.preventDefault();
+    console.log('handleSaveProduct called', formData);
     const errors = {};
     const stockQuantity = Number(formData.stock);
     if (!formData.name.trim()) errors.name = 'Product name is required';
@@ -141,6 +142,7 @@ export default function Products() {
     const stockChanged = editingProduct && stockQuantity !== Number(editingProduct.stock);
     if (stockChanged && !formData.stockReason.trim()) errors.stockReason = 'Add a reason for changing stock.';
 
+    console.log('Validation errors:', errors);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
@@ -148,6 +150,7 @@ export default function Products() {
 
     const payload = {
       name: formData.name.trim(),
+      slug: formData.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
       productCollection: formData.categories,
       category: formData.categories,
       categorySlug: formData.categories.toLowerCase(),
@@ -160,12 +163,15 @@ export default function Products() {
       ...(stockChanged && { stockAdjustmentReason: formData.stockReason.trim() }),
     };
 
+    console.log('Sending payload:', payload);
     if (editingProduct) {
       const updated = await updateProduct(editingProduct.id, payload);
       if (!updated) return;
       addToast({ type: 'success', message: `Updated "${payload.name}" successfully` });
     } else {
+      console.log('Calling addProduct...');
       const added = await addProduct(payload);
+      console.log('addProduct result:', added);
       if (!added) return;
       addToast({ type: 'success', message: `Added "${payload.name}" to catalog` });
     }
