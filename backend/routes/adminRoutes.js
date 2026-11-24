@@ -10,6 +10,7 @@ const User = require('../models/User');
 const Setting = require('../models/Setting');
 const InventoryAdjustment = require('../models/InventoryAdjustment');
 const adminAuth = require('../middleware/adminAuth');
+const upload = require('../middleware/upload');
 
 // Middleware to ensure all routes require admin authentication
 router.use(adminAuth);
@@ -187,9 +188,15 @@ router.get('/products', async (req, res) => {
   }
 });
 
-router.post('/products', async (req, res) => {
+router.post('/products', upload.single('image'), async (req, res) => {
   try {
     const productData = req.body;
+
+    // If file was uploaded, add image URL
+    if (req.file) {
+      productData.image = `/uploads/${req.file.filename}`;
+    }
+
     // Map 'collection' from frontend to 'productCollection' in database
     if (productData.collection) {
       productData.productCollection = productData.collection;
@@ -203,6 +210,9 @@ router.post('/products', async (req, res) => {
       req.io.to('admin').emit('admin:data:changed', { type: 'product', action: 'create', data: savedProduct });
       req.io.emit('product:created', savedProduct);
     }
+
+    // Construct full image URL for response
+    const imageUrl = savedProduct.image ? `${req.protocol}://${req.get('host')}${savedProduct.image}` : '';
 
     res.status(201).json({
       success: true,
@@ -222,7 +232,7 @@ router.post('/products', async (req, res) => {
         rating: savedProduct.rating,
         reviewCount: savedProduct.reviewCount,
         images: savedProduct.images,
-        image: savedProduct.image || (savedProduct.images && savedProduct.images[0]) || '',
+        image: imageUrl || (savedProduct.images && savedProduct.images[0]) || '',
         description: savedProduct.description,
         variants: savedProduct.variants,
         sizes: savedProduct.sizes,

@@ -11,13 +11,20 @@ async function request(path, options = {}, prefix = '/admin') {
     throw new Error('Please sign in with an administrator account');
   }
 
+  // Don't set Content-Type for FormData (let browser set it with boundary)
+  const headers = {
+    Authorization: `Bearer ${session.token}`,
+    ...options.headers
+  };
+
+  // Only set Content-Type if not FormData
+  if (!(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const response = await fetch(`${API_BASE_URL}${prefix}${path}`, {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.token}`,
-      ...options.headers
-    }
+    headers
   });
   let result;
   try {

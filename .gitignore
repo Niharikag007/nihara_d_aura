@@ -35,6 +35,10 @@ frontend/build/
 dist/
 build/
 
+# Uploads directory
+backend/uploads/
+uploads/
+
 # Local API comparison document
 /Nihara API_DOCUMENTATION.md
 

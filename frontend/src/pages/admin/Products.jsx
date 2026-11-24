@@ -135,63 +135,57 @@ export default function Products() {
 
   const handleSaveProduct = async (e) => {
     e.preventDefault();
-    console.log('=== Form Submit Called ===');
-    console.log('FormData:', formData);
-
     const errors = {};
     const stockQuantity = Number(formData.stock);
     if (!formData.name.trim()) errors.name = 'Product name is required';
     if (!formData.description.trim()) errors.description = 'Product description is required';
-    if (!formData.image.trim()) errors.image = 'Product image is required';
+    if (!formData.imageFile && !formData.image.trim()) errors.image = 'Product image is required';
     if (!formData.cost || parseFloat(formData.cost) <= 0) errors.cost = 'Enter a valid cost (> 0)';
     if (!formData.price || parseFloat(formData.price) <= 0) errors.price = 'Enter a valid price (> 0)';
     if (formData.stock === '' || !Number.isInteger(stockQuantity) || stockQuantity < 0) errors.stock = 'Enter a whole stock quantity (≥ 0)';
     const stockChanged = editingProduct && stockQuantity !== Number(editingProduct.stock);
     if (stockChanged && !formData.stockReason.trim()) errors.stockReason = 'Add a reason for changing stock.';
 
-    console.log('Validation Errors:', errors);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
-      console.log('Validation failed, stopping');
       return;
     }
 
-    const payload = {
-      name: formData.name.trim(),
-      slug: formData.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
-      productCollection: formData.categories,
-      category: formData.categories,
-      categorySlug: formData.categories.toLowerCase(),
-      subcategory: formData.subcategory.trim(),
-      description: formData.description.trim(),
-      cost: parseFloat(formData.cost),
-      price: parseFloat(formData.price),
-      stock: stockQuantity,
-      status: formData.status,
-      image: formData.image.trim(),
-      ...(stockChanged && { stockAdjustmentReason: formData.stockReason.trim() }),
-    };
+    // Create FormData for file upload
+    const formPayload = new FormData();
+    formPayload.append('name', formData.name.trim());
+    formPayload.append('slug', formData.name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''));
+    formPayload.append('productCollection', formData.categories);
+    formPayload.append('category', formData.categories);
+    formPayload.append('categorySlug', formData.categories.toLowerCase());
+    formPayload.append('subcategory', formData.subcategory.trim());
+    formPayload.append('description', formData.description.trim());
+    formPayload.append('cost', parseFloat(formData.cost));
+    formPayload.append('price', parseFloat(formData.price));
+    formPayload.append('stock', stockQuantity);
+    formPayload.append('status', formData.status);
 
-    console.log('Payload to send:', payload);
+    // Append image file if exists
+    if (formData.imageFile) {
+      formPayload.append('image', formData.imageFile);
+    } else if (formData.image && formData.image.startsWith('http')) {
+      // If using existing Cloudinary URL, send as string
+      formPayload.append('image', formData.image);
+    }
+
+    if (stockChanged) {
+      formPayload.append('stockAdjustmentReason', formData.stockReason.trim());
+    }
 
     try {
       if (editingProduct) {
-        console.log('Updating product ID:', editingProduct.id);
-        const updated = await updateProduct(editingProduct.id, payload);
-        if (!updated) {
-          console.log('Update failed');
-          return;
-        }
-        addToast({ type: 'success', message: `Updated "${payload.name}" successfully` });
+        const updated = await updateProduct(editingProduct.id, formPayload);
+        if (!updated) return;
+        addToast({ type: 'success', message: `Updated "${formData.name}" successfully` });
       } else {
-        console.log('Creating new product...');
-        const added = await addProduct(payload);
-        console.log('Add result:', added);
-        if (!added) {
-          console.log('Add failed');
-          return;
-        }
-        addToast({ type: 'success', message: `Added "${payload.name}" to catalog` });
+        const added = await addProduct(formPayload);
+        if (!added) return;
+        addToast({ type: 'success', message: `Added "${formData.name}" to catalog` });
       }
       setEditModalOpen(false);
     } catch (err) {
@@ -860,47 +854,22 @@ export default function Products() {
                 <input
                   type="file"
                   accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.heic,.heif"
-                  onChange={async (e) => {
+                  onChange={(e) => {
                     const file = e.target.files[0];
                     if (!file) return;
 
-                    // Show local preview immediately
+                    // Show local preview
                     const reader = new FileReader();
                     reader.onload = (event) => {
                       setFormData(p => ({ ...p, image: event.target.result, imageFile: file }));
                     };
                     reader.readAsDataURL(file);
-
-                    // Upload to Cloudinary (unsigned upload preset)
-                    try {
-                      const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-                      const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-
-                      if (cloudName && uploadPreset) {
-                        const fd = new FormData();
-                        fd.append('file', file);
-                        fd.append('upload_preset', uploadPreset);
-                        fd.append('folder', 'nihara_products');
-
-                        const res = await fetch(
-                          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-                          { method: 'POST', body: fd }
-                        );
-                        const data = await res.json();
-                        if (data.secure_url) {
-                          setFormData(p => ({ ...p, image: data.secure_url, imageFile: null }));
-                        }
-                      }
-                      // If no Cloudinary config, base64 preview stays (small images only)
-                    } catch (err) {
-                      console.warn('Cloudinary upload failed, using local preview:', err);
-                    }
                   }}
                   className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#C59B27] file:text-white hover:file:bg-[#A87D17] ${
                     darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
                   }`}
                 />
-                <p className="text-[10px] text-stone-500">Supports JPG, PNG, WebP, GIF, BMP, HEIC formats</p>
+                <p className="text-[10px] text-stone-500">Supports JPG, PNG, WebP, GIF, BMP, HEIC formats (Max 10MB)</p>
                 {formErrors.image && <p className="text-[11px] text-rose-500 mt-1">{formErrors.image}</p>}
               </div>
             </div>
