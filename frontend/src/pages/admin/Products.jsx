@@ -53,6 +53,7 @@ export default function Products() {
     name: '',
     categories: 'Jewellery',
     subcategory: '',
+    description: '',
     cost: '',
     price: '',
     stock: '',
@@ -100,6 +101,7 @@ export default function Products() {
       name: '',
       categories: productCategories[0],
       subcategory: '',
+      description: '',
       cost: '',
       price: '',
       stock: '10',
@@ -118,6 +120,7 @@ export default function Products() {
       name: p.name,
       categories: p.productCollection || p.categories || p.collection || 'Jewellery',
       subcategory: p.subcategory || '',
+      description: p.description || '',
       cost: String(p.cost),
       price: String(p.price),
       stock: String(p.stock),
@@ -132,17 +135,17 @@ export default function Products() {
 
   const handleSaveProduct = async (e) => {
     e.preventDefault();
-    console.log('handleSaveProduct called', formData);
     const errors = {};
     const stockQuantity = Number(formData.stock);
     if (!formData.name.trim()) errors.name = 'Product name is required';
+    if (!formData.description.trim()) errors.description = 'Product description is required';
+    if (!formData.image.trim()) errors.image = 'Product image is required';
     if (!formData.cost || parseFloat(formData.cost) <= 0) errors.cost = 'Enter a valid cost (> 0)';
     if (!formData.price || parseFloat(formData.price) <= 0) errors.price = 'Enter a valid price (> 0)';
     if (formData.stock === '' || !Number.isInteger(stockQuantity) || stockQuantity < 0) errors.stock = 'Enter a whole stock quantity (≥ 0)';
     const stockChanged = editingProduct && stockQuantity !== Number(editingProduct.stock);
     if (stockChanged && !formData.stockReason.trim()) errors.stockReason = 'Add a reason for changing stock.';
 
-    console.log('Validation errors:', errors);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
@@ -155,23 +158,21 @@ export default function Products() {
       category: formData.categories,
       categorySlug: formData.categories.toLowerCase(),
       subcategory: formData.subcategory.trim(),
+      description: formData.description.trim(),
       cost: parseFloat(formData.cost),
       price: parseFloat(formData.price),
       stock: stockQuantity,
       status: formData.status,
-      image: formData.image.trim() || undefined,
+      image: formData.image.trim(),
       ...(stockChanged && { stockAdjustmentReason: formData.stockReason.trim() }),
     };
 
-    console.log('Sending payload:', payload);
     if (editingProduct) {
       const updated = await updateProduct(editingProduct.id, payload);
       if (!updated) return;
       addToast({ type: 'success', message: `Updated "${payload.name}" successfully` });
     } else {
-      console.log('Calling addProduct...');
       const added = await addProduct(payload);
-      console.log('addProduct result:', added);
       if (!added) return;
       addToast({ type: 'success', message: `Added "${payload.name}" to catalog` });
     }
@@ -680,6 +681,22 @@ export default function Products() {
 
           <div>
             <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
+              Product description *
+            </label>
+            <textarea
+              rows={3}
+              value={formData.description}
+              onChange={(e) => setFormData(p => ({ ...p, description: e.target.value }))}
+              placeholder="Describe the product features, materials, and details..."
+              className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] resize-y ${
+                darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+              }`}
+            />
+            {formErrors.description && <p className="text-[11px] text-rose-500 mt-1">{formErrors.description}</p>}
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
               Stock quantity *
             </label>
             <input
@@ -806,7 +823,7 @@ export default function Products() {
 
             <div>
               <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
-                Product Image (optional)
+                Product Image *
               </label>
               <div className="space-y-2">
                 {formData.image && (
@@ -839,6 +856,7 @@ export default function Products() {
                   }`}
                 />
                 <p className="text-[10px] text-stone-500">Supports JPG, PNG, WebP, GIF, BMP, HEIC formats</p>
+                {formErrors.image && <p className="text-[11px] text-rose-500 mt-1">{formErrors.image}</p>}
               </div>
             </div>
           </div>
