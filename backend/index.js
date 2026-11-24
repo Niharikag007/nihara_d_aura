@@ -69,8 +69,8 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
-// Handle preflight OPTIONS requests for ALL routes
-app.options('*', cors(corsOptions));
+// Handle preflight OPTIONS requests for ALL routes (Express 5 compatible regex)
+app.options(/.*/, cors(corsOptions));
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
