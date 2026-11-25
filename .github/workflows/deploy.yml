@@ -1,0 +1,32 @@
+name: Deploy Backend to EC2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    name: Deploy Backend via SSH
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to AWS EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "🚀 Starting automated deployment..."
+            cd /home/ubuntu/Nihara-D-Aura
+            git pull origin main
+            cd backend
+            npm install --production
+            pm2 reload nihara-backend || pm2 start server.js --name nihara-backend
+            echo "✅ Deployment completed successfully!"
