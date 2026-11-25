@@ -120,13 +120,7 @@ export default function Profile() {
     email: user?.email || '',
     phone: user?.phone || ''
   });
-  const avatarInitials = (user?.name || '')
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0].toUpperCase())
-    .join('');
+  const [formErrors, setFormErrors] = useState({ name: '', email: '', phone: '' });
 
   useEffect(() => {
     let active = true;
@@ -176,12 +170,20 @@ export default function Profile() {
     return <Navigate to="/login" replace />;
   }
 
-  // Process selected image file for preview and upload
+  // Process selected image file for preview and upload (supports all camera & gallery image formats)
   const processImageFile = (file) => {
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      showToast('Please select a valid image file (JPG, PNG, WEBP, GIF, SVG, etc.)', 'error');
+    // Check extensions and mimetypes (allow any image format, camera RAW, HEIC, etc.)
+    const isImage = file.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|svg|bmp|heic|heif|avif|tiff?|dng|raw)$/i.test(file.name);
+    if (!isImage) {
+      showToast('Please select a valid image file from camera or gallery (JPG, PNG, WEBP, HEIC, etc.)', 'error');
+      return;
+    }
+
+    // Limit check: 15MB
+    if (file.size > 15 * 1024 * 1024) {
+      showToast('Image file size should be less than 15MB', 'error');
       return;
     }
 
@@ -192,10 +194,11 @@ export default function Profile() {
     reader.onload = (e) => {
       setPreviewPhoto(e.target.result);
       setIsPhotoModalOpen(true);
-      showToast('Image ready! Click "Save Photo" to apply.', 'info');
+      showToast('Photo selected! Click "Save Photo" to upload.', 'info');
     };
     reader.onerror = () => {
-      showToast('Unable to process image file.', 'error');
+      showToast('Unable to preview file. You can still save to upload.', 'warning');
+      setIsPhotoModalOpen(true);
     };
     reader.readAsDataURL(file);
   };
@@ -242,8 +245,52 @@ export default function Profile() {
     }
   };
 
+  // Strict validations for Profile edit
+  const validateProfileForm = () => {
+    const errors = { name: '', email: '', phone: '' };
+    let isValid = true;
+
+    // Full name: only letters and spaces, at least 2 characters
+    const trimmedName = formData.name.trim();
+    if (!trimmedName) {
+      errors.name = 'Full name is required.';
+      isValid = false;
+    } else if (trimmedName.length < 2) {
+      errors.name = 'Name must be at least 2 characters long.';
+      isValid = false;
+    } else if (!/^[a-zA-Z\s'.]+$/.test(trimmedName)) {
+      errors.name = 'Name can only contain alphabetic letters and spaces.';
+      isValid = false;
+    }
+
+    // Email validation
+    const trimmedEmail = formData.email.trim().toLowerCase();
+    if (!trimmedEmail) {
+      errors.email = 'Email address is required.';
+      isValid = false;
+    } else if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(trimmedEmail)) {
+      errors.email = 'Please enter a valid email address (e.g., name@domain.com).';
+      isValid = false;
+    }
+
+    // Phone validation (optional or 10-digit)
+    const trimmedPhone = formData.phone.trim().replace(/\D/g, '');
+    if (formData.phone.trim() && (trimmedPhone.length !== 10 || !/^[6-9]\d{9}$/.test(trimmedPhone))) {
+      errors.phone = 'Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.';
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  };
+
   const handleSaveProfile = async (e) => {
     e.preventDefault();
+    if (!validateProfileForm()) {
+      showToast('Please fix the validation errors in the form.', 'error');
+      return;
+    }
+
     try {
       await updateProfile({
         name: formData.name.trim(),
@@ -346,17 +393,18 @@ export default function Profile() {
               <img
                 src={resolveAvatarUrl(user.avatar)}
                 alt={user.name || 'Profile'}
-                className="w-24 h-24 rounded-full object-cover border-2 border-[#C59B27] group-hover:border-[#A87D17] group-hover:opacity-90 transition-all"
+                className="w-24 h-24 rounded-full object-cover border-2 border-[#C59B27] group-hover:border-[#A87D17] group-hover:opacity-90 transition-all shadow-md"
               />
             ) : (
-              <div className={`w-24 h-24 rounded-full border-2 border-[#C59B27] flex items-center justify-center font-semibold text-xl group-hover:bg-[#C59B27] group-hover:text-white group-hover:border-[#A87D17] transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
-                {avatarInitials || <User className="w-10 h-10" />}
+              <div className={`w-24 h-24 rounded-full border-2 border-dashed border-[#C59B27] flex flex-col items-center justify-center font-medium text-xs group-hover:border-[#A87D17] transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#DFBC77]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
+                <User className="w-9 h-9 mb-0.5 opacity-70" />
+                <span className="text-[10px] font-semibold">Add Photo</span>
               </div>
             )}
             <div 
-              className="absolute -bottom-0.5 -right-0.5 w-8 h-8 rounded-full bg-[#C59B27] text-white flex items-center justify-center border-2 border-white group-hover:bg-[#A87D17] group-hover:scale-110 transition-all"
+              className="absolute -bottom-0.5 -right-0.5 w-8 h-8 rounded-full bg-[#C59B27] text-white flex items-center justify-center border-2 border-white group-hover:bg-[#A87D17] group-hover:scale-110 transition-all shadow"
             >
-              <Camera className="w-5 h-5" />
+              <Camera className="w-4 h-4" />
             </div>
           </div>
 
@@ -514,12 +562,12 @@ export default function Profile() {
         NIHARA D'AURA • JEWELLERY & MAKEUP
       </div>
 
-      {/* Hidden Native File Input */}
+      {/* Native File Input (accepts all formats: camera photos, JPG, PNG, WEBP, HEIC, RAW) */}
       <input
         type="file"
         ref={fileInputRef}
         onChange={handleFileInputChange}
-        accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.svg,.bmp,.heic"
+        accept="image/*,capture=camera,.jpg,.jpeg,.png,.webp,.gif,.svg,.bmp,.heic,.heif,.avif,.tiff,.dng,.raw"
         className="hidden"
       />
       </div>
@@ -537,11 +585,17 @@ export default function Profile() {
 
             <div className="flex flex-col items-center mb-5">
               {previewPhoto ? (
-                <img src={previewPhoto} alt="Preview" className="w-24 h-24 rounded-full object-cover border-2 border-[#C59B27]" />
+                <img src={previewPhoto} alt="Preview" className="w-28 h-28 rounded-full object-cover border-2 border-[#C59B27] shadow-md" />
               ) : (
-                <div className={`w-24 h-24 rounded-full border-2 border-[#C59B27] flex items-center justify-center font-semibold text-2xl transition-colors duration-300 ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
-                  {avatarInitials || <User className="w-8 h-8" />}
+                <div className={`w-28 h-28 rounded-full border-2 border-dashed border-[#C59B27] flex flex-col items-center justify-center text-xs transition-colors duration-300 ${isDarkMode ? 'bg-[#2C2318] text-[#DFBC77]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
+                  <User className="w-12 h-12 mb-1 opacity-70" />
+                  <span>No photo</span>
                 </div>
+              )}
+              {selectedFileName && (
+                <p className={`text-xs mt-3 truncate max-w-xs ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>
+                  {selectedFileName}
+                </p>
               )}
             </div>
 
@@ -549,8 +603,12 @@ export default function Profile() {
               <button onClick={() => setIsPhotoModalOpen(false)} className={`flex-1 py-2.5 rounded-xl border text-xs font-bold transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#B5A98C] hover:bg-[#2C2318]' : 'border-stone-300 text-stone-700'}`}>
                 Cancel
               </button>
-              <button onClick={handleApplyPhoto} className="flex-1 py-2.5 rounded-xl bg-[#C59B27] text-white text-xs font-bold">
-                Save
+              <button 
+                onClick={handleApplyPhoto} 
+                disabled={isUploadingPhoto}
+                className="flex-1 py-2.5 rounded-xl bg-[#C59B27] hover:bg-[#A87D17] text-white text-xs font-bold disabled:opacity-50 transition-all flex items-center justify-center gap-1.5"
+              >
+                {isUploadingPhoto ? 'Uploading...' : 'Save Photo'}
               </button>
             </div>
           </div>
@@ -575,9 +633,16 @@ export default function Profile() {
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#FAF3E8] bg-[#2C2318]' : 'border-stone-300 text-stone-900'}`}
+                  onChange={(e) => {
+                    const cleaned = e.target.value.replace(/[0-9]/g, '');
+                    setFormData({ ...formData, name: cleaned });
+                    if (formErrors.name) setFormErrors({ ...formErrors, name: '' });
+                  }}
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm transition-colors duration-300 ${formErrors.name ? 'border-red-500' : isDarkMode ? 'border-[#3E2F1E] text-[#FAF3E8] bg-[#2C2318]' : 'border-stone-300 text-stone-900'}`}
                 />
+                {formErrors.name && (
+                  <p className="text-xs text-red-500 mt-1 font-medium">{formErrors.name}</p>
+                )}
               </div>
               <div>
                 <label className={`text-xs font-semibold block mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-700'}`}>Email</label>
@@ -585,25 +650,42 @@ export default function Profile() {
                   type="email"
                   required
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value.toLowerCase() })}
-                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#FAF3E8] bg-[#2C2318]' : 'border-stone-300 text-stone-900'}`}
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value.toLowerCase() });
+                    if (formErrors.email) setFormErrors({ ...formErrors, email: '' });
+                  }}
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm transition-colors duration-300 ${formErrors.email ? 'border-red-500' : isDarkMode ? 'border-[#3E2F1E] text-[#FAF3E8] bg-[#2C2318]' : 'border-stone-300 text-stone-900'}`}
                 />
+                {formErrors.email && (
+                  <p className="text-xs text-red-500 mt-1 font-medium">{formErrors.email}</p>
+                )}
               </div>
               <div>
                 <label className={`text-xs font-semibold block mb-1.5 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-700'}`}>Phone</label>
                 <input
                   type="tel"
+                  placeholder="10-digit mobile number"
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#FAF3E8] bg-[#2C2318]' : 'border-stone-300 text-stone-900'}`}
+                  onChange={(e) => {
+                    setFormData({ ...formData, phone: e.target.value });
+                    if (formErrors.phone) setFormErrors({ ...formErrors, phone: '' });
+                  }}
+                  className={`w-full px-3.5 py-2.5 rounded-xl border text-sm transition-colors duration-300 ${formErrors.phone ? 'border-red-500' : isDarkMode ? 'border-[#3E2F1E] text-[#FAF3E8] bg-[#2C2318]' : 'border-stone-300 text-stone-900'}`}
                 />
+                {formErrors.phone && (
+                  <p className="text-xs text-red-500 mt-1 font-medium">{formErrors.phone}</p>
+                )}
               </div>
               <div className="flex gap-3 pt-2">
-                <button onClick={() => setIsEditModalOpen(false)} className={`flex-1 py-2.5 rounded-xl border text-xs font-bold transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#B5A98C] hover:bg-[#2C2318]' : 'border-stone-300 text-stone-700'}`}>
+                <button 
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)} 
+                  className={`flex-1 py-2.5 rounded-xl border text-xs font-bold transition-colors duration-300 ${isDarkMode ? 'border-[#3E2F1E] text-[#B5A98C] hover:bg-[#2C2318]' : 'border-stone-300 text-stone-700'}`}
+                >
                   Cancel
                 </button>
-                <button type="submit" className="flex-1 py-2.5 rounded-xl bg-[#C59B27] text-white text-xs font-bold">
-                  Save
+                <button type="submit" className="flex-1 py-2.5 rounded-xl bg-[#C59B27] hover:bg-[#A87D17] text-white text-xs font-bold shadow-md transition-all">
+                  Save Changes
                 </button>
               </div>
             </form>
