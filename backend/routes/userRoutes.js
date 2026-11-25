@@ -163,9 +163,12 @@ router.post('/avatar', upload.single('avatar'), async (req, res) => {
 router.get('/wishlist', async (req, res) => {
   try {
     const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Authentication required' });
+    }
     res.status(200).json({
       success: true,
-      wishlist: user ? (user.wishlist || []) : []
+      wishlist: user.wishlist || []
     });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Could not load wishlist' });
@@ -202,13 +205,16 @@ router.post('/wishlist/:id', async (req, res) => {
 router.get('/addresses', async (req, res) => {
   try {
     const user = await getAuthenticatedUser(req);
-    const addresses = user ? (user.addresses || []).map((address) => ({
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Authentication required' });
+    }
+    const addresses = (user.addresses || []).map((address) => ({
       ...address.toObject(),
       streetAddress: address.street || address.streetAddress,
       area: address.area || '',
       postalCode: address.pincode || address.postalCode,
       type: address.tag || address.type
-    })) : [];
+    }));
     res.status(200).json({
       success: true,
       addresses
@@ -315,35 +321,63 @@ router.delete('/addresses/:id', async (req, res) => {
   }
 });
 
-// 5. Get current profile or all profiles
+// 5. Get current authenticated user's own profile only
 router.get('/', async (req, res) => {
   try {
     const user = await getAuthenticatedUser(req);
-    if (user) {
-      return res.status(200).json({ success: true, user });
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Authentication required' });
     }
-    const users = await User.find().select('-password -otp -otpExpires');
-    res.status(200).json({ success: true, users });
+    return res.status(200).json({
+      success: true,
+      user: {
+        id: user.id,
+        _id: user.id,
+        fullName: user.fullName || user.name,
+        name: user.name || user.fullName,
+        email: user.email,
+        mobileNumber: user.mobileNumber || user.phone || '',
+        phone: user.phone || user.mobileNumber || '',
+        avatar: user.avatar || '',
+        tier: user.tier || 'Royal Member',
+        rewardPoints: user.rewardPoints || 0,
+        role: user.role || 'user',
+        addresses: user.addresses || [],
+        wishlist: user.wishlist || [],
+      }
+    });
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching user profile:', error);
     res.status(500).json({ success: false, error: 'Internal server error', message: 'Internal server error' });
   }
 });
 
-// 6. Get specific profile by id or email
+// 6. Get specific profile by id — only own profile allowed (admin exempt via adminRoutes)
 router.get('/:idOrEmail', async (req, res) => {
   try {
-    const { idOrEmail } = req.params;
-    let user;
+    const requester = await getAuthenticatedUser(req);
+    if (!requester) {
+      return res.status(401).json({ success: false, message: 'Authentication required' });
+    }
 
+    const { idOrEmail } = req.params;
+
+    // Users can only access their own profile
+    const isSelf =
+      requester._id.toString() === idOrEmail ||
+      requester.email.toLowerCase() === idOrEmail.toLowerCase();
+
+    if (!isSelf && requester.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Access denied: you can only view your own profile' });
+    }
+
+    let user;
     if (mongoose.Types.ObjectId.isValid(idOrEmail)) {
       user = await User.findById(idOrEmail).select('-password -otp -otpExpires');
     }
-
     if (!user) {
       user = await User.findOne({ email: idOrEmail.toLowerCase() }).select('-password -otp -otpExpires');
     }
-
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found', message: 'User not found' });
     }
