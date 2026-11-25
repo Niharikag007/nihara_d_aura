@@ -197,10 +197,10 @@ export default function Navbar() {
               {isSearchOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Search className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
 
-            {/* Wishlist Link */}
+            {/* Wishlist Link - Hidden on mobile, available in MobileBottomNav */}
             <Link
               to="/wishlist"
-              className="relative p-1.5 sm:p-2 text-[#26221F] hover:text-[#C59B27] hover:bg-[#F4ECE1] rounded-full transition-all"
+              className="hidden md:flex relative p-1.5 sm:p-2 text-[#26221F] hover:text-[#C59B27] hover:bg-[#F4ECE1] rounded-full transition-all"
               title="Saved Wishlist"
             >
               <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -240,10 +240,10 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* User Profile / Login */}
+            {/* User Profile / Login - Hidden on mobile, available in MobileBottomNav */}
             <Link
               to={isAuthenticated ? '/profile' : '/login'}
-              className="flex items-center p-1 text-[#26221F] hover:text-[#C59B27] rounded-full transition-all"
+              className="hidden md:flex items-center p-1 text-[#26221F] hover:text-[#C59B27] rounded-full transition-all"
               title={isAuthenticated ? 'Customer Account' : 'Sign In'}
             >
               {isAuthenticated && user?.avatar ? (
