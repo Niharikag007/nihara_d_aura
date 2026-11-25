@@ -30,21 +30,7 @@ import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { useNotifications } from '../context/NotificationContext';
 import { api } from '../services/api';
-
-const BACKEND_STATIC_BASE = (
-  import.meta.env?.VITE_API_BASE_URL
-    ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '')
-    : (import.meta.env?.PROD ? 'https://api.niharadaura.com' : 'http://localhost:3000')
-).replace(/\/+$/, '');
-
-function resolveAvatarUrl(url) {
-  if (!url || typeof url !== 'string') return null;
-  const trimmed = url.trim();
-  if (trimmed.startsWith('/uploads/')) {
-    return `${BACKEND_STATIC_BASE}${trimmed}`;
-  }
-  return trimmed;
-}
+import { resolveAvatarUrl } from '../utils/imageUrl';
 
 export default function Profile() {
   const navigate = useNavigate();

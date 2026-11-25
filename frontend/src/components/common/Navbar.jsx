@@ -17,6 +17,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useNotifications } from '../../context/NotificationContext';
 import { useAuth } from '../../context/AuthContext';
+import { resolveAvatarUrl } from '../../utils/imageUrl';
 
 import Logo from './Logo';
 
@@ -247,9 +248,16 @@ export default function Navbar() {
             >
               {isAuthenticated && user?.avatar ? (
                 <img 
-                  src={user.avatar} 
-                  alt={user.name} 
+                  src={resolveAvatarUrl(user.avatar)} 
+                  alt={user.name || 'User'} 
                   className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border-2 border-[#C59B27]"
+                  onError={(e) => {
+                    // Fallback to icon container if image fails to load
+                    e.target.style.display = 'none';
+                    if (e.target.nextSibling) {
+                      e.target.nextSibling.style.display = 'flex';
+                    }
+                  }}
                 />
               ) : (
                 <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#EAD7AD] flex items-center justify-center text-[#855F14]">
