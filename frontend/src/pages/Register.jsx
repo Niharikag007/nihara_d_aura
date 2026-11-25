@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sparkles, User, Mail, Lock, ShieldCheck, ArrowRight, AlertCircle, Phone, LoaderCircle } from 'lucide-react';
+import { Sparkles, User, Mail, Lock, ShieldCheck, ArrowRight, AlertCircle, LoaderCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { api } from '../services/api';
@@ -31,26 +31,20 @@ export default function Register() {
     return '';
   };
 
-  // Email / Phone validation: Standard lowercase email format or 10-digit mobile number
+  // Email validation: Standard lowercase email format (Phone number authentication is reserved for future)
   const validateIdentifier = (input) => {
     const trimmed = input.trim().toLowerCase();
-    if (!trimmed) return 'Please enter your email or phone number.';
+    if (!trimmed) return 'Please enter your email address.';
 
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
     const cleanDigits = trimmed.replace(/[^0-9]/g, '');
-    const hasLetters = /[a-z]/i.test(trimmed);
-
-    // If it has '@' or alphabets, treat as Email
-    if (trimmed.includes('@') || hasLetters) {
-      if (!emailRegex.test(trimmed)) {
-        return 'Please enter a valid standard email in lowercase (e.g., yourname@domain.com).';
-      }
-      return '';
+    const isPhone = !trimmed.includes('@') && cleanDigits.length >= 7;
+    if (isPhone) {
+      return 'Mobile/Phone number signup will be available soon! Please register with your email address for now.';
     }
 
-    // Otherwise treat as Phone Number
-    if (cleanDigits.length !== 10 || !/^[6-9]\d{9}$/.test(cleanDigits)) {
-      return 'Please enter a valid 10-digit mobile number (starting with 6, 7, 8, or 9).';
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+    if (!emailRegex.test(trimmed)) {
+      return 'Please enter a valid standard email address in lowercase (e.g., yourname@domain.com).';
     }
 
     return '';
@@ -94,18 +88,16 @@ export default function Register() {
     setIsSubmitting(true);
 
     const cleanName = formData.name.trim();
-    const cleanIdentifier = formData.identifier.trim().includes('@')
-      ? formData.identifier.trim().toLowerCase()
-      : formData.identifier.trim().replace(/\D/g, '');
+    const cleanEmail = formData.identifier.trim().toLowerCase();
 
     try {
-      const res = await api.register(cleanName, cleanIdentifier);
+      const res = await api.register(cleanName, cleanEmail);
       setIsSubmitting(false);
 
       if (res && res.success) {
         localStorage.setItem('pending_signup_name', cleanName);
-        localStorage.setItem('pending_email', cleanIdentifier);
-        showToast(res.message || `Verification OTP sent to ${cleanIdentifier}!`, 'success');
+        localStorage.setItem('pending_email', cleanEmail);
+        showToast(res.message || `Verification OTP sent to ${cleanEmail}!`, 'success');
         navigate('/verify-otp?flow=register');
       } else {
         setErrorMessage(res?.message || 'Registration failed. Please check your details and try again.');
@@ -115,12 +107,6 @@ export default function Register() {
       setErrorMessage(err.message || 'Registration request failed. Please try again.');
     }
   };
-
-  const isPhoneInput = Boolean(
-    formData.identifier &&
-    !formData.identifier.includes('@') &&
-    /^[+0-9\s-]+$/.test(formData.identifier.trim())
-  );
 
   return (
     <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center p-4 py-12 relative overflow-hidden selection:bg-[#C59B27] selection:text-white">
@@ -155,7 +141,7 @@ export default function Register() {
               Create Account
             </h1>
             <p className="text-sm text-stone-500 font-normal max-w-xs mx-auto leading-relaxed">
-              Sign up with email or phone number for your luxury journey
+              Sign up with your email address for your luxury journey
             </p>
           </div>
         </div>
@@ -192,25 +178,21 @@ export default function Register() {
             </div>
           </div>
 
-          {/* EMAIL OR PHONE NUMBER */}
+          {/* EMAIL ADDRESS */}
           <div className="text-left">
             <label className="text-[11px] sm:text-xs font-bold text-stone-700 tracking-wider uppercase block mb-1.5">
-              EMAIL OR PHONE NUMBER
+              EMAIL ADDRESS
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-stone-400">
-                {isPhoneInput ? (
-                  <Phone className="w-5 h-5 text-stone-400" />
-                ) : (
-                  <Mail className="w-5 h-5 text-stone-400" />
-                )}
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#855F14]">
+                <Mail className="w-5 h-5 text-[#855F14]" />
               </div>
               <input
-                type="text"
+                type="email"
                 required
                 value={formData.identifier}
                 onChange={handleIdentifierChange}
-                placeholder="Email or Phone Number"
+                placeholder="yourname@domain.com"
                 className={`w-full pl-11 pr-4 py-3.5 rounded-2xl border ${
                   fieldErrors.identifier ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200 bg-[#FBF9F6]'
                 } focus:border-2 focus:border-[#855F14] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs`}

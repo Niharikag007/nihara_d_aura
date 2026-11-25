@@ -340,10 +340,8 @@ export const api = {
   // Auth & Real OTP API
   async register(fullName, identifier) {
     try {
-      const cleanIdentifier = identifier.trim().toLowerCase();
-      const body = cleanIdentifier.includes('@')
-        ? { fullName, email: cleanIdentifier }
-        : { fullName, phone: cleanIdentifier.replace(/\D/g, '') };
+      const cleanEmail = identifier.trim().toLowerCase();
+      const body = { fullName, email: cleanEmail };
       const res = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -365,10 +363,8 @@ export const api = {
 
   async login(identifier, password = '', role = 'user') {
     try {
-      const cleanIdentifier = identifier.trim().toLowerCase();
-      const body = role === 'admin' || cleanIdentifier.includes('@')
-        ? { email: cleanIdentifier, password, role }
-        : { phone: cleanIdentifier.replace(/\D/g, ''), password, role };
+      const cleanEmail = identifier.trim().toLowerCase();
+      const body = { email: cleanEmail, password, role };
       const res = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

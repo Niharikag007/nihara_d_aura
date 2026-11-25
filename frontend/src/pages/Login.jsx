@@ -6,7 +6,6 @@ import {
   ShieldCheck, 
   Lock,
   Mail, 
-  Phone,
   AlertCircle,
   Eye,
   EyeOff,
@@ -60,9 +59,6 @@ export default function Login() {
   const [isResending, setIsResending] = useState(false);
   const [resendTimer, setResendTimer] = useState(30);
 
-  // Check if identifier is phone-like
-  const isPhoneInput = Boolean(identifier && !identifier.includes('@') && /^[+0-9\s-]+$/.test(identifier.trim()));
-
   // Sync params if URL changes (Admin mode or Registration redirect)
   useEffect(() => {
     if (roleParam === 'admin' || redirectParam === '/admin') {
@@ -105,31 +101,32 @@ export default function Login() {
     setErrorMessage('');
 
     const rawInput = identifier.trim().toLowerCase();
-    const isPhone = !rawInput.includes('@');
-    const cleanInput = isPhone ? rawInput.replace(/\D/g, '') : rawInput;
-    if (!cleanInput) {
-      setErrorMessage('Please enter your email address or mobile number.');
+    if (!rawInput) {
+      setErrorMessage('Please enter your email address.');
+      return;
+    }
+
+    const cleanDigits = rawInput.replace(/[^0-9]/g, '');
+    const isPhone = !rawInput.includes('@') && cleanDigits.length >= 7;
+    if (isPhone) {
+      setErrorMessage('Mobile/Phone number login will be available soon! Please use your email address for now.');
       return;
     }
 
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-    if (isPhone && !/^[6-9]\d{9}$/.test(cleanInput)) {
-      setErrorMessage('Please enter a valid 10-digit mobile number.');
-      return;
-    }
-    if (!isPhone && !emailRegex.test(cleanInput)) {
-      setErrorMessage('Please enter a valid email address.');
+    if (!emailRegex.test(rawInput)) {
+      setErrorMessage('Please enter a valid standard email address (e.g., yourname@domain.com).');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const res = await api.login(cleanInput);
+      const res = await api.login(rawInput);
       setIsSubmitting(false);
 
       if (res && res.success) {
-        localStorage.setItem('pending_email', cleanInput);
-        showToast(res.message || `Verification OTP sent to ${cleanInput}`, 'success');
+        localStorage.setItem('pending_email', rawInput);
+        showToast(res.message || `Verification OTP sent to ${rawInput}`, 'success');
         navigate('/verify-otp');
       } else {
         setErrorMessage(res?.message || 'Failed to dispatch OTP. Please check your email and try again.');
@@ -443,7 +440,7 @@ export default function Login() {
                   : 'Enter administrative credentials to access management console'
                 : otpStep === 'enter_otp'
                   ? `Enter the 6-digit verification code dispatched to ${identifier}`
-                  : 'Enter your email or phone number to receive an OTP'}
+                  : 'Enter your email address to receive a secure OTP'}
             </p>
           </div>
         </div>
@@ -619,25 +616,21 @@ export default function Login() {
               <form onSubmit={handleSendOtp} className="space-y-4">
                 <div className="text-left">
                   <label className="text-[11px] sm:text-xs font-bold text-stone-700 tracking-wider uppercase block mb-1.5">
-                    EMAIL OR PHONE NUMBER
+                    EMAIL ADDRESS
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#855F14]">
-                      {isPhoneInput ? (
-                        <Phone className="w-5 h-5 text-[#855F14]" />
-                      ) : (
-                        <Mail className="w-5 h-5 text-[#855F14]" />
-                      )}
+                      <Mail className="w-5 h-5 text-[#855F14]" />
                     </div>
                     <input
-                      type="text"
+                      type="email"
                       required
                       value={identifier}
                       onChange={(e) => {
                         setIdentifier(e.target.value.toLowerCase());
                         if (errorMessage) setErrorMessage('');
                       }}
-                      placeholder="Email or Phone Number"
+                      placeholder="yourname@domain.com"
                       className="w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 border-[#855F14] bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs"
                     />
                   </div>
