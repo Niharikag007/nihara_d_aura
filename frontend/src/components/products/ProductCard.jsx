@@ -23,8 +23,8 @@ export default function ProductCard({ product }) {
     if (isArtificialJewellery(product)) return `${ARTIFICIAL_JEWELLERY.name} • ${getJewellerySubcategory(product)}`;
     if (!product.category) return 'Luxury';
     if (!product.subcategory ||
-        product.subcategory.toLowerCase().startsWith('all') ||
-        product.subcategory.toLowerCase() === product.category.toLowerCase()) {
+      product.subcategory.toLowerCase().startsWith('all') ||
+      product.subcategory.toLowerCase() === product.category.toLowerCase()) {
       return product.category;
     }
     return `${product.category} • ${product.subcategory}`;
