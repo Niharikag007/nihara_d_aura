@@ -104,7 +104,7 @@ router.get('/dashboard', async (req, res) => {
         id: c._id,
         name: c.name,
         email: c.email,
-        phone: c.phone,
+        phone: c.mobileNumber || c.phone || '',
         createdAt: c.createdAt,
       })),
       services: services.map(s => ({
@@ -1118,7 +1118,6 @@ router.patch('/users/:id', async (req, res) => {
     const resolvedPhone = mobileNumber !== undefined ? mobileNumber : phone;
     if (resolvedPhone !== undefined) {
       user.mobileNumber = resolvedPhone;
-      user.phone = resolvedPhone;
     }
     if (tier !== undefined) user.tier = tier;
     if (rewardPoints !== undefined) {

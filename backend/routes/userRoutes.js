@@ -42,7 +42,6 @@ router.post('/', async (req, res) => {
       name: resolvedName,
       email: email.toLowerCase(),
       mobileNumber: resolvedPhone || '',
-      phone: resolvedPhone || '',
       avatar: avatar || '',
       tier: tier || 'Royal Member',
       rewardPoints: rewardPoints || 0,
@@ -76,13 +75,9 @@ const handleUpdateProfile = async (req, res) => {
       user.name = name;
       user.fullName = name;
     }
-    if (mobileNumber !== undefined) {
-      user.mobileNumber = mobileNumber;
-      user.phone = mobileNumber;
-    }
-    if (phone !== undefined) {
-      user.phone = phone;
-      user.mobileNumber = phone;
+    const resolvedPhone = mobileNumber !== undefined ? mobileNumber : phone;
+    if (resolvedPhone !== undefined) {
+      user.mobileNumber = resolvedPhone;
     }
     if (tier !== undefined) user.tier = tier;
     if (rewardPoints !== undefined) user.rewardPoints = rewardPoints;

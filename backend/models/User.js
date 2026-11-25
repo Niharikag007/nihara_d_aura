@@ -20,10 +20,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  phone: {
-    type: String,
-    trim: true,
-  },
   avatar: {
     type: String,
     default: '',
@@ -84,9 +80,16 @@ const userSchema = new mongoose.Schema({
     type: Date,
     expires: 600, // MongoDB TTL index: automatically deletes document field or clears after 10 mins (600s)
   }
-}, { timestamps: true });
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
 
-// Sync name <-> fullName and phone <-> mobileNumber before validation
+// Virtual 'phone' to support legacy code while only saving 'mobileNumber' in MongoDB
+userSchema.virtual('phone').get(function() {
+  return this.mobileNumber || '';
+}).set(function(val) {
+  this.mobileNumber = val;
+});
+
+// Sync name <-> fullName and map phone -> mobileNumber before validation
 userSchema.pre('validate', function() {
   if (this.name && !this.fullName) {
     this.fullName = this.name;
@@ -96,9 +99,6 @@ userSchema.pre('validate', function() {
   }
   if (this.phone && !this.mobileNumber) {
     this.mobileNumber = this.phone;
-  }
-  if (this.mobileNumber && !this.phone) {
-    this.phone = this.mobileNumber;
   }
 });
 

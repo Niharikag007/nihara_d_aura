@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
       userId: req.user._id,
       customerName: req.body.customer || req.user.name,
       customerEmail: req.body.email || req.user.email,
-      customerPhone: req.body.phone || req.user.phone || '',
+      customerPhone: req.body.mobileNumber || req.body.phone || req.user.mobileNumber || req.user.phone || '',
       items,
       totalAmount: Number(req.body.totalAmount) || 0,
       status: 'Pending',

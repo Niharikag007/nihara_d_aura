@@ -48,7 +48,21 @@ const mongoose = require('mongoose');
 
 if (process.env.MONGO_URI) {
   mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log(`Connected to MongoDB successfully! Database: ${mongoose.connection.name}`))
+    .then(async () => {
+      console.log(`Connected to MongoDB successfully! Database: ${mongoose.connection.name}`);
+      try {
+        const User = require('./models/User');
+        // If any document has phone but no mobileNumber, copy phone to mobileNumber
+        await User.updateMany(
+          { $or: [{ mobileNumber: { $exists: false } }, { mobileNumber: '' }, { mobileNumber: null }], phone: { $exists: true, $nin: ['', null] } },
+          [{ $set: { mobileNumber: '$phone' } }]
+        );
+        // Unset redundant 'phone' field from all User documents in MongoDB
+        await User.updateMany({ phone: { $exists: true } }, { $unset: { phone: '' } });
+      } catch (cleanupErr) {
+        console.warn('[MongoDB Cleanup] Non-fatal notice:', cleanupErr.message);
+      }
+    })
     .catch((err) => console.error('Error connecting to MongoDB:', err));
 }
 

@@ -100,7 +100,6 @@ router.post('/register', async (req, res) => {
         name: resolvedName.trim(),
         email: normalizedEmail,
         mobileNumber: resolvedPhone.trim(),
-        phone: resolvedPhone.trim(),
         otp: hashedOtp,
         otpExpires,
         avatar: avatar || '',
@@ -111,7 +110,6 @@ router.post('/register', async (req, res) => {
       user.name = resolvedName.trim();
       if (resolvedPhone) {
         user.mobileNumber = resolvedPhone.trim();
-        user.phone = resolvedPhone.trim();
       }
       user.otp = hashedOtp;
       user.otpExpires = otpExpires;

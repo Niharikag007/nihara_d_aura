@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
       userId: req.user._id,
       customerName: req.user.name,
       customerEmail: req.user.email,
-      customerPhone: req.user.phone || req.body.phone || '',
+      customerPhone: req.user.mobileNumber || req.user.phone || req.body.mobileNumber || req.body.phone || '',
       serviceType: selectedNames || req.body.serviceType || 'Salon service',
       artist: req.body.artistName || req.body.artist || 'Senior Stylist',
       venue: req.body.locationType === 'home' ? 'At Home' : 'Salon',
