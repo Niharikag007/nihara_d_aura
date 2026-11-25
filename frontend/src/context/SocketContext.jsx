@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
-import { useToast } from './ToastContext';
 import { useAuth } from './AuthContext';
 import { SOCKET_URL } from '../config/api.js';
 
@@ -17,62 +16,69 @@ export const useSocket = () => {
 export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-  const { showToast } = useToast();
   const { token, isAdmin } = useAuth();
+  const socketRef = useRef(null);
 
   useEffect(() => {
-    // Initialize Socket.io client
+    // Disconnect previous socket if token changed
+    if (socketRef.current) {
+      socketRef.current.disconnect();
+    }
+
+    // Initialize Socket.io client with robust settings
     const socketInstance = io(SOCKET_URL, {
-      reconnectionAttempts: 5,
-      reconnectionDelay: 2000,
-      auth: token ? { token } : {}
+      transports: ['websocket', 'polling'],   // Prefer WebSocket, fall back to polling
+      reconnectionAttempts: Infinity,          // Never give up reconnecting
+      reconnectionDelay: 1000,                 // Start retry after 1s
+      reconnectionDelayMax: 10000,             // Max 10s between retries
+      timeout: 20000,                          // 20s connection timeout
+      auth: token ? { token } : {},
+      forceNew: true,                          // Fresh connection on token change
     });
 
     socketInstance.on('connect', () => {
-      console.log('[Socket.io Client] Connected to real-time server:', socketInstance.id);
+      console.log('[Socket.io] ✅ Connected:', socketInstance.id);
       setIsConnected(true);
     });
 
-    socketInstance.on('disconnect', () => {
-      console.log('[Socket.io Client] Disconnected from server');
+    socketInstance.on('disconnect', (reason) => {
+      console.log('[Socket.io] ❌ Disconnected:', reason);
       setIsConnected(false);
+      // Auto-reconnect if server disconnected us
+      if (reason === 'io server disconnect') {
+        socketInstance.connect();
+      }
     });
+
     socketInstance.on('connect_error', (error) => {
-      console.error('[Socket.io Client] Connection failed:', error.message);
+      console.error('[Socket.io] Connection error:', error.message);
       setIsConnected(false);
     });
 
-    // Real-time Event Listeners
-    socketInstance.on('order:created', (data) => {
-      showToast(`⚡ Realtime: New Order #${data.orderId || data.id} placed!`, 'success');
+    socketInstance.on('reconnect', (attemptNumber) => {
+      console.log('[Socket.io] 🔄 Reconnected after', attemptNumber, 'attempts');
     });
 
-    socketInstance.on('booking:created', (data) => {
-      showToast(`⚡ Realtime: Appointment #${data.bookingId || data.id} confirmed!`, 'info');
-    });
-
-    socketInstance.on('booking:cancelled', (data) => {
-      showToast(`⚡ Realtime: Appointment #${data.bookingId || data.id} cancelled.`, 'warning');
-    });
-
+    socketRef.current = socketInstance;
     setSocket(socketInstance);
 
     return () => {
       socketInstance.disconnect();
+      socketRef.current = null;
     };
-  }, [SOCKET_URL, token, isAdmin, showToast]);
+  }, [token]); // Only reconnect when auth token changes
 
   const joinRoom = React.useCallback((roomId) => {
-    if (socket && isConnected) {
-      socket.emit('join_room', roomId);
+    if (socketRef.current?.connected) {
+      socketRef.current.emit('join_room', roomId);
     }
-  }, [socket, isConnected]);
+  }, []);
 
   const emitEvent = React.useCallback((eventName, payload) => {
-    if (socket && isConnected) {
-      socket.emit(eventName, payload);
+    if (socketRef.current?.connected) {
+      socketRef.current.emit(eventName, payload);
     }
-  }, [socket, isConnected]);
+  }, []);
 
   const value = React.useMemo(() => ({
     socket,

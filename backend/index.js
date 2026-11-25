@@ -25,6 +25,10 @@ try {
       socket.join(room);
     });
 
+    socket.on('join_room', (room) => {
+      socket.join(room);
+    });
+
     socket.on('disconnect', () => {
       console.log(`[Socket.io] Client disconnected: ${socket.id}`);
     });
@@ -118,7 +122,10 @@ app.use('/api/admin', adminRoutes);
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
   server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+    if (io) console.log('[Socket.io] Real-time server ready on same port');
   });
 }
 
+// Export both app (for Vercel serverless) and server (for PM2/EC2 with Socket.io)
 module.exports = app;
+module.exports.server = server;
