@@ -82,6 +82,7 @@ const userSchema = new mongoose.Schema({
   },
   otpExpires: {
     type: Date,
+    expires: 600, // MongoDB TTL index: automatically deletes document field or clears after 10 mins (600s)
   }
 }, { timestamps: true });
 

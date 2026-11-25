@@ -282,6 +282,27 @@ export const api = {
     throw new Error(serverRes?.message || 'Profile update failed.');
   },
 
+  async uploadAvatar(file) {
+    const authHeaders = getAuthHeaders();
+    delete authHeaders['x-user-role'];
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const res = await fetch(`${API_BASE_URL}/profile/avatar`, {
+      method: 'POST',
+      headers: {
+        ...authHeaders
+      },
+      body: formData
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: res.statusText }));
+      throw new Error(err.message || 'Avatar upload failed');
+    }
+    return await res.json();
+  },
+
   async getAddresses() {
     const serverRes = await request('/profile/addresses');
     if (serverRes && serverRes.addresses) return serverRes;

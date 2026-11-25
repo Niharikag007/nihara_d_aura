@@ -92,6 +92,7 @@ router.post('/register', async (req, res) => {
 
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    const hashedOtp = await bcrypt.hash(otp, 10);
 
     if (!user) {
       user = new User({
@@ -100,7 +101,7 @@ router.post('/register', async (req, res) => {
         email: normalizedEmail,
         mobileNumber: resolvedPhone.trim(),
         phone: resolvedPhone.trim(),
-        otp,
+        otp: hashedOtp,
         otpExpires,
         avatar: avatar || '',
         isVerified: false,
@@ -112,7 +113,7 @@ router.post('/register', async (req, res) => {
         user.mobileNumber = resolvedPhone.trim();
         user.phone = resolvedPhone.trim();
       }
-      user.otp = otp;
+      user.otp = hashedOtp;
       user.otpExpires = otpExpires;
       if (avatar) user.avatar = avatar;
     }
@@ -165,6 +166,9 @@ router.post('/login', async (req, res) => {
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (isPasswordValid) {
           user.isVerified = true;
+          // Clear any leftover OTP fields on login
+          user.otp = undefined;
+          user.otpExpires = undefined;
           await user.save();
           const jwtSecret = process.env.JWT_SECRET || 'secret123';
           const payload = { user: { id: user.id } };
@@ -200,8 +204,9 @@ router.post('/login', async (req, res) => {
     // Regular OTP flow for non-admin or password-less login
     const otp = generateOTP();
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+    const hashedOtp = await bcrypt.hash(otp, 10);
 
-    user.otp = otp;
+    user.otp = hashedOtp;
     user.otpExpires = otpExpires;
     await user.save();
 
@@ -245,7 +250,16 @@ router.post('/verify-otp', async (req, res) => {
       return res.status(403).json({ success: false, error: 'This account has been blocked. Please contact support.', message: 'This account has been blocked. Please contact support.' });
     }
 
-    if (user.otp !== String(otp).trim() || !user.otpExpires || user.otpExpires < new Date()) {
+    if (!user.otp || !user.otpExpires || user.otpExpires < new Date()) {
+      return res.status(400).json({ success: false, error: 'Invalid or expired OTP', message: 'Invalid or expired OTP' });
+    }
+
+    // Verify hashed OTP (or backward compatible plain text if any old OTP exists)
+    const isOtpValid = user.otp.startsWith('$2')
+      ? await bcrypt.compare(String(otp).trim(), user.otp)
+      : user.otp === String(otp).trim();
+
+    if (!isOtpValid) {
       return res.status(400).json({ success: false, error: 'Invalid or expired OTP', message: 'Invalid or expired OTP' });
     }
 

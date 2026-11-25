@@ -85,6 +85,14 @@ export function AuthProvider({ children }) {
     return result.user;
   }, [token]);
 
+  const uploadAvatar = useCallback(async (file) => {
+    const result = await api.uploadAvatar(file);
+    if (!result?.success || !result.user) throw new Error(result?.message || 'Avatar upload failed');
+    setUser(result.user);
+    saveState(result.user, true, token);
+    return result.user;
+  }, [token]);
+
   const isAdmin = isAuthenticated && user?.role === 'admin';
   const isCustomer = isAuthenticated && user?.role === 'user';
   const value = useMemo(() => ({
@@ -95,8 +103,9 @@ export function AuthProvider({ children }) {
     token,
     login,
     logout,
-    updateProfile
-  }), [user, isAuthenticated, isAdmin, isCustomer, token, login, logout, updateProfile]);
+    updateProfile,
+    uploadAvatar
+  }), [user, isAuthenticated, isAdmin, isCustomer, token, login, logout, updateProfile, uploadAvatar]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -31,15 +31,32 @@ import { useToast } from '../context/ToastContext';
 import { useNotifications } from '../context/NotificationContext';
 import { api } from '../services/api';
 
+const BACKEND_STATIC_BASE = (
+  import.meta.env?.VITE_API_BASE_URL
+    ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '')
+    : (import.meta.env?.PROD ? 'https://api.niharadaura.com' : 'http://localhost:3000')
+).replace(/\/+$/, '');
+
+function resolveAvatarUrl(url) {
+  if (!url || typeof url !== 'string') return null;
+  const trimmed = url.trim();
+  if (trimmed.startsWith('/uploads/')) {
+    return `${BACKEND_STATIC_BASE}${trimmed}`;
+  }
+  return trimmed;
+}
+
 export default function Profile() {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isAdmin, updateProfile, logout } = useAuth();
+  const { user, isAuthenticated, isAdmin, updateProfile, uploadAvatar, logout } = useAuth();
   const { showToast } = useToast();
   const { addNotification } = useNotifications();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
   const [previewPhoto, setPreviewPhoto] = useState(user?.avatar || '');
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState('');
 
@@ -159,7 +176,7 @@ export default function Profile() {
     return <Navigate to="/login" replace />;
   }
 
-  // Optimize and resize uploaded image (crystal clear & lightweight)
+  // Process selected image file for preview and upload
   const processImageFile = (file) => {
     if (!file) return;
 
@@ -168,43 +185,17 @@ export default function Profile() {
       return;
     }
 
+    setSelectedFile(file);
     setSelectedFileName(file.name);
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const MAX_DIM = 480;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > MAX_DIM) {
-            height = Math.round((height * MAX_DIM) / width);
-            width = MAX_DIM;
-          }
-        } else {
-          if (height > MAX_DIM) {
-            width = Math.round((width * MAX_DIM) / height);
-            height = MAX_DIM;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-
-        const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
-        setPreviewPhoto(optimizedDataUrl);
-        setIsPhotoModalOpen(true);
-        showToast('Image ready! Click "Save Photo" to apply.', 'info');
-      };
-      img.onerror = () => {
-        showToast('Unable to process image file.', 'error');
-      };
-      img.src = e.target.result;
+      setPreviewPhoto(e.target.result);
+      setIsPhotoModalOpen(true);
+      showToast('Image ready! Click "Save Photo" to apply.', 'info');
+    };
+    reader.onerror = () => {
+      showToast('Unable to process image file.', 'error');
     };
     reader.readAsDataURL(file);
   };
@@ -227,11 +218,17 @@ export default function Profile() {
     }
   };
 
-  // Save photo to auth state & backend
+  // Save photo to auth state & backend via clean multipart upload (never huge base64 in DB)
   const handleApplyPhoto = async () => {
     try {
-      await updateProfile({ avatar: previewPhoto });
+      setIsUploadingPhoto(true);
+      if (selectedFile) {
+        await uploadAvatar(selectedFile);
+      } else if (previewPhoto) {
+        await updateProfile({ avatar: previewPhoto });
+      }
       setIsPhotoModalOpen(false);
+      setSelectedFile(null);
       showToast('Profile photo updated successfully!', 'success');
       addNotification({
         type: 'profile',
@@ -240,6 +237,8 @@ export default function Profile() {
       });
     } catch (error) {
       showToast(error.message || 'Could not update your profile photo.', 'error');
+    } finally {
+      setIsUploadingPhoto(false);
     }
   };
 
@@ -345,7 +344,7 @@ export default function Profile() {
           >
             {user?.avatar ? (
               <img
-                src={user.avatar}
+                src={resolveAvatarUrl(user.avatar)}
                 alt={user.name || 'Profile'}
                 className="w-24 h-24 rounded-full object-cover border-2 border-[#C59B27] group-hover:border-[#A87D17] group-hover:opacity-90 transition-all"
               />

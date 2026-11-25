@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const upload = require('../middleware/upload');
 
 // Helper to get authenticated user from token or email in request
 async function getAuthenticatedUser(req) {
@@ -117,6 +118,46 @@ const handleUpdateProfile = async (req, res) => {
 router.put('/update', handleUpdateProfile);
 router.post('/update', handleUpdateProfile);
 router.put('/', handleUpdateProfile);
+
+// 2.1 Dedicated Avatar Image Upload (clean file storage, no heavy base64 strings in DB)
+router.post('/avatar', upload.single('avatar'), async (req, res) => {
+  try {
+    const user = await getAuthenticatedUser(req);
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Authentication required' });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No image file uploaded' });
+    }
+
+    const avatarUrl = `/uploads/${req.file.filename}`;
+    user.avatar = avatarUrl;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Avatar uploaded successfully',
+      avatar: avatarUrl,
+      user: {
+        id: user.id,
+        _id: user.id,
+        fullName: user.fullName || user.name,
+        name: user.name || user.fullName,
+        email: user.email,
+        mobileNumber: user.mobileNumber || user.phone || '',
+        phone: user.phone || user.mobileNumber || '',
+        avatar: user.avatar,
+        tier: user.tier || 'Royal Member',
+        rewardPoints: user.rewardPoints || 0,
+        role: user.role || 'user'
+      }
+    });
+  } catch (error) {
+    console.error('Error uploading avatar:', error);
+    res.status(500).json({ success: false, message: 'Could not upload avatar image' });
+  }
+});
 
 // 3. Wishlist Management
 router.get('/wishlist', async (req, res) => {
