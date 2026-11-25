@@ -21,16 +21,15 @@ const storage = multer.diskStorage({
   }
 });
 
-// File filter - only allow images
+// File filter - allow all common image formats
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|webp|bmp|heic|heif/;
-  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
+  const allowedExtensions = /\.(jpe?g|png|gif|webp|bmp|heic|heif|svg|avif|tiff?)$/i;
+  const isImageMime = file.mimetype.startsWith('image/') || allowedExtensions.test(file.originalname);
 
-  if (mimetype && extname) {
+  if (isImageMime) {
     return cb(null, true);
   } else {
-    cb(new Error('Only image files are allowed (jpeg, jpg, png, gif, webp, bmp, heic, heif)'));
+    cb(new Error('Only image files are allowed (JPG, PNG, WebP, GIF, BMP, HEIC, AVIF, SVG)'));
   }
 };
 

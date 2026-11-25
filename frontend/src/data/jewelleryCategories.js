@@ -235,15 +235,33 @@ export function getJewellerySubcategory(product) {
 
 // --- REAL IMAGE PRIORITY: Always show uploaded image first, no dummy fallbacks ---
 
+const BACKEND_STATIC_BASE = (
+  import.meta.env?.VITE_API_BASE_URL
+    ? import.meta.env.VITE_API_BASE_URL.replace(/\/api\/?$/, '')
+    : (import.meta.env?.PROD ? 'https://api.niharadaura.com' : 'http://localhost:3000')
+).replace(/\/+$/, '');
+
+function resolveImageUrl(url) {
+  if (!url || typeof url !== 'string') return null;
+  const trimmed = url.trim();
+  // If it's stored as relative /uploads/..., prepend backend URL
+  if (trimmed.startsWith('/uploads/')) {
+    return `${BACKEND_STATIC_BASE}${trimmed}`;
+  }
+  return trimmed;
+}
+
 export function getProductImages(product) {
   // 1. Uploaded single image (from admin panel upload / backend)
   if (product?.image && typeof product.image === 'string' && product.image.trim()) {
-    return [product.image.trim()];
+    return [resolveImageUrl(product.image)];
   }
 
   // 2. Uploaded images array
   const productImages = Array.isArray(product?.images)
-    ? product.images.filter((image) => typeof image === 'string' && image.trim())
+    ? product.images
+        .filter((image) => typeof image === 'string' && image.trim())
+        .map((img) => resolveImageUrl(img))
     : [];
 
   if (productImages.length > 0) return productImages;
