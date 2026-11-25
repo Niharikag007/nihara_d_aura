@@ -24,9 +24,9 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "🚀 Starting automated deployment..."
-            cd /home/ubuntu/Nihara-D-Aura
+            cd /home/ubuntu/nihara_d_aura
             git pull origin main
             cd backend
             npm install --production
-            pm2 reload nihara-backend || pm2 start server.js --name nihara-backend
+            pm2 reload nihara-backend || pm2 restart nihara-backend
             echo "✅ Deployment completed successfully!"

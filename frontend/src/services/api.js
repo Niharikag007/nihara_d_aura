@@ -31,25 +31,27 @@ const getAuthHeaders = () => {
 
 // Safe request wrapper that requires the Express server/API.
 async function request(endpoint, options = {}) {
-  try {
-    const authHeaders = getAuthHeaders();
-    delete authHeaders['x-user-role'];
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...authHeaders,
-        ...(options.headers || {})
-      },
-      ...options
-    });
-      if (!res.ok) {
-      const err = await res.json().catch(() => ({ message: res.statusText }));
-      throw new Error(err.message || 'Server error');
-    }
-    return await res.json();
-  } catch (err) {
-    throw err;
+  const authHeaders = getAuthHeaders();
+  delete authHeaders['x-user-role'];
+  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...authHeaders,
+      ...(options.headers || {})
+    },
+    ...options
+  });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({ message: res.statusText }));
+    const errorMessage = errData.message || errData.error || `HTTP ${res.status}: ${res.statusText || 'Server Error'}`;
+    const error = new Error(errorMessage);
+    error.status = res.status;
+    error.statusCode = res.status;
+    error.data = errData;
+    throw error;
   }
+  return await res.json();
 }
 
 export const api = {
