@@ -7,6 +7,7 @@ const Order = require('../models/Order');
 const Booking = require('../models/Booking');
 const Coupon = require('../models/Coupon');
 const User = require('../models/User');
+const ReturnRequest = require('../models/ReturnRequest');
 const Setting = require('../models/Setting');
 const InventoryAdjustment = require('../models/InventoryAdjustment');
 const adminAuth = require('../middleware/adminAuth');
@@ -1165,6 +1166,74 @@ router.delete('/users/:id', async (req, res) => {
   } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).json({ success: false, message: 'Error deleting user' });
+  }
+});
+
+// 12. Return & Refund Management
+router.get('/returns', async (req, res) => {
+  try {
+    const returns = await ReturnRequest.find()
+      .sort({ createdAt: -1 })
+      .populate('userId', 'name email mobileNumber phone')
+      .populate('orderId', 'orderId totalAmount paymentMethod paymentStatus');
+
+    res.status(200).json({
+      success: true,
+      returns: returns.map(item => ({
+        id: item._id,
+        orderId: item.orderId?._id,
+        orderIdentifier: item.orderIdentifier || item.orderId?.orderId,
+        user: item.userId,
+        type: item.type,
+        items: item.items,
+        refundAmount: item.refundAmount,
+        reason: item.reason,
+        status: item.status,
+        adminNotes: item.adminNotes,
+        createdAt: item.createdAt,
+        resolvedAt: item.resolvedAt,
+      })),
+    });
+  } catch (error) {
+    console.error('Error fetching admin returns:', error);
+    res.status(500).json({ success: false, message: 'Could not load return requests' });
+  }
+});
+
+router.patch('/returns/:id', async (req, res) => {
+  try {
+    const { status, adminNotes } = req.body;
+    const request = await ReturnRequest.findById(req.params.id);
+    if (!request) {
+      return res.status(404).json({ success: false, message: 'Return request not found' });
+    }
+
+    if (status) request.status = status;
+    if (adminNotes !== undefined) request.adminNotes = adminNotes;
+
+    if (status === 'Completed' || status === 'Approved') {
+      request.resolvedAt = new Date();
+      // If refund is approved/completed, update order payment status
+      if (request.type === 'Refund' && status === 'Completed') {
+        await Order.findByIdAndUpdate(request.orderId, { paymentStatus: 'Refunded' });
+      }
+    }
+
+    await request.save();
+
+    if (req.io) {
+      req.io.to('admin').emit('admin:data:changed', { type: 'return_request', action: 'update', data: request });
+      req.io.emit('return:updated', request);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Return request marked as ${request.status}`,
+      request,
+    });
+  } catch (error) {
+    console.error('Error updating return request:', error);
+    res.status(500).json({ success: false, message: 'Could not update return request' });
   }
 });
 

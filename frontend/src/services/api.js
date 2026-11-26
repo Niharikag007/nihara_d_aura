@@ -251,6 +251,29 @@ export const api = {
     return serverRes || { success: false, message: 'Order could not be saved. Check your sign-in and backend connection.' };
   },
 
+  // Returns & Refunds
+  async getReturns(type) {
+    const query = type ? `?type=${encodeURIComponent(type)}` : '';
+    return await request(`/returns${query}`, {}, false);
+  },
+
+  async getEligibleOrdersForReturn() {
+    return await request('/returns/eligible-orders', {}, false);
+  },
+
+  async createReturn(payload) {
+    return await request('/returns', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+  },
+
+  async cancelReturn(id) {
+    return await request(`/returns/${id}/cancel`, {
+      method: 'PATCH'
+    });
+  },
+
   // Profile & Addresses
   async getProfile() {
     const serverRes = await request('/profile', {}, false);
