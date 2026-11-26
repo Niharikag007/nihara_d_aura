@@ -1,21 +1,55 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '../../utils/adminUtils';
 
 export default function Modal({ open, onClose, title, subtitle, children, maxWidth = 'max-w-2xl' }) {
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    if (!open) return;
+
+    const prevBodyOverflow = document.body.style.overflow;
+    const prevHtmlOverflow = document.documentElement.style.overflow;
+    const prevPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && onClose) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = prevBodyOverflow;
+      document.documentElement.style.overflow = prevHtmlOverflow;
+      document.body.style.paddingRight = prevPaddingRight;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open, onClose]);
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-hidden" role="dialog" aria-modal="true">
-      {/* Backdrop */}
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-hidden overscroll-contain"
+      role="dialog"
+      aria-modal="true"
+    >
+      {/* Backdrop - 100% transparent */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
+        className="absolute inset-0 bg-transparent"
         onClick={onClose}
         aria-hidden="true"
       />
       {/* Panel */}
       <div className={cn(
-        'relative w-full bg-white dark:bg-[#1a1717] rounded-2xl border border-[#e9e3dd] dark:border-white/10 shadow-2xl flex flex-col max-h-[90vh] animate-slide-up',
+        'relative w-full bg-white dark:bg-[#1a1717] rounded-2xl border border-[#e9e3dd] dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.25)] flex flex-col max-h-[90vh] animate-slide-up overscroll-contain',
         maxWidth
       )}>
         {/* Header */}
@@ -40,7 +74,7 @@ export default function Modal({ open, onClose, title, subtitle, children, maxWid
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto flex-1 px-6 py-5">
+        <div className="overflow-y-auto flex-1 px-6 py-5 overscroll-contain">
           {children}
         </div>
       </div>
