@@ -51,7 +51,9 @@ router.post('/', async (req, res) => {
       quantity: Number(item.qty || item.quantity) || 1,
       subtotal: Number(item.price) || 0,
     }));
+    const generatedOrderId = `ORD-${Date.now().toString().slice(-6)}${Math.random().toString(36).substring(2, 5).toUpperCase()}`;
     const order = await Order.create({
+      orderId: generatedOrderId,
       userId: req.user._id,
       customerName: req.body.customer || req.user.name,
       customerEmail: req.body.email || req.user.email,
