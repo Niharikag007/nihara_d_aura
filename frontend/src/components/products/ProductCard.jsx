@@ -18,6 +18,17 @@ export default function ProductCard({ product }) {
 
   const isFavorited = isInWishlist(product.id);
 
+  // Compute discount percentage dynamically if available
+  const discountPct = useMemo(() => {
+    if (product.discountPercent && Number(product.discountPercent) > 0) {
+      return Number(product.discountPercent);
+    }
+    if (product.originalPrice && product.price && Number(product.originalPrice) > Number(product.price)) {
+      return Math.round(((Number(product.originalPrice) - Number(product.price)) / Number(product.originalPrice)) * 100);
+    }
+    return 0;
+  }, [product.discountPercent, product.originalPrice, product.price]);
+
   // Clean, non-repetitive category label
   const categoryLabel = useMemo(() => {
     if (isArtificialJewellery(product)) return `${ARTIFICIAL_JEWELLERY.name} • ${getJewellerySubcategory(product)}`;
@@ -93,9 +104,9 @@ export default function ProductCard({ product }) {
             )}
           </Link>
 
-          {product.discountPercent > 0 && (
+          {discountPct > 0 && (
             <span className="absolute left-3 top-3 z-10 rounded-full bg-[#C59B27] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-white shadow-md">
-              {product.discountPercent}% Off
+              {discountPct}% Off
             </span>
           )}
 

@@ -56,6 +56,8 @@ export default function Products() {
     description: '',
     cost: '',
     price: '',
+    originalPrice: '',
+    discountPercent: '',
     stock: '',
     stockReason: '',
     status: 'Live',
@@ -104,6 +106,8 @@ export default function Products() {
       description: '',
       cost: '',
       price: '',
+      originalPrice: '',
+      discountPercent: '',
       stock: '10',
       stockReason: '',
       status: 'Live',
@@ -123,6 +127,8 @@ export default function Products() {
       description: p.description || '',
       cost: String(p.cost),
       price: String(p.price),
+      originalPrice: p.originalPrice ? String(p.originalPrice) : '',
+      discountPercent: p.discountPercent ? String(p.discountPercent) : '',
       stock: String(p.stock),
       stockReason: '',
       status: p.status,
@@ -162,6 +168,8 @@ export default function Products() {
     formPayload.append('description', formData.description.trim());
     formPayload.append('cost', parseFloat(formData.cost));
     formPayload.append('price', parseFloat(formData.price));
+    if (formData.originalPrice) formPayload.append('originalPrice', parseFloat(formData.originalPrice));
+    if (formData.discountPercent) formPayload.append('discountPercent', parseFloat(formData.discountPercent));
     formPayload.append('stock', stockQuantity);
     formPayload.append('status', formData.status);
 
@@ -799,6 +807,62 @@ export default function Products() {
                 }`}
               />
               {formErrors.price && <p className="text-[11px] text-rose-500 mt-1">{formErrors.price}</p>}
+            </div>
+          </div>
+
+          {/* Optional MRP and Discount Badge Inputs */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="text-xs font-semibold text-stone-700 dark:text-stone-300 block mb-1">
+                Original MRP (₹) <span className="text-[10px] text-stone-400 font-normal">(Strikethrough price)</span>
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="any"
+                value={formData.originalPrice}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const mrp = parseFloat(val);
+                  const price = parseFloat(formData.price);
+                  let autoDiscount = formData.discountPercent;
+                  if (mrp && price && mrp > price) {
+                    autoDiscount = String(Math.round(((mrp - price) / mrp) * 100));
+                  }
+                  setFormData(p => ({ ...p, originalPrice: val, discountPercent: autoDiscount }));
+                }}
+                placeholder="e.g. 900"
+                className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                  darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                }`}
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold text-stone-700 dark:text-stone-300 block mb-1">
+                Discount Badge (% Off) <span className="text-[10px] text-stone-400 font-normal">(e.g. 18 for 18% OFF)</span>
+              </label>
+              <input
+                type="number"
+                min="0"
+                max="99"
+                step="1"
+                value={formData.discountPercent}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const disc = parseFloat(val);
+                  const price = parseFloat(formData.price);
+                  let autoMrp = formData.originalPrice;
+                  if (disc && price && disc > 0 && disc < 100) {
+                    autoMrp = String(Math.round(price / (1 - disc / 100)));
+                  }
+                  setFormData(p => ({ ...p, discountPercent: val, originalPrice: autoMrp }));
+                }}
+                placeholder="e.g. 18"
+                className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
+                  darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
+                }`}
+              />
             </div>
           </div>
 
