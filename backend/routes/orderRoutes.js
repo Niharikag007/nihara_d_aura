@@ -17,10 +17,12 @@ router.get('/', async (req, res) => {
       success: true,
       orders: orders.map(order => ({
         id: order._id,
-        orderId: `ORD-${String(order._id).slice(-8).toUpperCase()}`,
+        orderId: order.orderId || `ORD-${String(order._id).slice(-8).toUpperCase()}`,
         createdAt: order.createdAt,
         items: order.items,
         shippingAddress: order.shippingAddress,
+        customerName: order.customerName,
+        customerPhone: order.customerPhone,
         paymentMethod: order.paymentMethod,
         totalAmount: order.totalAmount,
         status: order.status,
