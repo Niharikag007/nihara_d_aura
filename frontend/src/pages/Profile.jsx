@@ -360,12 +360,12 @@ export default function Profile() {
   ];
 
   return (
-    <div className={`min-h-screen px-4 py-10 flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-b from-[#1C1917] to-[#0A0908]' : 'bg-gradient-to-b from-[#FFFDF9] to-[#F9F5EE]'}`}>
-      <div className={`w-full max-w-2xl transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
+    <div className={`min-h-screen px-4 py-8 sm:py-10 flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-b from-[#1C1917] to-[#0A0908]' : 'bg-gradient-to-b from-[#FFFDF9] to-[#F9F5EE]'}`}>
+      <div className={`w-full max-w-3xl transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
       
       {/* Profile Header */}
-      <div className={`rounded-3xl border p-7 shadow-sm mb-6 transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}>
-        <div className="flex items-center gap-5">
+      <div className={`rounded-3xl border p-5 sm:p-6 shadow-xs mb-5 transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}>
+        <div className="flex items-center gap-4 sm:gap-5">
           {/* Profile Picture */}
           <div 
             className="relative cursor-pointer flex-shrink-0 group"
@@ -379,31 +379,31 @@ export default function Profile() {
               <img
                 src={resolveAvatarUrl(user.avatar)}
                 alt={user.name || 'Profile'}
-                className="w-24 h-24 rounded-full object-cover border-2 border-[#C59B27] group-hover:border-[#A87D17] group-hover:opacity-90 transition-all shadow-md"
+                className="w-18 h-18 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-[#C59B27] group-hover:border-[#A87D17] group-hover:opacity-90 transition-all shadow-sm"
               />
             ) : (
-              <div className={`w-24 h-24 rounded-full border-2 border-dashed border-[#C59B27] flex flex-col items-center justify-center font-medium text-xs group-hover:border-[#A87D17] transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#DFBC77]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
-                <User className="w-9 h-9 mb-0.5 opacity-70" />
+              <div className={`w-18 h-18 sm:w-20 sm:h-20 rounded-full border-2 border-dashed border-[#C59B27] flex flex-col items-center justify-center font-medium text-xs group-hover:border-[#A87D17] transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#DFBC77]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
+                <User className="w-7 h-7 sm:w-8 sm:h-8 mb-0.5 opacity-70" />
                 <span className="text-[10px] font-semibold">Add Photo</span>
               </div>
             )}
             <div 
-              className="absolute -bottom-0.5 -right-0.5 w-8 h-8 rounded-full bg-[#C59B27] text-white flex items-center justify-center border-2 border-white group-hover:bg-[#A87D17] group-hover:scale-110 transition-all shadow"
+              className="absolute -bottom-0.5 -right-0.5 w-7 h-7 rounded-full bg-[#C59B27] text-white flex items-center justify-center border-2 border-white group-hover:bg-[#A87D17] group-hover:scale-110 transition-all shadow-xs"
             >
-              <Camera className="w-4 h-4" />
+              <Camera className="w-3.5 h-3.5" />
             </div>
           </div>
 
           {/* User Details */}
           <div className="flex-1 min-w-0">
-            <h2 className={`font-bold text-xl truncate transition-colors duration-300 ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
+            <h2 className={`font-bold text-xl sm:text-2xl truncate transition-colors duration-300 ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
               {user?.name || 'Name not provided'}
             </h2>
-            <p className={`text-base mt-1.5 truncate transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>
+            <p className={`text-sm sm:text-[15px] mt-0.5 truncate transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>
               {user?.email || 'Email not provided'}
             </p>
             {user?.phone && (
-              <p className={`text-base mt-1.5 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>
+              <p className={`text-sm sm:text-[15px] mt-0.5 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>
                 {user.phone}
               </p>
             )}
@@ -419,32 +419,32 @@ export default function Profile() {
               });
               setIsEditModalOpen(true);
             }}
-            className="w-14 h-14 rounded-full bg-[#C59B27] text-white flex items-center justify-center flex-shrink-0 hover:bg-[#A87D17] hover:scale-105 transition-all shadow-md"
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#C59B27] text-white flex items-center justify-center flex-shrink-0 hover:bg-[#A87D17] hover:scale-105 transition-all shadow-sm cursor-pointer"
           >
-            <Edit3 className="w-6 h-6" />
+            <Edit3 className="w-5 h-5" />
           </button>
         </div>
       </div>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-3 gap-5 mb-6">
+      <div className="grid grid-cols-3 gap-3.5 sm:gap-5 mb-5">
         <div 
           onClick={() => navigate('/orders')}
-          className={`rounded-3xl border p-7 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-lg hover:scale-105 transition-all group ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}
+          className={`rounded-3xl border py-4 sm:py-5 px-3 sm:px-4 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-md hover:scale-[1.02] transition-all group ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}
         >
-          <span className={`font-bold text-3xl group-hover:text-[#C59B27] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
+          <span className={`font-bold text-2xl sm:text-3xl group-hover:text-[#C59B27] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
             {ordersStat.userId === user?.id ? ordersStat.count : '—'}
           </span>
-          <p className={`text-base mt-3 group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>Orders</p>
+          <p className={`text-xs sm:text-sm mt-1.5 font-medium group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>Orders</p>
         </div>
         <div 
           onClick={() => navigate('/wishlist')}
-          className={`rounded-3xl border p-7 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-lg hover:scale-105 transition-all group ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}
+          className={`rounded-3xl border py-4 sm:py-5 px-3 sm:px-4 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-md hover:scale-[1.02] transition-all group ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}
         >
-          <span className={`font-bold text-3xl group-hover:text-[#C59B27] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
+          <span className={`font-bold text-2xl sm:text-3xl group-hover:text-[#C59B27] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
             {wishlistStat.userId === user?.id ? wishlistStat.count : '—'}
           </span>
-          <p className={`text-base mt-3 group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>Wishlist</p>
+          <p className={`text-xs sm:text-sm mt-1.5 font-medium group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>Wishlist</p>
         </div>
         <div 
           onClick={() => {
@@ -455,18 +455,18 @@ export default function Profile() {
               navigate('/cart');
             }
           }}
-          className={`rounded-3xl border p-7 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-lg hover:scale-105 transition-all group ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}
+          className={`rounded-3xl border py-4 sm:py-5 px-3 sm:px-4 text-center cursor-pointer hover:border-[#C59B27] hover:shadow-md hover:scale-[1.02] transition-all group ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}
         >
-          <span className={`font-bold text-3xl group-hover:text-[#C59B27] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
+          <span className={`font-bold text-2xl sm:text-3xl group-hover:text-[#C59B27] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>
             {couponsLoaded ? availableCoupons.length : '—'}
           </span>
-          <p className={`text-base mt-3 group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>Coupons</p>
+          <p className={`text-xs sm:text-sm mt-1.5 font-medium group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-500'}`}>Coupons</p>
         </div>
       </div>
 
       {/* Account Settings Section */}
-      <div className="mb-6">
-        <h3 className={`text-base font-bold uppercase tracking-wider mb-5 px-1 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`}>
+      <div className="mb-5">
+        <h3 className={`text-xs sm:text-[13px] font-bold uppercase tracking-wider mb-3 px-1 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`}>
           Account Settings
         </h3>
         <div className={`rounded-3xl border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}>
@@ -476,21 +476,21 @@ export default function Profile() {
               <div 
                 key={idx}
                 onClick={item.onClick}
-                className={`flex items-center justify-between p-6 border-b last:border-b-0 cursor-pointer hover:bg-[#FAF3E8] hover:border-l-4 hover:border-l-[#C59B27] transition-all group ${isDarkMode ? 'border-[#3E2F1E]' : 'border-stone-100'}`}
+                className={`flex items-center justify-between py-3.5 sm:py-4 px-5 sm:px-6 border-b last:border-b-0 cursor-pointer hover:bg-[#FAF3E8] hover:border-l-4 hover:border-l-[#C59B27] transition-all group ${isDarkMode ? 'border-[#3E2F1E]' : 'border-stone-100'}`}
               >
-                <div className="flex items-center gap-5">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center group-hover:bg-[#C59B27] group-hover:text-white transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
-                    <Icon className="w-5 h-5" />
+                <div className="flex items-center gap-4 sm:gap-5">
+                  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center group-hover:bg-[#C59B27] group-hover:text-white transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
+                    <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                   </div>
-                  <span className={`text-lg font-medium group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>{item.title}</span>
+                  <span className={`text-sm sm:text-base font-medium group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>{item.title}</span>
                 </div>
                 <div className="flex items-center gap-3">
                   {item.badge && (
-                    <span className="text-base font-semibold text-[#C59B27] bg-[#FAF3E8] px-4 py-1.5 rounded-full group-hover:bg-[#C59B27] group-hover:text-white transition-all">
+                    <span className="text-xs sm:text-sm font-semibold text-[#C59B27] bg-[#FAF3E8] px-3 py-1 rounded-full group-hover:bg-[#C59B27] group-hover:text-white transition-all">
                       {item.badge}
                     </span>
                   )}
-                  <ChevronRight className={`w-6 h-6 group-hover:text-[#C59B27] group-hover:translate-x-1 transition-all ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`} />
+                  <ChevronRight className={`w-4 h-4 sm:w-5 sm:h-5 group-hover:text-[#C59B27] group-hover:translate-x-1 transition-all ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`} />
                 </div>
               </div>
             );
@@ -504,8 +504,8 @@ export default function Profile() {
       </div>
 
       {/* Support & Preferences Section */}
-      <div className="mb-6">
-        <h3 className={`text-base font-bold uppercase tracking-wider mb-5 px-1 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`}>
+      <div className="mb-5">
+        <h3 className={`text-xs sm:text-[13px] font-bold uppercase tracking-wider mb-3 px-1 transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`}>
           Support & Preferences
         </h3>
         <div className={`rounded-3xl border overflow-hidden transition-colors duration-300 ${isDarkMode ? 'bg-[#1C1917] border-[#3E2F1E]' : 'bg-white border-stone-200'}`}>
@@ -514,15 +514,15 @@ export default function Profile() {
             const content = (
               <div 
                 key={idx}
-                className={`flex items-center justify-between p-6 border-b last:border-b-0 hover:bg-[#FAF3E8] hover:border-l-4 hover:border-l-[#C59B27] transition-all group ${isDarkMode ? 'border-[#3E2F1E]' : 'border-stone-100'}`}
+                className={`flex items-center justify-between py-3.5 sm:py-4 px-5 sm:px-6 border-b last:border-b-0 hover:bg-[#FAF3E8] hover:border-l-4 hover:border-l-[#C59B27] transition-all group ${isDarkMode ? 'border-[#3E2F1E]' : 'border-stone-100'}`}
               >
-                <div className="flex items-center gap-5">
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center group-hover:bg-[#C59B27] group-hover:text-white transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
-                    <Icon className="w-5 h-5" />
+                <div className="flex items-center gap-4 sm:gap-5">
+                  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center group-hover:bg-[#C59B27] group-hover:text-white transition-all ${isDarkMode ? 'bg-[#2C2318] text-[#855F14]' : 'bg-[#FAF3E8] text-[#855F14]'}`}>
+                    <Icon className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                   </div>
-                  <span className={`text-lg font-medium group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>{item.title}</span>
+                  <span className={`text-sm sm:text-base font-medium group-hover:text-[#855F14] transition-colors ${isDarkMode ? 'text-[#FAF3E8]' : 'text-[#1C1917]'}`}>{item.title}</span>
                 </div>
-                {item.rightContent || <ChevronRight className={`w-6 h-6 group-hover:text-[#C59B27] group-hover:translate-x-1 transition-all ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`} />}
+                {item.rightContent || <ChevronRight className={`w-4 h-4 sm:w-5 sm:h-5 group-hover:text-[#C59B27] group-hover:translate-x-1 transition-all ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`} />}
               </div>
             );
 
@@ -537,14 +537,14 @@ export default function Profile() {
       {/* Log Out Button */}
       <button
         onClick={handleLogout}
-        className="w-full bg-[#C59B27] text-white font-semibold py-5 rounded-3xl mt-6 flex items-center justify-center gap-3 text-lg hover:bg-[#A87D17] hover:shadow-lg hover:scale-105 transition-all"
+        className="w-full bg-[#C59B27] text-white font-semibold py-3.5 sm:py-4 rounded-2xl sm:rounded-3xl mt-5 flex items-center justify-center gap-2.5 text-sm sm:text-base hover:bg-[#A87D17] hover:shadow-md hover:scale-[1.01] transition-all shadow-xs cursor-pointer"
       >
-        <LogOut className="w-6 h-6" />
+        <LogOut className="w-5 h-5" />
         <span>Log Out</span>
       </button>
 
       {/* Footer */}
-      <div className={`text-center mt-10 text-base font-medium transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`}>
+      <div className={`text-center mt-8 text-xs sm:text-[13px] font-medium tracking-wider transition-colors duration-300 ${isDarkMode ? 'text-[#B5A98C]' : 'text-stone-400'}`}>
         NIHARA D'AURA • JEWELLERY & MAKEUP
       </div>
 
