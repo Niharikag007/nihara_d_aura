@@ -41,9 +41,9 @@ export default function Modal({ open, onClose, title, subtitle, children, maxWid
       role="dialog"
       aria-modal="true"
     >
-      {/* Backdrop - 100% transparent */}
+      {/* Backdrop - Opaque dark overlay */}
       <div
-        className="absolute inset-0 bg-transparent"
+        className="absolute inset-0 bg-black/70 backdrop-blur-[2px] transition-opacity animate-fade-in"
         onClick={onClose}
         aria-hidden="true"
       />
