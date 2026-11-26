@@ -4,21 +4,35 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Order = require('../models/Order');
 
-router.use(auth);
+function getRazorpay() {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  if (!keyId || !keySecret) return { razorpay: null, keyId: null, keySecret: null };
 
-const keyId = process.env.RAZORPAY_KEY_ID;
-const keySecret = process.env.RAZORPAY_KEY_SECRET;
-const gatewayConfigured = Boolean(keyId && keySecret);
-
-let razorpay = null;
-if (gatewayConfigured) {
   try {
     const Razorpay = require('razorpay');
-    razorpay = new Razorpay({ key_id: keyId, key_secret: keySecret });
+    return {
+      razorpay: new Razorpay({ key_id: keyId, key_secret: keySecret }),
+      keyId,
+      keySecret
+    };
   } catch (error) {
     console.error('Failed to initialize Razorpay:', error.message);
+    return { razorpay: null, keyId: null, keySecret: null };
   }
 }
+
+// Public: Returns whether a real gateway is configured so the frontend can show/hide options
+router.get('/config', (req, res) => {
+  const { razorpay, keyId } = getRazorpay();
+  res.status(200).json({
+    success: true,
+    gatewayEnabled: Boolean(razorpay && keyId),
+    keyId: razorpay ? keyId : null,
+  });
+});
+
+router.use(auth);
 
 function requireUser(req, res) {
   if (!req.user) {
@@ -28,18 +42,10 @@ function requireUser(req, res) {
   return true;
 }
 
-// Returns whether a real gateway is configured so the frontend can show/hide options
-router.get('/config', (req, res) => {
-  res.status(200).json({
-    success: true,
-    gatewayEnabled: gatewayConfigured && Boolean(razorpay),
-    keyId: gatewayConfigured && razorpay ? keyId : null,
-  });
-});
-
 // Create a Razorpay order for the given amount (INR)
 router.post('/create-order', async (req, res) => {
   if (!requireUser(req, res)) return;
+  const { razorpay } = getRazorpay();
   if (!razorpay) {
     return res.status(503).json({
       success: false,
@@ -77,6 +83,7 @@ router.post('/create-order', async (req, res) => {
 // Verify Razorpay payment signature and mark the linked order as Paid
 router.post('/verify', async (req, res) => {
   if (!requireUser(req, res)) return;
+  const { keySecret } = getRazorpay();
   if (!keySecret) {
     return res.status(503).json({ success: false, message: 'Payment verification is not configured.' });
   }
