@@ -55,6 +55,7 @@ export default function Login() {
 
   // States
   const [errorMessage, setErrorMessage] = useState('');
+  const [emailInputError, setEmailInputError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [resendTimer, setResendTimer] = useState(30);
@@ -99,23 +100,27 @@ export default function Login() {
   const handleSendOtp = async (e) => {
     if (e) e.preventDefault();
     setErrorMessage('');
+    setEmailInputError(false);
 
     const rawInput = identifier.trim().toLowerCase();
     if (!rawInput) {
       setErrorMessage('Please enter your email address.');
+      setEmailInputError(true);
       return;
     }
 
     const cleanDigits = rawInput.replace(/[^0-9]/g, '');
-    const isPhone = !rawInput.includes('@') && cleanDigits.length >= 7;
+    const isPhone = !rawInput.includes('@') && (cleanDigits.length >= 7 || /^\d+$/.test(rawInput));
     if (isPhone) {
-      setErrorMessage('Mobile/Phone number login will be available soon! Please use your email address for now.');
+      setErrorMessage('Phone/Mobile numbers are not supported for login. Please enter your valid email address (e.g. example@gmail.com) to receive OTP.');
+      setEmailInputError(true);
       return;
     }
 
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
     if (!emailRegex.test(rawInput)) {
-      setErrorMessage('Please enter a valid standard email address (e.g., yourname@domain.com).');
+      setErrorMessage('Please enter a valid standard email address (e.g., example@gmail.com).');
+      setEmailInputError(true);
       return;
     }
 
@@ -456,7 +461,7 @@ export default function Login() {
         {/* -------------------- ADMIN LOGIN FORM -------------------- */}
         {isAdminMode ? (
           adminOtpStep === 'enter_credentials' ? (
-            <form onSubmit={handleAdminPasswordLogin} className="space-y-4">
+            <form noValidate onSubmit={handleAdminPasswordLogin} className="space-y-4">
               <div>
                 <label className="text-xs sm:text-[13px] font-['Times_New_Roman',_Times,_serif] font-normal tracking-wide text-stone-700 block mb-2 text-left">
                   Admin Email Address
@@ -613,7 +618,7 @@ export default function Login() {
           <div className="space-y-4">
             {otpStep === 'enter_identifier' ? (
               /* Step 1: Identifier Input Form */
-              <form onSubmit={handleSendOtp} className="space-y-4">
+              <form noValidate onSubmit={handleSendOtp} className="space-y-4">
                 <div className="text-left">
                   <label className="text-[11px] sm:text-xs font-bold text-stone-700 tracking-wider uppercase block mb-1.5">
                     EMAIL ADDRESS
@@ -629,11 +634,17 @@ export default function Login() {
                       onChange={(e) => {
                         setIdentifier(e.target.value.toLowerCase());
                         if (errorMessage) setErrorMessage('');
+                        if (emailInputError) setEmailInputError(false);
                       }}
-                      placeholder="yourname@domain.com"
-                      className="w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 border-[#855F14] bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs"
+                      placeholder="example@gmail.com"
+                      className={`w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 ${
+                        emailInputError ? 'border-rose-400 bg-rose-50/20' : 'border-[#855F14] bg-white'
+                      } text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs`}
                     />
                   </div>
+                  <p className="text-[11px] text-stone-500 mt-1 pl-1">
+                    Enter your email address to receive a secure OTP (e.g. example@gmail.com)
+                  </p>
                 </div>
 
                 {/* Primary Action Button */}

@@ -37,14 +37,14 @@ export default function Register() {
     if (!trimmed) return 'Please enter your email address.';
 
     const cleanDigits = trimmed.replace(/[^0-9]/g, '');
-    const isPhone = !trimmed.includes('@') && cleanDigits.length >= 7;
+    const isPhone = !trimmed.includes('@') && (cleanDigits.length >= 7 || /^\d+$/.test(trimmed));
     if (isPhone) {
-      return 'Mobile/Phone number signup will be available soon! Please register with your email address for now.';
+      return 'Phone/Mobile numbers are not supported for signup. Please enter your valid email address (e.g., example@gmail.com).';
     }
 
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
     if (!emailRegex.test(trimmed)) {
-      return 'Please enter a valid standard email address in lowercase (e.g., yourname@domain.com).';
+      return 'Please enter a valid standard email address in lowercase (e.g., example@gmail.com).';
     }
 
     return '';
@@ -155,7 +155,7 @@ export default function Register() {
         )}
 
         {/* Signup Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form noValidate onSubmit={handleSubmit} className="space-y-4">
           {/* FULL NAME */}
           <div className="text-left">
             <label className="text-[11px] sm:text-xs font-bold text-stone-700 tracking-wider uppercase block mb-1.5">
@@ -192,12 +192,15 @@ export default function Register() {
                 required
                 value={formData.identifier}
                 onChange={handleIdentifierChange}
-                placeholder="yourname@domain.com"
-                className={`w-full pl-11 pr-4 py-3.5 rounded-2xl border ${
-                  fieldErrors.identifier ? 'border-rose-400 bg-rose-50/30' : 'border-stone-200 bg-[#FBF9F6]'
-                } focus:border-2 focus:border-[#855F14] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs`}
+                placeholder="example@gmail.com"
+                className={`w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 ${
+                  fieldErrors.identifier ? 'border-rose-400 bg-rose-50/20' : 'border-[#855F14] bg-white'
+                } text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs`}
               />
             </div>
+            <p className="text-[11px] text-stone-500 mt-1 pl-1">
+              Enter your email address to receive OTP for verification (e.g. example@gmail.com)
+            </p>
           </div>
 
           {/* Primary Action Button */}
