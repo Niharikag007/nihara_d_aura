@@ -4,6 +4,7 @@ import { Search, Filter, ArrowUpDown, Sparkles, X } from 'lucide-react';
 import { useProducts } from '../context/ProductContext';
 import ProductCard from '../components/products/ProductCard';
 import HorizontalScroll from '../components/common/HorizontalScroll';
+import { ProductGridSkeleton } from '../components/common/Skeleton';
 import {
   ARTIFICIAL_JEWELLERY,
   getProductImages,
@@ -12,7 +13,7 @@ import {
 } from '../data/jewelleryCategories';
 
 export default function Products() {
-  const { products } = useProducts();
+  const { products, loading } = useProducts();
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category') || 'All';
   const subcategoryParam = searchParams.get('subcategory') || 'All';
@@ -296,7 +297,9 @@ export default function Products() {
       )}
 
       {/* Product Grid */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <ProductGridSkeleton count={10} />
+      ) : filtered.length === 0 ? (
         <div className="text-center py-20 bg-white rounded-3xl border border-[#DFBC77]/40 shadow-sm mt-6 p-8 max-w-md mx-auto">
           <div className="w-16 h-16 rounded-full bg-[#FCF9F2] border border-[#DFBC77]/50 flex items-center justify-center mx-auto mb-4 text-[#C59B27] shadow-inner">
             <Sparkles className="w-8 h-8" />

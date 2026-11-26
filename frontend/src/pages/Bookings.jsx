@@ -4,6 +4,7 @@ import { ArrowLeft, ShoppingBag, Calendar, Clock, MapPin, Sparkles, XCircle, Loa
 import { api } from '../services/api';
 import { useToast } from '../context/ToastContext';
 import { useSocket } from '../context/SocketContext';
+import { ListCardSkeleton } from '../components/common/Skeleton';
 
 export default function Bookings() {
   const navigate = useNavigate();
@@ -105,10 +106,7 @@ export default function Bookings() {
       {/* Bookings List */}
       <div className="space-y-4">
         {loading ? (
-          <div className="py-16 text-center flex flex-col items-center justify-center gap-3 bg-white rounded-3xl border border-[#DFBC77]/30">
-            <Loader2 className="w-8 h-8 animate-spin text-[#DFBC77]" />
-            <p className="text-xs text-stone-500 font-serif italic">Loading your appointments...</p>
-          </div>
+          <ListCardSkeleton count={3} />
         ) : bookings.length === 0 ? (
           <div className="bg-white rounded-3xl p-10 text-center border border-stone-200">
             <Calendar className="w-12 h-12 text-[#DFBC77] mx-auto mb-3" />

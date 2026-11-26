@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Sparkles, Clock, Star, MapPin, CheckCircle2, ArrowRight, Loader2, Mail } from 'lucide-react';
 import { useServices } from '../context/ServiceContext';
+import { ServiceCardSkeleton } from '../components/common/Skeleton';
 
 export default function Services() {
   const navigate = useNavigate();
@@ -98,9 +99,10 @@ export default function Services() {
 
       {/* Services Listing */}
       {loading ? (
-        <div className="py-20 text-center flex flex-col items-center justify-center gap-3">
-          <Loader2 className="w-8 h-8 animate-spin text-[#DFBC77]" />
-          <p className="text-stone-500 font-serif italic text-sm">Retrieving bespoke salon services...</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <ServiceCardSkeleton key={i} />
+          ))}
         </div>
       ) : filteredServices.length === 0 ? (
         <div className="bg-white rounded-3xl p-12 text-center border border-[#DFBC77]/30 max-w-lg mx-auto">

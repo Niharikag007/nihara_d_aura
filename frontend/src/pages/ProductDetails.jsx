@@ -18,10 +18,11 @@ import { useToast } from '../context/ToastContext';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import ProductCard from '../components/products/ProductCard';
+import { ProductDetailSkeleton } from '../components/common/Skeleton';
 import { ARTIFICIAL_JEWELLERY, getJewellerySubcategory, getProductImage, getProductImageAlt, getProductImages, isArtificialJewellery } from '../data/jewelleryCategories';
 
 export default function ProductDetails() {
-  const { products } = useProducts();
+  const { products, loading } = useProducts();
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart, setIsDrawerOpen } = useCart();
@@ -132,6 +133,10 @@ export default function ProductDetails() {
     const added = addToCart(product, quantity, selectedVariant, selectedSize);
     if (added) navigate('/checkout');
   };
+
+  if (loading && !product) {
+    return <ProductDetailSkeleton />;
+  }
 
   if (!product) {
     return (

@@ -27,6 +27,7 @@ import ProductCard from '../components/products/ProductCard';
 import ServiceCard from '../components/services/ServiceCard';
 import HeroSlider from '../components/common/HeroSlider';
 import HorizontalScroll from '../components/common/HorizontalScroll';
+import { ProductRowSkeleton } from '../components/common/Skeleton';
 import {
   ARTIFICIAL_JEWELLERY,
   ARTIFICIAL_JEWELLERY_IMAGES,
@@ -36,7 +37,7 @@ import {
 } from '../data/jewelleryCategories';
 
 export default function Home() {
-  const { products } = useProducts();
+  const { products, loading } = useProducts();
   const { services } = useServices();
   const [activeCategory, setActiveCategory] = useState('All');
   const [activeSubcategory, setActiveSubcategory] = useState('All');
@@ -482,13 +483,17 @@ export default function Home() {
         )}
 
         {/* Display 5 products for selected category (Mobile Horizontal Slide & Desktop Grid) */}
-        <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-5 pt-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
-          {filteredProducts.slice(0, 5).map((product) => (
-            <div key={product.id || product._id} className="w-[68vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <ProductRowSkeleton count={5} />
+        ) : (
+          <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-5 pt-4 overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
+            {filteredProducts.slice(0, 5).map((product) => (
+              <div key={product.id || product._id} className="w-[68vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* 4. Luxury Bridal Transformation Spotlight Banner */}
@@ -598,13 +603,17 @@ export default function Home() {
         </div>
 
         {/* Tab Content (Mobile Horizontal Slide & Desktop Grid) */}
-        <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-5 animate-fade-in overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
-          {(patronTab === 'bestsellers' ? bestsellerProducts : featuredProducts).slice(0, 5).map((product) => (
-            <div key={product.id || product._id} className="w-[68vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <ProductRowSkeleton count={5} />
+        ) : (
+          <div className="flex md:grid md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-5 animate-fade-in overflow-x-auto pb-4 md:pb-0 scrollbar-none snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0">
+            {(patronTab === 'bestsellers' ? bestsellerProducts : featuredProducts).slice(0, 5).map((product) => (
+              <div key={product.id || product._id} className="w-[68vw] sm:w-[45vw] md:w-auto flex-shrink-0 snap-center">
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* 7. Royal Wall of Love (Real Client Stories with Authentic Photography) */}
