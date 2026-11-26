@@ -150,15 +150,26 @@ router.post('/', adminAuth, async (req, res) => {
     const generatedSlug = slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const generatedCategorySlug = categorySlug || category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
+    let finalDiscount = Number(discountPercent) || 0;
+    const numPrice = Number(price);
+    const numOriginal = Number(originalPrice);
+    if (numOriginal > 0 && numPrice > 0) {
+      if (numOriginal > numPrice) {
+        finalDiscount = Math.round(((numOriginal - numPrice) / numOriginal) * 100);
+      } else {
+        finalDiscount = 0;
+      }
+    }
+
     const product = new Product({
       name,
       slug: generatedSlug,
       category,
       categorySlug: generatedCategorySlug,
       subcategory,
-      price,
-      originalPrice,
-      discountPercent,
+      price: numPrice,
+      originalPrice: numOriginal > 0 ? numOriginal : undefined,
+      discountPercent: finalDiscount,
       rating,
       reviewCount,
       images,
@@ -189,6 +200,21 @@ router.put('/:id', adminAuth, async (req, res) => {
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ success: false, error: 'Invalid product ID' });
+    }
+
+    if (req.body.price !== undefined || req.body.originalPrice !== undefined) {
+      const existingProduct = await Product.findById(id);
+      if (existingProduct) {
+        const effPrice = req.body.price !== undefined ? Number(req.body.price) : existingProduct.price;
+        const effOriginal = req.body.originalPrice !== undefined ? Number(req.body.originalPrice) : existingProduct.originalPrice;
+        if (effOriginal > 0 && effPrice > 0) {
+          if (effOriginal > effPrice) {
+            req.body.discountPercent = Math.round(((effOriginal - effPrice) / effOriginal) * 100);
+          } else {
+            req.body.discountPercent = 0;
+          }
+        }
+      }
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {

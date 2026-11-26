@@ -49,6 +49,17 @@ export default function ProductDetails() {
 
   const isFavorited = isInWishlist(product?.id);
 
+  // Compute discount percentage dynamically
+  const discountPercent = React.useMemo(() => {
+    if (product?.discountPercent && Number(product.discountPercent) > 0) {
+      return Number(product.discountPercent);
+    }
+    if (product?.originalPrice && product?.price && Number(product.originalPrice) > Number(product.price)) {
+      return Math.round(((Number(product.originalPrice) - Number(product.price)) / Number(product.originalPrice)) * 100);
+    }
+    return 0;
+  }, [product?.discountPercent, product?.originalPrice, product?.price]);
+
   // Reviews state
   const productRefId = product?.id || product?._id?.toString();
   const [reviews, setReviews] = useState([]);
@@ -173,9 +184,9 @@ export default function ProductDetails() {
         {/* Left: Images Column */}
         <div className="space-y-4">
           <div className="aspect-square rounded-2xl overflow-hidden bg-[#FBF8F2] border border-[#E8DFC8] relative shadow-inner">
-            {product.discountPercent > 0 && (
+            {discountPercent > 0 && (
               <span className="absolute top-4 left-4 z-10 bg-[#C59B27] text-white text-xs font-bold px-3 py-1 rounded-full shadow">
-                {product.discountPercent}% OFF
+                {discountPercent}% OFF
               </span>
             )}
             <button
@@ -253,13 +264,18 @@ export default function ProductDetails() {
             </div>
 
             {/* Price Row */}
-            <div className="flex items-baseline gap-3 pt-2">
+            <div className="flex items-baseline gap-3 pt-2 flex-wrap">
               <span className="text-2xl sm:text-3xl font-bold text-[#1C1917]">
                 ₹{product.price.toLocaleString('en-IN')}
               </span>
-              {product.originalPrice && (
+              {product.originalPrice && Number(product.originalPrice) > Number(product.price) && (
                 <span className="text-base text-stone-400 line-through">
                   ₹{product.originalPrice.toLocaleString('en-IN')}
+                </span>
+              )}
+              {discountPercent > 0 && (
+                <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                  {discountPercent}% OFF
                 </span>
               )}
               <span className="text-xs font-semibold text-[#855F14]">

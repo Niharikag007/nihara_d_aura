@@ -162,6 +162,11 @@ export default function ProductCard({ product }) {
                       ₹{product.originalPrice.toLocaleString('en-IN')}
                     </span>
                   )}
+                  {discountPct > 0 && (
+                    <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                      {discountPct}% off
+                    </span>
+                  )}
                 </div>
               </div>
 

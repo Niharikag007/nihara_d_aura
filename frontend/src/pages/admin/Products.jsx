@@ -10,7 +10,7 @@ import DataTable from '../../components/admin/DataTable';
 import Modal from '../../components/admin/Modal';
 import StatusPill from '../../components/admin/StatusPill';
 import ConfirmDialog from '../../components/admin/ConfirmDialog';
-import { formatINR, calcMargin } from '../../utils/adminUtils';
+import { formatINR } from '../../utils/adminUtils';
 import { getProductImage, isArtificialJewellery } from '../../data/jewelleryCategories';
 
 export default function Products() {
@@ -77,25 +77,15 @@ export default function Products() {
     Candles: ['Scented Candles', 'Aromatherapy', 'Decorative Candles', 'Gift Sets', 'Reed Diffusers']
   };
 
-  const targetMargins = settings.targetMargins || { Jewellery: 18, Makeup: 45, Nails: 55, Candles: 60 };
-
-  // Calculate live margin readout in form
-  const liveCost = parseFloat(formData.cost) || 0;
-  const livePrice = parseFloat(formData.price) || 0;
-  const currentMargin = livePrice > 0 ? ((livePrice - liveCost) / livePrice) * 100 : 0;
-  const targetForCollection = targetMargins[formData.categories] || 25;
-
-  // Price suggestion from cost formula: price = cost / (1 - targetMargin / 100)
-  const handleSuggestPrice = () => {
-    if (!liveCost || liveCost <= 0) {
-      setFormErrors(prev => ({ ...prev, cost: 'Enter a valid cost first' }));
-      return;
-    }
-    const target = targetMargins[formData.categories] || 25;
-    const suggested = Math.round(liveCost / (1 - target / 100));
-    setFormData(prev => ({ ...prev, price: String(suggested) }));
-    setFormErrors(prev => ({ ...prev, price: undefined }));
-  };
+  // Live auto-calculated discount % for form
+  const liveOriginalPrice = parseFloat(formData.originalPrice) || 0;
+  const liveSellingPrice = parseFloat(formData.price) || 0;
+  const liveCalculatedDiscount = (liveOriginalPrice > 0 && liveSellingPrice > 0 && liveOriginalPrice > liveSellingPrice)
+    ? Math.round(((liveOriginalPrice - liveSellingPrice) / liveOriginalPrice) * 100)
+    : 0;
+  const liveDiscountSavings = (liveOriginalPrice > liveSellingPrice)
+    ? (liveOriginalPrice - liveSellingPrice)
+    : 0;
 
   const openAddModal = () => {
     setEditingProduct(null);
@@ -104,7 +94,7 @@ export default function Products() {
       categories: productCategories[0],
       subcategory: '',
       description: '',
-      cost: '',
+      cost: '0',
       price: '',
       originalPrice: '',
       discountPercent: '',
@@ -120,15 +110,21 @@ export default function Products() {
 
   const openEditModal = (p) => {
     setEditingProduct(p);
+    const orig = p.originalPrice ? String(p.originalPrice) : '';
+    const sell = p.price ? String(p.price) : '';
+    let disc = p.discountPercent ? String(p.discountPercent) : '';
+    if (!disc && orig && sell && parseFloat(orig) > parseFloat(sell)) {
+      disc = String(Math.round(((parseFloat(orig) - parseFloat(sell)) / parseFloat(orig)) * 100));
+    }
     setFormData({
       name: p.name,
       categories: p.productCollection || p.categories || p.collection || 'Jewellery',
       subcategory: p.subcategory || '',
       description: p.description || '',
-      cost: String(p.cost),
-      price: String(p.price),
-      originalPrice: p.originalPrice ? String(p.originalPrice) : '',
-      discountPercent: p.discountPercent ? String(p.discountPercent) : '',
+      cost: p.cost ? String(p.cost) : '0',
+      price: sell,
+      originalPrice: orig,
+      discountPercent: disc,
       stock: String(p.stock),
       stockReason: '',
       status: p.status,
@@ -146,8 +142,11 @@ export default function Products() {
     if (!formData.name.trim()) errors.name = 'Product name is required';
     if (!formData.description.trim()) errors.description = 'Product description is required';
     if (!formData.imageFile && !formData.image.trim()) errors.image = 'Product image is required';
-    if (!formData.cost || parseFloat(formData.cost) <= 0) errors.cost = 'Enter a valid cost (> 0)';
-    if (!formData.price || parseFloat(formData.price) <= 0) errors.price = 'Enter a valid price (> 0)';
+    if (!formData.price || parseFloat(formData.price) <= 0) errors.price = 'Enter a valid selling price (> 0)';
+    if (formData.originalPrice && parseFloat(formData.originalPrice) <= 0) errors.originalPrice = 'Original price must be greater than 0';
+    if (formData.originalPrice && formData.price && parseFloat(formData.originalPrice) < parseFloat(formData.price)) {
+      errors.originalPrice = 'Original price should be equal to or higher than selling price';
+    }
     if (formData.stock === '' || !Number.isInteger(stockQuantity) || stockQuantity < 0) errors.stock = 'Enter a whole stock quantity (≥ 0)';
     const stockChanged = editingProduct && stockQuantity !== Number(editingProduct.stock);
     if (stockChanged && !formData.stockReason.trim()) errors.stockReason = 'Add a reason for changing stock.';
@@ -156,6 +155,12 @@ export default function Products() {
       setFormErrors(errors);
       return;
     }
+
+    const sellPriceNum = parseFloat(formData.price);
+    const origPriceNum = parseFloat(formData.originalPrice) || 0;
+    const computedDiscount = (origPriceNum > 0 && sellPriceNum > 0 && origPriceNum > sellPriceNum)
+      ? Math.round(((origPriceNum - sellPriceNum) / origPriceNum) * 100)
+      : 0;
 
     // Create FormData for file upload
     const formPayload = new FormData();
@@ -166,10 +171,10 @@ export default function Products() {
     formPayload.append('categorySlug', formData.categories.toLowerCase());
     formPayload.append('subcategory', formData.subcategory.trim());
     formPayload.append('description', formData.description.trim());
-    formPayload.append('cost', parseFloat(formData.cost));
-    formPayload.append('price', parseFloat(formData.price));
-    if (formData.originalPrice) formPayload.append('originalPrice', parseFloat(formData.originalPrice));
-    if (formData.discountPercent) formPayload.append('discountPercent', parseFloat(formData.discountPercent));
+    formPayload.append('cost', 0);
+    formPayload.append('price', sellPriceNum);
+    if (origPriceNum > 0) formPayload.append('originalPrice', origPriceNum);
+    formPayload.append('discountPercent', computedDiscount);
     formPayload.append('stock', stockQuantity);
     formPayload.append('status', formData.status);
 
@@ -277,15 +282,13 @@ export default function Products() {
       if (statusFilter === 'no_sales') {
         return p.status === 'Live' && (p.soldLast30 === 0 || !p.soldLast30);
       }
-      if (statusFilter === 'below_margin') {
-        const m = calcMargin(p.cost, p.price);
-        const productCategory = p.productCollection || p.categories || p.collection;
-        const target = targetMargins[productCategory] || 25;
-        return m < target;
+      if (statusFilter === 'below_margin' || statusFilter === 'discounted') {
+        const hasDiscount = (p.discountPercent > 0) || (p.originalPrice && p.price && p.originalPrice > p.price);
+        return p.status === 'Live' && hasDiscount;
       }
       return true;
     });
-  }, [products, collectionFilter, statusFilter, settings, targetMargins]);
+  }, [products, collectionFilter, statusFilter, settings]);
 
   // Unsold count for cleanup banner
   const unsoldProducts = useMemo(() => {
@@ -364,14 +367,22 @@ export default function Products() {
       },
     },
     {
-      key: 'cost',
-      header: 'Cost',
+      key: 'originalPrice',
+      header: 'Original Price',
       sortable: true,
-      render: (val) => <span className="text-xs font-mono text-stone-500">{formatINR(val)}</span>,
+      render: (_, row) => {
+        const orig = row.originalPrice || row.price;
+        const hasDiscount = row.originalPrice && row.price && row.originalPrice > row.price;
+        return (
+          <span className={`text-xs font-mono ${hasDiscount ? 'text-stone-400 line-through' : 'text-stone-600 dark:text-stone-300'}`}>
+            {formatINR(orig)}
+          </span>
+        );
+      },
     },
     {
       key: 'price',
-      header: 'Price',
+      header: 'Selling Price',
       sortable: true,
       render: (val) => (
         <span className="text-xs font-bold font-serif text-[#1e1519] dark:text-stone-100">
@@ -380,25 +391,22 @@ export default function Products() {
       ),
     },
     {
-      key: 'margin',
-      header: 'Margin %',
+      key: 'discountPercent',
+      header: 'Discount %',
       sortable: true,
       render: (_, row) => {
-        const m = calcMargin(row.cost, row.price);
-        const productCategory = row.productCollection || row.categories || row.collection;
-        const target = targetMargins[productCategory] || 25;
-        const isHealthy = m >= target;
-        const isClose = m >= target - 5;
-        const color = isHealthy ? '#1d8f6a' : isClose ? '#d9801a' : '#c4425e';
-
-        return (
-          <div className="inline-flex items-center gap-1.5 font-semibold text-xs" style={{ color }}>
-            <span>{m}%</span>
-            <span className="text-[10px] text-stone-400 font-normal">
-              (tgt {target}%)
+        let disc = row.discountPercent;
+        if (!disc && row.originalPrice && row.price && row.originalPrice > row.price) {
+          disc = Math.round(((row.originalPrice - row.price) / row.originalPrice) * 100);
+        }
+        if (disc && Number(disc) > 0) {
+          return (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-[#C59B27]/15 text-[#855F14] dark:text-[#E2C068] border border-[#DFBC77]/60">
+              {disc}% OFF
             </span>
-          </div>
-        );
+          );
+        }
+        return <span className="text-xs text-stone-400 font-mono">—</span>;
       },
     },
     {
@@ -457,7 +465,7 @@ export default function Products() {
             Product inventory
           </h1>
           <p className={`text-xs sm:text-sm mt-0.5 ${darkMode ? 'text-stone-400' : 'text-stone-500'}`}>
-            Manage categories stock, pricing margins, and catalog statuses
+            Manage category stock, pricing, discounts, and catalog statuses
           </p>
         </div>
         <button
@@ -562,7 +570,7 @@ export default function Products() {
           <option value="low_stock">Low stock (≤ {settings.lowStockThreshold || 5})</option>
           <option value="out_of_stock">Out of stock (0 units)</option>
           <option value="no_sales">No sales in 30 days</option>
-          <option value="below_margin">Below target margin</option>
+          <option value="discounted">Discounted products</option>
         </select>
 
         {statusFilter !== 'all' && (
@@ -648,7 +656,7 @@ export default function Products() {
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
         title={editingProduct ? 'Edit product' : 'Add new product'}
-        subtitle="Manage SKU information, cost, retail pricing, and live margin"
+        subtitle="Manage product details, original price, selling price, and automatic discount"
       >
         <form onSubmit={handleSaveProduct} className="space-y-4">
           <div>
@@ -762,46 +770,59 @@ export default function Products() {
             )}
           </div>
 
+          {/* Price & Auto-Calculated Discount Section */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
-                Artisan / Supplier cost (₹) *
+                Original Price (₹) * <span className="text-[10px] text-stone-400 font-normal">(MRP / Strikethrough)</span>
               </label>
               <input
                 type="number"
                 min="1"
                 step="any"
-                value={formData.cost}
-                onChange={(e) => setFormData(p => ({ ...p, cost: e.target.value }))}
-                placeholder="e.g. 18500"
+                value={formData.originalPrice}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const orig = parseFloat(val) || 0;
+                  const sell = parseFloat(formData.price) || 0;
+                  const disc = (orig > 0 && sell > 0 && orig > sell) ? Math.round(((orig - sell) / orig) * 100) : 0;
+                  setFormData(p => ({
+                    ...p,
+                    originalPrice: val,
+                    discountPercent: disc > 0 ? String(disc) : '',
+                  }));
+                  setFormErrors(p => ({ ...p, originalPrice: undefined }));
+                }}
+                placeholder="e.g. 635"
                 className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
                   darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
                 }`}
               />
-              {formErrors.cost && <p className="text-[11px] text-rose-500 mt-1">{formErrors.cost}</p>}
+              {formErrors.originalPrice && <p className="text-[11px] text-rose-500 mt-1">{formErrors.originalPrice}</p>}
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-semibold text-stone-700 dark:text-stone-300">
-                  Retail price (₹) *
-                </label>
-                <button
-                  type="button"
-                  onClick={handleSuggestPrice}
-                  className="text-[11px] font-semibold text-[#b58a2a] hover:underline flex items-center gap-1"
-                >
-                  <Sparkles className="w-3 h-3" />
-                  Suggest from cost
-                </button>
-              </div>
+              <label className="block text-xs font-semibold mb-1 text-stone-700 dark:text-stone-300">
+                Selling Price (₹) * <span className="text-[10px] text-stone-400 font-normal">(Actual price to customer)</span>
+              </label>
               <input
                 type="number"
                 min="1"
                 step="any"
                 value={formData.price}
-                onChange={(e) => setFormData(p => ({ ...p, price: e.target.value }))}
-                placeholder="e.g. 22600"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  const sell = parseFloat(val) || 0;
+                  const orig = parseFloat(formData.originalPrice) || 0;
+                  const disc = (orig > 0 && sell > 0 && orig > sell) ? Math.round(((orig - sell) / orig) * 100) : 0;
+                  setFormData(p => ({
+                    ...p,
+                    price: val,
+                    discountPercent: disc > 0 ? String(disc) : '',
+                  }));
+                  setFormErrors(p => ({ ...p, price: undefined }));
+                }}
+                placeholder="e.g. 610"
                 className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
                   darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
                 }`}
@@ -810,63 +831,7 @@ export default function Products() {
             </div>
           </div>
 
-          {/* Optional MRP and Discount Badge Inputs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="text-xs font-semibold text-stone-700 dark:text-stone-300 block mb-1">
-                Original MRP (₹) <span className="text-[10px] text-stone-400 font-normal">(Strikethrough price)</span>
-              </label>
-              <input
-                type="number"
-                min="0"
-                step="any"
-                value={formData.originalPrice}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  const mrp = parseFloat(val);
-                  const price = parseFloat(formData.price);
-                  let autoDiscount = formData.discountPercent;
-                  if (mrp && price && mrp > price) {
-                    autoDiscount = String(Math.round(((mrp - price) / mrp) * 100));
-                  }
-                  setFormData(p => ({ ...p, originalPrice: val, discountPercent: autoDiscount }));
-                }}
-                placeholder="e.g. 900"
-                className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
-                  darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
-                }`}
-              />
-            </div>
-
-            <div>
-              <label className="text-xs font-semibold text-stone-700 dark:text-stone-300 block mb-1">
-                Discount Badge (% Off) <span className="text-[10px] text-stone-400 font-normal">(e.g. 18 for 18% OFF)</span>
-              </label>
-              <input
-                type="number"
-                min="0"
-                max="99"
-                step="1"
-                value={formData.discountPercent}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  const disc = parseFloat(val);
-                  const price = parseFloat(formData.price);
-                  let autoMrp = formData.originalPrice;
-                  if (disc && price && disc > 0 && disc < 100) {
-                    autoMrp = String(Math.round(price / (1 - disc / 100)));
-                  }
-                  setFormData(p => ({ ...p, discountPercent: val, originalPrice: autoMrp }));
-                }}
-                placeholder="e.g. 18"
-                className={`w-full px-3.5 py-2 rounded-xl text-xs border focus:outline-none focus:ring-2 focus:ring-[#b58a2a] ${
-                  darkMode ? 'bg-[#121010] border-white/10 text-white' : 'bg-white border-stone-200'
-                }`}
-              />
-            </div>
-          </div>
-
-          {/* Live margin readout card */}
+          {/* Auto-Calculated Discount Display Card */}
           <div
             className="p-3.5 rounded-xl border text-xs flex items-center justify-between"
             style={{
@@ -874,22 +839,28 @@ export default function Products() {
               borderColor: 'rgba(181, 138, 42, 0.3)',
             }}
           >
-            <div>
+            <div className="flex items-center gap-2">
               <span className="font-semibold text-stone-700 dark:text-stone-300">
-                Live calculated margin:
+                Discount:
               </span>
-              <span
-                className="ml-2 font-bold font-serif text-sm"
-                style={{
-                  color: currentMargin >= targetForCollection ? '#1d8f6a' : '#c4425e',
-                }}
-              >
-                {livePrice > 0 ? `${currentMargin.toFixed(1)}%` : '—'}
-              </span>
+              {liveCalculatedDiscount > 0 ? (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#C59B27] text-white shadow-xs">
+                  {liveCalculatedDiscount}% OFF
+                </span>
+              ) : (
+                <span className="text-xs text-stone-400 font-medium">
+                  {liveOriginalPrice > 0 && liveSellingPrice > 0 && liveSellingPrice >= liveOriginalPrice
+                    ? 'No discount (Selling price ≥ Original price)'
+                    : 'Auto-calculates % when both prices are entered'}
+                </span>
+              )}
             </div>
-            <div className="text-[11px] text-stone-500">
-              Target for {formData.categories}: {targetForCollection}%
-            </div>
+
+            {liveCalculatedDiscount > 0 && (
+              <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                Customer saves ₹{liveDiscountSavings.toLocaleString('en-IN')}
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

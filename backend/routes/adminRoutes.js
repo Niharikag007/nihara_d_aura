@@ -203,12 +203,13 @@ router.post('/products', upload.single('image'), async (req, res) => {
     if (productData.originalPrice !== undefined && productData.originalPrice !== '') productData.originalPrice = Number(productData.originalPrice);
     if (productData.discountPercent !== undefined && productData.discountPercent !== '') productData.discountPercent = Number(productData.discountPercent);
 
-    // Auto-calculate discount or original price if one is provided
-    if (productData.originalPrice && productData.price && productData.originalPrice > productData.price && !productData.discountPercent) {
-      productData.discountPercent = Math.round(((productData.originalPrice - productData.price) / productData.originalPrice) * 100);
-    }
-    if (productData.discountPercent && productData.price && !productData.originalPrice) {
-      productData.originalPrice = Math.round(productData.price / (1 - productData.discountPercent / 100));
+    // Auto-calculate discount percentage whenever originalPrice and price are provided
+    if (productData.originalPrice && productData.price) {
+      if (productData.originalPrice > productData.price) {
+        productData.discountPercent = Math.round(((productData.originalPrice - productData.price) / productData.originalPrice) * 100);
+      } else {
+        productData.discountPercent = 0;
+      }
     }
 
     if (productData.stock) productData.stock = Number(productData.stock);
@@ -292,12 +293,19 @@ router.patch('/products/:id', upload.single('image'), async (req, res) => {
     if (updateData.originalPrice !== undefined) updateData.originalPrice = Number(updateData.originalPrice) || 0;
     if (updateData.discountPercent !== undefined) updateData.discountPercent = Number(updateData.discountPercent) || 0;
 
-    // Auto-calculate discount or original price if one is provided
-    if (updateData.originalPrice && updateData.price && updateData.originalPrice > updateData.price && !updateData.discountPercent) {
-      updateData.discountPercent = Math.round(((updateData.originalPrice - updateData.price) / updateData.originalPrice) * 100);
-    }
-    if (updateData.discountPercent && updateData.price && !updateData.originalPrice) {
-      updateData.originalPrice = Math.round(updateData.price / (1 - updateData.discountPercent / 100));
+    // Auto-calculate discount percentage whenever originalPrice and price are provided
+    if (updateData.originalPrice !== undefined || updateData.price !== undefined) {
+      const existingProduct = await Product.findById(id);
+      const effectivePrice = updateData.price !== undefined ? updateData.price : existingProduct?.price;
+      const effectiveOriginalPrice = updateData.originalPrice !== undefined ? updateData.originalPrice : existingProduct?.originalPrice;
+
+      if (effectiveOriginalPrice && effectivePrice) {
+        if (effectiveOriginalPrice > effectivePrice) {
+          updateData.discountPercent = Math.round(((effectiveOriginalPrice - effectivePrice) / effectiveOriginalPrice) * 100);
+        } else {
+          updateData.discountPercent = 0;
+        }
+      }
     }
 
     if (updateData.stock) updateData.stock = Number(updateData.stock);

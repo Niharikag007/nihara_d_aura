@@ -60,6 +60,16 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
   const displayImage = getProductImage(product, activeImageIdx);
   const displayImages = getProductImages(product);
 
+  const discountPercent = React.useMemo(() => {
+    if (product?.discountPercent && Number(product.discountPercent) > 0) {
+      return Number(product.discountPercent);
+    }
+    if (product?.originalPrice && product?.price && Number(product.originalPrice) > Number(product.price)) {
+      return Math.round(((Number(product.originalPrice) - Number(product.price)) / Number(product.originalPrice)) * 100);
+    }
+    return 0;
+  }, [product?.discountPercent, product?.originalPrice, product?.price]);
+
   const cleanCategoryLabel = (() => {
     if (isArtificialJewellery(product)) return `${ARTIFICIAL_JEWELLERY.name} • ${getJewellerySubcategory(product)}`;
     if (!product.subcategory || product.subcategory.toLowerCase().startsWith('all') || product.subcategory.toLowerCase() === product.category?.toLowerCase()) {
@@ -110,9 +120,9 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
             {/* Left: Product Images */}
             <div className="p-6 bg-[#FBF8F2] flex flex-col justify-between border-b md:border-b-0 md:border-r border-[#E8DFC8]">
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-white border border-[#E8DFC8] shadow-sm">
-                {product.discountPercent > 0 && (
+                {discountPercent > 0 && (
                   <span className="absolute top-3 left-3 z-10 bg-[#C59B27] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow">
-                    {product.discountPercent}% OFF
+                    {discountPercent}% OFF
                   </span>
                 )}
 
@@ -203,13 +213,18 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                 </div>
 
                 {/* Price */}
-                <div className="flex items-baseline gap-2.5 mt-3 pt-2 border-t border-stone-100">
+                <div className="flex items-baseline gap-2.5 mt-3 pt-2 border-t border-stone-100 flex-wrap">
                   <span className="text-2xl font-bold text-[#1C1917]">
                     ₹{product.price.toLocaleString('en-IN')}
                   </span>
                   {product.originalPrice && product.originalPrice > product.price && (
                     <span className="text-sm text-stone-400 line-through">
                       ₹{product.originalPrice.toLocaleString('en-IN')}
+                    </span>
+                  )}
+                  {discountPercent > 0 && (
+                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      {discountPercent}% OFF
                     </span>
                   )}
                 </div>
