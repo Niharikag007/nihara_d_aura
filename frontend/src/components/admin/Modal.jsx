@@ -1,8 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { cn } from '../../utils/adminUtils';
 
 export default function Modal({ open, onClose, title, subtitle, children, maxWidth = 'max-w-2xl' }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Prevent background scrolling when modal is open
   useEffect(() => {
     if (!open) return;
@@ -33,23 +40,42 @@ export default function Modal({ open, onClose, title, subtitle, children, maxWid
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-hidden overscroll-contain"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 overflow-hidden overscroll-contain"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+      }}
       role="dialog"
       aria-modal="true"
     >
-      {/* Backdrop - Opaque dark overlay */}
+      {/* Backdrop - Full screen opaque dark overlay covering entire viewport */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-[2px] transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-black/75 backdrop-blur-[2px] transition-opacity animate-fade-in"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100vw',
+          height: '100vh',
+        }}
         onClick={onClose}
         aria-hidden="true"
       />
+
       {/* Panel */}
       <div className={cn(
-        'relative w-full bg-white dark:bg-[#1a1717] rounded-2xl border border-[#e9e3dd] dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.25)] flex flex-col max-h-[90vh] animate-slide-up overscroll-contain',
+        'relative z-10 w-full bg-white dark:bg-[#1a1717] rounded-2xl border border-[#e9e3dd] dark:border-white/10 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] flex flex-col max-h-[90vh] animate-slide-up overscroll-contain',
         maxWidth
       )}>
         {/* Header */}
@@ -78,6 +104,7 @@ export default function Modal({ open, onClose, title, subtitle, children, maxWid
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
