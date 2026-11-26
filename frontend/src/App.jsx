@@ -41,6 +41,7 @@ const VerifyOTP = lazy(() => lazyRetry(() => import('./pages/VerifyOTP')));
 const About = lazy(() => lazyRetry(() => import('./pages/About')));
 const HelpCenter = lazy(() => lazyRetry(() => import('./pages/HelpCenter')));
 const Notifications = lazy(() => lazyRetry(() => import('./pages/Notifications')));
+const ReturnsAndRefunds = lazy(() => lazyRetry(() => import('./pages/ReturnsAndRefunds')));
 
 // Admin Console Layout & Pages — with auto-retry
 const AdminLayout = lazy(() => lazyRetry(() => import('./components/admin/AdminLayout')));
@@ -157,6 +158,7 @@ function AppLayout() {
             <Route path="/bookings" element={<ProtectedCustomerRoute><Bookings /></ProtectedCustomerRoute>} />
             <Route path="/bookings/:id" element={<ProtectedCustomerRoute><Bookings /></ProtectedCustomerRoute>} />
             <Route path="/addresses" element={<ProtectedCustomerRoute><Addresses /></ProtectedCustomerRoute>} />
+            <Route path="/returns-refunds" element={<ProtectedCustomerRoute><ReturnsAndRefunds /></ProtectedCustomerRoute>} />
 
             {/* Catch-all redirect */}
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -310,7 +310,7 @@ export default function Profile() {
     {
       title: 'Returns & Refunds',
       icon: RotateCcw,
-      onClick: () => showToast('Returns & Refunds: Contact support@niharadaura.com', 'info')
+      link: '/returns-refunds'
     },
     {
       title: 'Shipping Addresses',
