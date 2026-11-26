@@ -31,7 +31,7 @@ export default function Checkout() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [createdOrderDetails, setCreatedOrderDetails] = useState(null);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState('UPI');
+  const [paymentMethod, setPaymentMethod] = useState('ONLINE');
   const [paymentGateway, setPaymentGateway] = useState({ enabled: false, keyId: null });
   const [orderError, setOrderError] = useState('');
   const [addressError, setAddressError] = useState('');
@@ -89,7 +89,7 @@ export default function Checkout() {
     // If using saved address and all fields are present, treat as valid
     if (paymentMethod === 'COD') {
       placeOrder('COD');
-    } else if (paymentMethod === 'ONLINE') {
+    } else if (paymentMethod === 'ONLINE' || paymentGateway.enabled) {
       placeOnlineOrder();
     } else {
       setIsGatewayOpen(true);
@@ -229,7 +229,7 @@ export default function Checkout() {
           <h1 className="mt-2 font-serif text-3xl font-bold text-[#1C1917] sm:text-4xl">
             Checkout & Secure Payment
           </h1>
-          <p className="mt-1 text-xs text-stone-500">Pay securely using UPI</p>
+          <p className="mt-1 text-xs text-stone-500">Pay securely via Razorpay (UPI, Cards, NetBanking) or COD</p>
         </div>
       </div>
 
@@ -342,14 +342,14 @@ export default function Checkout() {
               Secure
             </div>
           </div>
-          <div className={`grid grid-cols-1 gap-3 ${paymentGateway.enabled ? 'sm:grid-cols-3' : 'sm:grid-cols-2'}`}>
-            {paymentGateway.enabled && (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {paymentGateway.enabled ? (
               <button
                 type="button"
                 onClick={() => setPaymentMethod('ONLINE')}
                 className={`flex items-center gap-3 rounded-xl border p-3.5 text-left transition ${
                   paymentMethod === 'ONLINE'
-                    ? 'border-[#C59B27] bg-[#FAF3E8]'
+                    ? 'border-[#C59B27] bg-[#FAF3E8] shadow-xs'
                     : 'border-stone-200 bg-[#FCF9F2] hover:border-[#DFBC77]'
                 }`}
               >
@@ -357,34 +357,38 @@ export default function Checkout() {
                   <CreditCard className="h-4 w-4" />
                 </span>
                 <div>
-                  <span className="block text-xs font-bold text-stone-800">Online Payment</span>
-                  <span className="text-[10px] text-stone-500">UPI, cards, net banking</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="block text-xs font-bold text-stone-800">Online & UPI (Razorpay)</span>
+                    <span className="rounded bg-[#C59B27]/15 px-1.5 py-0.5 text-[9px] font-bold text-[#855F14]">Recommended</span>
+                  </div>
+                  <span className="text-[10px] text-stone-500">Google Pay, PhonePe, Paytm, Cards, NetBanking</span>
+                </div>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('UPI')}
+                className={`flex items-center gap-3 rounded-xl border p-3.5 text-left transition ${
+                  paymentMethod === 'UPI'
+                    ? 'border-[#C59B27] bg-[#FAF3E8]'
+                    : 'border-stone-200 bg-[#FCF9F2] hover:border-[#DFBC77]'
+                }`}
+              >
+                <span className={`flex h-9 w-9 items-center justify-center rounded-lg text-white ${paymentMethod === 'UPI' ? 'bg-[#C59B27]' : 'bg-stone-400'}`}>
+                  <Smartphone className="h-4 w-4" />
+                </span>
+                <div>
+                  <span className="block text-xs font-bold text-stone-800">UPI / QR Payment</span>
+                  <span className="text-[10px] text-stone-500">Pay using UPI app</span>
                 </div>
               </button>
             )}
             <button
               type="button"
-              onClick={() => setPaymentMethod('UPI')}
-              className={`flex items-center gap-3 rounded-xl border p-3.5 text-left transition ${
-                paymentMethod === 'UPI'
-                  ? 'border-[#C59B27] bg-[#FAF3E8]'
-                  : 'border-stone-200 bg-[#FCF9F2] hover:border-[#DFBC77]'
-              }`}
-            >
-              <span className={`flex h-9 w-9 items-center justify-center rounded-lg text-white ${paymentMethod === 'UPI' ? 'bg-[#C59B27]' : 'bg-stone-400'}`}>
-                <Smartphone className="h-4 w-4" />
-              </span>
-              <div>
-                <span className="block text-xs font-bold text-stone-800">UPI / GPay / PhonePe</span>
-                <span className="text-[10px] text-stone-500">Pay from your UPI app</span>
-              </div>
-            </button>
-            <button
-              type="button"
               onClick={() => setPaymentMethod('COD')}
               className={`flex items-center gap-3 rounded-xl border p-3.5 text-left transition ${
                 paymentMethod === 'COD'
-                  ? 'border-[#C59B27] bg-[#FAF3E8]'
+                  ? 'border-[#C59B27] bg-[#FAF3E8] shadow-xs'
                   : 'border-stone-200 bg-[#FCF9F2] hover:border-[#DFBC77]'
               }`}
             >
@@ -393,7 +397,7 @@ export default function Checkout() {
               </span>
               <div>
                 <span className="block text-xs font-bold text-stone-800">Cash on Delivery</span>
-                <span className="text-[10px] text-stone-500">Pay when you receive</span>
+                <span className="text-[10px] text-stone-500">Pay cash upon delivery</span>
               </div>
             </button>
           </div>
