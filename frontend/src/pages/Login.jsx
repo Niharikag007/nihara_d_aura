@@ -162,7 +162,7 @@ export default function Login() {
                   setAdminEmail(e.target.value);
                   if (errorMessage) setErrorMessage('');
                 }}
-                placeholder="niharikagautam007@gmail.com"
+                placeholder="admin@gmail.com"
                 className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#E8DFC8] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
               />
             </div>
