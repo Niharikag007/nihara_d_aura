@@ -1,22 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams, Navigate } from 'react-router-dom';
 import { 
   Sparkles, 
-  ArrowRight, 
   ShieldCheck, 
-  Lock,
+  Lock, 
   Mail, 
-  AlertCircle,
-  Eye,
-  EyeOff,
-  RefreshCw,
-  Edit3,
-  LoaderCircle
+  AlertCircle, 
+  Eye, 
+  EyeOff, 
+  LoaderCircle,
+  ArrowRight
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { api } from '../services/api';
 import Logo from '../components/common/Logo';
+
+// Authorized Admin Credentials
+const AUTHORIZED_ADMIN_EMAIL = 'niharikagautam007@gmail.com';
+const AUTHORIZED_ADMIN_PASSWORD = 'Niharika_2026';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -24,378 +26,88 @@ export default function Login() {
   const { login, isAuthenticated, isAdmin } = useAuth();
   const { showToast } = useToast();
 
-  const roleParam = searchParams.get('role');
   const redirectParam = searchParams.get('redirect');
-  const emailParam = searchParams.get('email');
-  const verifyParam = searchParams.get('verify');
 
-  // Admin Mode detection
-  const [isAdminMode, setIsAdminMode] = useState(
-    roleParam === 'admin' || redirectParam === '/admin'
-  );
-
-  // OTP flow step: 'enter_identifier' | 'enter_otp'
-  const [otpStep, setOtpStep] = useState('enter_identifier');
-
-  // Admin OTP flow step: 'enter_credentials' | 'enter_admin_otp'
-  const [adminOtpStep, setAdminOtpStep] = useState('enter_credentials');
-
-  // Patron input (Email or Phone Number)
-  const [identifier, setIdentifier] = useState('');
-
-  // Admin credentials (only for Staff Portal)
+  // Admin credentials state
   const [adminEmail, setAdminEmail] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
   const [showAdminPassword, setShowAdminPassword] = useState(false);
-  
-  // 6-digit OTP array
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const otpInputsRef = useRef([]);
-  const verificationInProgress = useRef(false);
 
-  // States
+  // Status & error states
   const [errorMessage, setErrorMessage] = useState('');
-  const [emailInputError, setEmailInputError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isResending, setIsResending] = useState(false);
-  const [resendTimer, setResendTimer] = useState(30);
 
-  // Sync params if URL changes (Admin mode or Registration redirect)
-  useEffect(() => {
-    if (roleParam === 'admin' || redirectParam === '/admin') {
-      setIsAdminMode(true);
-      setAdminOtpStep('enter_credentials');
-    }
-    if (emailParam) {
-      setIdentifier(emailParam);
-      if (verifyParam === 'true') {
-        setOtpStep('enter_otp');
-        setResendTimer(30);
-      }
-    }
-  }, [roleParam, redirectParam, emailParam, verifyParam]);
-
-  // Resend Countdown Timer
-  useEffect(() => {
-    let interval = null;
-    if (resendTimer > 0) {
-      interval = setInterval(() => {
-        setResendTimer((prev) => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [resendTimer]);
-
-  // If already authenticated, redirect
-  if (isAuthenticated) {
-    if (isAdminMode && isAdmin) {
-      return <Navigate to={redirectParam || '/admin'} replace />;
-    }
-    if (!isAdminMode) {
-      return <Navigate to={redirectParam && redirectParam !== '/admin' ? redirectParam : '/profile'} replace />;
-    }
+  // If already authenticated as admin, redirect to admin dashboard
+  if (isAuthenticated && isAdmin) {
+    return <Navigate to={redirectParam || '/admin'} replace />;
   }
 
-  // Handle Send OTP (Email via Real Backend)
-  const handleSendOtp = async (e) => {
-    if (e) e.preventDefault();
-    setErrorMessage('');
-    setEmailInputError(false);
-
-    const rawInput = identifier.trim().toLowerCase();
-    if (!rawInput) {
-      setErrorMessage('Please enter your email address.');
-      setEmailInputError(true);
-      return;
-    }
-
-    const cleanDigits = rawInput.replace(/[^0-9]/g, '');
-    const isPhone = !rawInput.includes('@') && (cleanDigits.length >= 7 || /^\d+$/.test(rawInput));
-    if (isPhone) {
-      setErrorMessage('Phone/Mobile numbers are not supported for login. Please enter your valid email address (e.g. example@gmail.com) to receive OTP.');
-      setEmailInputError(true);
-      return;
-    }
-
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-    if (!emailRegex.test(rawInput)) {
-      setErrorMessage('Please enter a valid standard email address (e.g., example@gmail.com).');
-      setEmailInputError(true);
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      const res = await api.login(rawInput);
-      setIsSubmitting(false);
-
-      if (res && res.success) {
-        localStorage.setItem('pending_email', rawInput);
-        showToast(res.message || `Verification OTP sent to ${rawInput}`, 'success');
-        navigate('/verify-otp');
-      } else {
-        setErrorMessage(res?.message || 'Failed to dispatch OTP. Please check your email and try again.');
-      }
-    } catch (err) {
-      setIsSubmitting(false);
-      setErrorMessage(err.message || 'Connection error. Please try again.');
-    }
-  };
-
-  // Handle OTP digit changes
-  const handleOtpDigitChange = (val, idx) => {
-    const cleaned = val.replace(/[^0-9]/g, '');
-    const newOtp = [...otp];
-
-    if (cleaned.length > 1) {
-      const pasted = cleaned.slice(0, 6).split('');
-      for (let i = 0; i < 6; i++) {
-        newOtp[i] = pasted[i] || '';
-      }
-      setOtp(newOtp);
-      const nextFocus = Math.min(pasted.length, 5);
-      if (otpInputsRef.current[nextFocus]) {
-        otpInputsRef.current[nextFocus].focus();
-      }
-      if (newOtp.every((digit) => /^\d$/.test(digit))) {
-        if (isAdminMode) {
-          void handleAdminOtpVerification(undefined, newOtp.join(''));
-        } else {
-          void handleVerifyOtp(undefined, newOtp.join(''));
-        }
-      }
-      return;
-    }
-
-    newOtp[idx] = cleaned;
-    setOtp(newOtp);
-
-    if (cleaned && idx < 5) {
-      if (otpInputsRef.current[idx + 1]) {
-        otpInputsRef.current[idx + 1].focus();
-      }
-    }
-
-    if (newOtp.every((digit) => /^\d$/.test(digit))) {
-      if (isAdminMode) {
-        void handleAdminOtpVerification(undefined, newOtp.join(''));
-      } else {
-        void handleVerifyOtp(undefined, newOtp.join(''));
-      }
-    }
-  };
-
-  // Handle Backspace in OTP boxes
-  const handleOtpKeyDown = (e, idx) => {
-    if (e.key === 'Backspace' && !otp[idx] && idx > 0) {
-      if (otpInputsRef.current[idx - 1]) {
-        otpInputsRef.current[idx - 1].focus();
-      }
-    }
-  };
-
-  // Resend OTP
-  const handleResendOtp = async () => {
-    if (resendTimer > 0) return;
-    if (isResending) return;
-    const cleanInput = identifier.trim().toLowerCase();
-    setIsResending(true);
-    setOtp(['', '', '', '', '', '']);
-
-    try {
-      const res = await api.login(cleanInput);
-      if (res && res.success) {
-        setResendTimer(30);
-        showToast(res.message || `Fresh OTP dispatched to ${cleanInput}`, 'info');
-      } else {
-        setErrorMessage(res?.message || 'Failed to resend OTP. Please try again.');
-      }
-    } catch (err) {
-      setErrorMessage(err.message || 'Error requesting a fresh OTP.');
-    } finally {
-      setIsResending(false);
-    }
-
-    if (otpInputsRef.current[0]) {
-      otpInputsRef.current[0].focus();
-    }
-  };
-
-  // Submit OTP Verification
-  const handleVerifyOtp = async (e, verificationCode = otp.join('').trim()) => {
-    e?.preventDefault();
-    if (verificationInProgress.current) return;
-
-    setErrorMessage('');
-
-    if (!/^\d{6}$/.test(verificationCode)) {
-      setErrorMessage('Please enter the complete 6-digit verification code.');
-      return;
-    }
-
-    verificationInProgress.current = true;
-    setIsSubmitting(true);
-    const cleanEmail = identifier.trim().toLowerCase();
-
-    try {
-      const res = await api.verifyOtp(cleanEmail, verificationCode);
-
-      if (res && res.success) {
-        const verifiedUser = res.user || res.data?.user || {
-          id: 'usr_' + Date.now(),
-          name: cleanEmail.split('@')[0] || 'Royal Patron',
-          email: cleanEmail,
-          role: 'user',
-          tier: 'Royal Patron',
-          rewardPoints: 100
-        };
-
-        const loginResult = login(verifiedUser, res.token);
-        if (!loginResult.success) {
-          setErrorMessage(loginResult.message);
-          return;
-        }
-        showToast(`Welcome back, ${verifiedUser.name || 'Patron'}! Authentication verified.`, 'success');
-
-        if (verifiedUser.role === 'admin') {
-          navigate('/admin');
-        } else {
-          navigate(redirectParam && redirectParam !== '/admin' ? redirectParam : '/profile');
-        }
-      } else {
-        setErrorMessage(res?.message || 'Invalid or expired verification code.');
-      }
-    } catch (err) {
-      setErrorMessage(err.message || 'Verification error. Please try again.');
-    } finally {
-      verificationInProgress.current = false;
-      setIsSubmitting(false);
-    }
-  };
-
-  // Submit Admin Password Login (Staff only)
-  const handleAdminPasswordLogin = async (e) => {
+  // Handle Admin Sign In (Strict credentials, NO OTP)
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage('');
-    setIsSubmitting(true);
 
     const cleanEmail = adminEmail.trim().toLowerCase();
+    const cleanPassword = adminPassword;
+
+    if (!cleanEmail || !cleanPassword) {
+      setErrorMessage('Please enter both administrative email and password.');
+      return;
+    }
+
+    // Strict Client-Side Credentials Validation
+    if (cleanEmail !== AUTHORIZED_ADMIN_EMAIL || cleanPassword !== AUTHORIZED_ADMIN_PASSWORD) {
+      setErrorMessage('Access Not Allowed: You do not have permission to access. Only authorized administrator can log in.');
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      const response = await api.login(cleanEmail, adminPassword, 'admin');
+      const response = await api.login(cleanEmail, cleanPassword, 'admin');
       setIsSubmitting(false);
 
-      if (response?.success) {
-        // If OTP is required, show OTP input
-        if (response.requiresOtp || response.message?.toLowerCase().includes('otp')) {
-          setAdminOtpStep('enter_admin_otp');
-          showToast(response.message || 'Login OTP sent successfully to your email', 'success');
-          setResendTimer(30);
-        } else if (response.token && response.user?.role === 'admin') {
-          // Direct login without OTP
-          const result = login(response.user, response.token);
-          if (!result.success) {
-            setErrorMessage(result.message);
-            return;
-          }
-          showToast('Administrator sign-in successful.', 'success');
-          navigate(redirectParam || '/admin');
-        } else {
-          setErrorMessage(response?.message || 'Administrator authentication failed.');
+      if (response?.success && response?.token) {
+        const adminUser = response.user || {
+          id: 'admin_niharika',
+          name: 'Niharika Gautam',
+          fullName: 'Niharika Gautam',
+          email: AUTHORIZED_ADMIN_EMAIL,
+          role: 'admin',
+          tier: 'Administrator'
+        };
+
+        const result = login(adminUser, response.token);
+        if (!result.success) {
+          setErrorMessage(result.message || 'Session creation failed. Please try again.');
+          return;
         }
+
+        showToast('Welcome back, Niharika! Administrator authentication successful.', 'success');
+        navigate(redirectParam || '/admin');
       } else {
-        setErrorMessage(response?.message || 'Administrator authentication failed.');
+        setErrorMessage(
+          response?.message || 'Access Not Allowed: You do not have permission to access. Only authorized administrator can log in.'
+        );
       }
     } catch (error) {
       setIsSubmitting(false);
-      setErrorMessage(error.message || 'Administrator authentication failed.');
-    }
-  };
-
-  // Handle Admin OTP Verification
-  const handleAdminOtpVerification = async (e, verificationCode = otp.join('').trim()) => {
-    e?.preventDefault();
-    if (verificationInProgress.current) return;
-
-    setErrorMessage('');
-
-    if (!/^\d{6}$/.test(verificationCode)) {
-      setErrorMessage('Please enter the complete 6-digit verification code.');
-      return;
-    }
-
-    verificationInProgress.current = true;
-    setIsSubmitting(true);
-    const cleanEmail = adminEmail.trim().toLowerCase();
-
-    try {
-      const res = await api.verifyOtp(cleanEmail, verificationCode);
-
-      if (res && res.success) {
-        const verifiedUser = res.user || res.data?.user || {
-          id: 'usr_' + Date.now(),
-          name: cleanEmail.split('@')[0] || 'Admin',
-          email: cleanEmail,
-          role: 'admin',
-          tier: 'Administrator',
-          rewardPoints: 0
-        };
-
-        const loginResult = login(verifiedUser, res.token);
-        if (!loginResult.success) {
-          setErrorMessage(loginResult.message);
-          return;
-        }
-        showToast(`Welcome back, ${verifiedUser.name || 'Admin'}! Authentication verified.`, 'success');
-        navigate(redirectParam || '/admin');
-      } else {
-        setErrorMessage(res?.message || 'Invalid or expired verification code.');
-      }
-    } catch (err) {
-      setErrorMessage(err.message || 'Verification error. Please try again.');
-    } finally {
-      verificationInProgress.current = false;
-      setIsSubmitting(false);
-    }
-  };
-
-  // Resend Admin OTP
-  const handleResendAdminOtp = async () => {
-    if (resendTimer > 0) return;
-    if (isResending) return;
-    const cleanEmail = adminEmail.trim().toLowerCase();
-    setIsResending(true);
-    setOtp(['', '', '', '', '', '']);
-
-    try {
-      const res = await api.login(cleanEmail, adminPassword, 'admin');
-      if (res && res.success) {
-        setResendTimer(30);
-        showToast(res.message || `Fresh OTP dispatched to ${cleanEmail}`, 'info');
-      } else {
-        setErrorMessage(res?.message || 'Failed to resend OTP. Please try again.');
-      }
-    } catch (err) {
-      setErrorMessage(err.message || 'Error requesting a fresh OTP.');
-    } finally {
-      setIsResending(false);
-    }
-
-    if (otpInputsRef.current[0]) {
-      otpInputsRef.current[0].focus();
+      setErrorMessage(
+        error.message || 'Access Not Allowed: Authentication failed. Please check your credentials.'
+      );
     }
   };
 
   return (
     <div className="min-h-screen bg-[#F7F5F0] flex items-center justify-center p-4 py-12 relative overflow-hidden selection:bg-[#C59B27] selection:text-white">
-      {/* Subtle soft warmth */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#DFBC77]/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Background Soft Glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] bg-[#DFBC77]/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* Main Luxury Login Card */}
+      {/* Main Luxury Card */}
       <div className="bg-white rounded-[32px] sm:rounded-[36px] border border-[#EBE5D8] p-7 sm:p-10 max-w-sm sm:max-w-md w-full shadow-[0_20px_50px_rgba(0,0,0,0.06)] space-y-6 relative z-10 text-center transition-all">
         
-        {/* Top Branding Section */}
+        {/* Branding & Logo */}
         <div className="text-center space-y-3.5">
-          {/* Squircle Logo Container */}
           <div className="flex justify-center">
             <Link to="/" title="Return to Nihara D'Aura Home" className="group">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#FCFAF6] border border-[#DFBC77]/40 flex items-center justify-center p-2.5 shadow-xs transition-transform duration-300 group-hover:scale-105">
@@ -404,362 +116,124 @@ export default function Login() {
             </Link>
           </div>
 
-          {/* Pill Badge */}
+          {/* Badge */}
           <div className="flex justify-center">
             <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-[#DFBC77]/60 bg-[#FAF7F2] text-[#855F14] text-[10.5px] font-semibold tracking-wider uppercase shadow-xs">
               <Sparkles className="w-3.5 h-3.5 text-[#C59B27]" />
-              <span>
-                {isAdminMode
-                  ? adminOtpStep === 'enter_admin_otp'
-                    ? 'SECURITY VERIFICATION'
-                    : 'STAFF PORTAL ACCESS'
-                  : otpStep === 'enter_otp'
-                    ? 'SECURITY VERIFICATION'
-                    : 'JEWELLERY • MAKEUP • SALON'}
-              </span>
+              <span>ADMINISTRATIVE PORTAL</span>
             </div>
           </div>
 
-          {/* Brand Name exactly like Kosmico Wellness */}
-          {!isAdminMode && otpStep !== 'enter_otp' && (
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 tracking-tight">
-              Nihara D'Aura
-            </h2>
-          )}
-
-          {/* Screen Title & Subtitle */}
+          {/* Titles */}
           <div className="space-y-1">
             <h1 className="text-2xl sm:text-[26px] font-bold text-stone-900 tracking-tight">
-              {isAdminMode
-                ? adminOtpStep === 'enter_admin_otp'
-                  ? 'Verify Security Code'
-                  : 'Staff Portal'
-                : otpStep === 'enter_otp'
-                  ? 'Verify Security Code'
-                  : 'Welcome Back'}
+              Admin Portal
             </h1>
-            <p className="text-sm text-stone-500 font-normal max-w-xs mx-auto leading-relaxed">
-              {isAdminMode
-                ? adminOtpStep === 'enter_admin_otp'
-                  ? `Enter the 6-digit verification code dispatched to ${adminEmail}`
-                  : 'Enter administrative credentials to access management console'
-                : otpStep === 'enter_otp'
-                  ? `Enter the 6-digit verification code dispatched to ${identifier}`
-                  : 'Enter your email address to receive a secure OTP'}
+            <p className="text-xs sm:text-sm text-stone-500 font-normal max-w-xs mx-auto leading-relaxed">
+              Enter authorized administrator credentials to access the management console
             </p>
           </div>
         </div>
 
-        {/* Error Alert */}
+        {/* Error Alert Message */}
         {errorMessage && (
-          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-medium flex items-start gap-2.5 shadow-xs animate-shake">
+          <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm font-medium flex items-start gap-2.5 shadow-xs text-left">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-600" />
-            <span>{errorMessage}</span>
+            <span className="leading-snug">{errorMessage}</span>
           </div>
         )}
 
-        {/* -------------------- ADMIN LOGIN FORM -------------------- */}
-        {isAdminMode ? (
-          adminOtpStep === 'enter_credentials' ? (
-            <form noValidate onSubmit={handleAdminPasswordLogin} className="space-y-4">
-              <div>
-                <label className="text-xs sm:text-[13px] font-['Times_New_Roman',_Times,_serif] font-normal tracking-wide text-stone-700 block mb-2 text-left">
-                  Admin Email Address
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
-                    <Mail className="w-4 h-4 text-[#C59B27]" />
-                  </div>
-                  <input
-                    type="email"
-                    required
-                    value={adminEmail}
-                    onChange={(e) => setAdminEmail(e.target.value.toLowerCase())}
-                    placeholder="admin@niharadaura.com"
-                    className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#C59B27] hover:border-[#855F14] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
-                  />
-                </div>
+        {/* Admin Login Form */}
+        <form noValidate onSubmit={handleSubmit} className="space-y-4 text-left">
+          <div>
+            <label className="text-xs sm:text-[13px] font-medium text-stone-700 block mb-1.5">
+              Admin Email Address
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
+                <Mail className="w-4 h-4 text-[#C59B27]" />
               </div>
+              <input
+                type="email"
+                required
+                autoComplete="email"
+                value={adminEmail}
+                onChange={(e) => {
+                  setAdminEmail(e.target.value);
+                  if (errorMessage) setErrorMessage('');
+                }}
+                placeholder="niharikagautam007@gmail.com"
+                className="w-full pl-10 pr-4 py-3.5 rounded-2xl border-2 border-[#E8DFC8] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+              />
+            </div>
+          </div>
 
-              <div>
-                <label className="text-xs sm:text-[13px] font-['Times_New_Roman',_Times,_serif] font-normal tracking-wide text-stone-700 block mb-2 text-left">
-                  Admin Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
-                    <Lock className="w-4 h-4 text-[#C59B27]" />
-                  </div>
-                  <input
-                    type={showAdminPassword ? 'text' : 'password'}
-                    required
-                    value={adminPassword}
-                    onChange={(e) => setAdminPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full pl-10 pr-11 py-3.5 rounded-2xl border-2 border-[#C59B27] hover:border-[#855F14] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/20 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowAdminPassword(!showAdminPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 p-1"
-                    aria-label={showAdminPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showAdminPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
+          <div>
+            <label className="text-xs sm:text-[13px] font-medium text-stone-700 block mb-1.5">
+              Admin Password
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#C59B27]">
+                <Lock className="w-4 h-4 text-[#C59B27]" />
               </div>
-
+              <input
+                type={showAdminPassword ? 'text' : 'password'}
+                required
+                autoComplete="current-password"
+                value={adminPassword}
+                onChange={(e) => {
+                  setAdminPassword(e.target.value);
+                  if (errorMessage) setErrorMessage('');
+                }}
+                placeholder="••••••••••••"
+                className="w-full pl-10 pr-11 py-3.5 rounded-2xl border-2 border-[#E8DFC8] focus:border-[#855F14] bg-[#FCFAF6] focus:bg-white text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+              />
               <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-4 rounded-2xl font-['Times_New_Roman',_Times,_serif] text-base tracking-wider text-white bg-gradient-to-r from-[#9E7318] via-[#C59B27] to-[#855F14] hover:from-[#B0831D] hover:via-[#D4AF37] hover:to-[#9E7318] shadow-[0_12px_28px_rgba(184,134,11,0.32)] hover:shadow-[0_16px_36px_rgba(184,134,11,0.42)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
+                type="button"
+                onClick={() => setShowAdminPassword(!showAdminPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 p-1"
+                aria-label={showAdminPassword ? 'Hide password' : 'Show password'}
               >
-                <span>{isSubmitting ? 'Authenticating...' : 'Access Admin Console →'}</span>
+                {showAdminPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
+            </div>
+          </div>
 
-              <div className="text-center pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsAdminMode(false);
-                    setAdminOtpStep('enter_credentials');
-                    setErrorMessage('');
-                    setAdminEmail('');
-                    setAdminPassword('');
-                    setOtp(['', '', '', '', '', '']);
-                  }}
-                  className="text-xs font-['Times_New_Roman',_Times,_serif] font-normal text-[#855F14] hover:underline cursor-pointer"
-                >
-                  ← Return to Patron Login
-                </button>
-              </div>
-            </form>
-          ) : (
-            /* Admin OTP Verification Form */
-            <form onSubmit={handleAdminOtpVerification} className="space-y-5">
-              <div className="flex items-center justify-between text-xs text-stone-700 px-3 py-2.5 bg-[#FAF7F2] rounded-xl border border-[#E8DFC8]">
-                <span>Dispatched to: <b className="text-stone-900">{adminEmail}</b></span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAdminOtpStep('enter_credentials');
-                    setOtp(['', '', '', '', '', '']);
-                  }}
-                  className="text-[#855F14] font-bold hover:underline flex items-center gap-1 cursor-pointer"
-                >
-                  <Edit3 className="w-3 h-3" />
-                  <span>Change</span>
-                </button>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-stone-700 block mb-2 text-center uppercase tracking-wider">
-                  Enter 6-Digit Verification Code
-                </label>
-                <div className="flex items-center justify-center gap-2 sm:gap-2.5">
-                  {otp.map((digit, idx) => (
-                    <input
-                      key={idx}
-                      ref={(el) => (otpInputsRef.current[idx] = el)}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpDigitChange(e.target.value, idx)}
-                      onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-                      className="w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-stone-900 bg-[#FCFAF6] focus:bg-white border-2 border-[#855F14] rounded-xl focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs"
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between text-xs text-stone-600 pt-1 px-1">
-                <span>Didn't receive code?</span>
-                <button
-                  type="button"
-                  onClick={handleResendAdminOtp}
-                  disabled={resendTimer > 0 || isResending}
-                  className="text-[#855F14] font-bold hover:underline flex items-center gap-1 cursor-pointer disabled:text-stone-400 disabled:no-underline disabled:cursor-not-allowed"
-                >
-                  {isResending ? (
-                    <LoaderCircle className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <RefreshCw className="w-3 h-3" />
-                  )}
-                  <span>{isResending ? 'Sending...' : resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend Code'}</span>
-                </button>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-4 rounded-2xl font-bold text-base text-white bg-[#855F14] hover:bg-[#6e4d0d] active:scale-[0.99] shadow-[0_8px_20px_rgba(133,95,20,0.25)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
-              >
-                {isSubmitting && <LoaderCircle className="w-4 h-4 animate-spin" />}
-                <span>{isSubmitting ? 'Verifying Code...' : 'Verify & Enter →'}</span>
-              </button>
-
-              <div className="text-center pt-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAdminOtpStep('enter_credentials');
-                    setErrorMessage('');
-                    setOtp(['', '', '', '', '', '']);
-                  }}
-                  className="text-xs font-['Times_New_Roman',_Times,_serif] font-normal text-[#855F14] hover:underline cursor-pointer"
-                >
-                  ← Back to Login
-                </button>
-              </div>
-            </form>
-          )
-        ) : (
-          /* -------------------- USER PASSWORDLESS OTP LOGIN -------------------- */
-          <div className="space-y-4">
-            {otpStep === 'enter_identifier' ? (
-              /* Step 1: Identifier Input Form */
-              <form noValidate onSubmit={handleSendOtp} className="space-y-4">
-                <div className="text-left">
-                  <label className="text-[11px] sm:text-xs font-bold text-stone-700 tracking-wider uppercase block mb-1.5">
-                    EMAIL ADDRESS
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#855F14]">
-                      <Mail className="w-5 h-5 text-[#855F14]" />
-                    </div>
-                    <input
-                      type="email"
-                      required
-                      value={identifier}
-                      onChange={(e) => {
-                        setIdentifier(e.target.value.toLowerCase());
-                        if (errorMessage) setErrorMessage('');
-                        if (emailInputError) setEmailInputError(false);
-                      }}
-                      placeholder="example@gmail.com"
-                      className={`w-full pl-11 pr-4 py-3.5 rounded-2xl border-2 ${
-                        emailInputError ? 'border-rose-400 bg-rose-50/20' : 'border-[#855F14] bg-white'
-                      } text-stone-900 placeholder:text-stone-400 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs`}
-                    />
-                  </div>
-                  <p className="text-[11px] text-stone-500 mt-1 pl-1">
-                    Enter your email address to receive a secure OTP (e.g. example@gmail.com)
-                  </p>
-                </div>
-
-                {/* Primary Action Button */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 rounded-2xl font-bold text-base text-white bg-[#855F14] hover:bg-[#6e4d0d] active:scale-[0.99] shadow-[0_8px_20px_rgba(133,95,20,0.25)] flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-70 mt-2"
-                >
-                  {isSubmitting && <LoaderCircle className="w-4 h-4 animate-spin" />}
-                  <span>{isSubmitting ? 'Sending OTP...' : 'Login →'}</span>
-                </button>
-              </form>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-4 rounded-2xl font-bold text-base text-white bg-gradient-to-r from-[#9E7318] via-[#C59B27] to-[#855F14] hover:from-[#B0831D] hover:via-[#D4AF37] hover:to-[#9E7318] shadow-[0_12px_28px_rgba(184,134,11,0.28)] hover:shadow-[0_16px_36px_rgba(184,134,11,0.38)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer pt-3 mt-2"
+          >
+            {isSubmitting ? (
+              <>
+                <LoaderCircle className="w-5 h-5 animate-spin" />
+                <span>Authenticating Admin...</span>
+              </>
             ) : (
-              /* Step 2: 6-Digit OTP Verification Form */
-              <form onSubmit={handleVerifyOtp} className="space-y-5">
-                <div className="flex items-center justify-between text-xs text-stone-700 px-3 py-2.5 bg-[#FAF7F2] rounded-xl border border-[#E8DFC8]">
-                  <span>Dispatched to: <b className="text-stone-900">{identifier}</b></span>
-                  <button
-                    type="button"
-                    onClick={() => setOtpStep('enter_identifier')}
-                    className="text-[#855F14] font-bold hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <Edit3 className="w-3 h-3" />
-                    <span>Change</span>
-                  </button>
-                </div>
-
-                <div>
-                  <label className="text-xs font-semibold text-stone-700 block mb-2 text-center uppercase tracking-wider">
-                    Enter 6-Digit Verification Code
-                  </label>
-                  <div className="flex items-center justify-center gap-2 sm:gap-2.5">
-                    {otp.map((digit, idx) => (
-                      <input
-                        key={idx}
-                        ref={(el) => (otpInputsRef.current[idx] = el)}
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={1}
-                        value={digit}
-                        onChange={(e) => handleOtpDigitChange(e.target.value, idx)}
-                        onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-                        className="w-11 h-13 sm:w-12 sm:h-14 text-center text-xl font-bold text-stone-900 bg-[#FCFAF6] focus:bg-white border-2 border-[#855F14] rounded-xl focus:ring-4 focus:ring-[#C59B27]/15 transition-all shadow-xs"
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-xs text-stone-600 pt-1 px-1">
-                  <span>Didn't receive code?</span>
-                  <button
-                    type="button"
-                    onClick={handleResendOtp}
-                    disabled={resendTimer > 0 || isResending}
-                    className="text-[#855F14] font-bold hover:underline flex items-center gap-1 cursor-pointer disabled:text-stone-400 disabled:no-underline disabled:cursor-not-allowed"
-                  >
-                    {isResending ? (
-                      <LoaderCircle className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
-                      <RefreshCw className="w-3 h-3" />
-                    )}
-                    <span>{isResending ? 'Sending...' : resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend Code'}</span>
-                  </button>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 rounded-2xl font-bold text-base text-white bg-[#855F14] hover:bg-[#6e4d0d] active:scale-[0.99] shadow-[0_8px_20px_rgba(133,95,20,0.25)] flex items-center justify-center gap-2 transition-all active:scale-[0.99] disabled:opacity-70 cursor-pointer"
-                >
-                  {isSubmitting && <LoaderCircle className="w-4 h-4 animate-spin" />}
-                  <span>{isSubmitting ? 'Verifying Code...' : 'Verify & Enter →'}</span>
-                </button>
-              </form>
+              <>
+                <span>Access Admin Console</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
             )}
+          </button>
+        </form>
 
-            {/* Passwordless & Encrypted Trust Row */}
-            <div className="flex items-center justify-center gap-4 pt-1 text-xs text-stone-500 font-medium">
-              <span className="flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-[#855F14]" /> Passwordless
-              </span>
-              <span className="text-stone-300">•</span>
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#855F14]" /> 256-Bit Encrypted
-              </span>
-            </div>
+        {/* Security Trust Note */}
+        <div className="pt-2 border-t border-stone-100 flex items-center justify-center gap-2 text-xs text-stone-500">
+          <ShieldCheck className="w-4 h-4 text-[#855F14]" />
+          <span>Restricted to Authorized Administrator Only</span>
+        </div>
 
-            {/* Footer Navigation */}
-            <div className="text-center text-xs sm:text-sm text-stone-600 font-medium pt-1 space-y-2">
-              <div>
-                Don't have an account?{' '}
-                <Link to="/register" className="text-[#855F14] font-bold hover:underline ml-1">
-                  Sign Up
-                </Link>
-              </div>
-
-              {!isAdminMode && (
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsAdminMode(true);
-                      setAdminOtpStep('enter_credentials');
-                      setErrorMessage('');
-                      setOtp(['', '', '', '', '', '']);
-                    }}
-                    className="text-[11px] text-stone-400 hover:text-[#855F14] transition-colors cursor-pointer"
-                  >
-                    Staff Portal Access
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        {/* Return Home */}
+        <div className="text-center">
+          <Link
+            to="/"
+            className="text-xs text-stone-400 hover:text-[#855F14] transition-colors"
+          >
+            ← Return to Storefront
+          </Link>
+        </div>
 
       </div>
     </div>

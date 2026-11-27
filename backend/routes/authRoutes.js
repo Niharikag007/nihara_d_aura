@@ -71,150 +71,90 @@ const sendOTPEmail = async (email, name, otp, purpose = 'registration') => {
   }
 };
 
-// 1. Register: Create Account with Name & Email -> Send OTP
+// 1. Register: Disabled as portal is restricted to Admin only
 router.post('/register', async (req, res) => {
+  return res.status(403).json({
+    success: false,
+    error: 'Access Not Allowed',
+    message: 'Access Not Allowed: Public registration is closed. Only the administrator is permitted to access.'
+  });
+});
+
+// 2. Login: Dedicated Admin Sign-In (Direct Token, No OTP)
+// Only niharikagautam007@gmail.com with Niharika_2026 is allowed
+router.post('/login', async (req, res) => {
   try {
-    const { fullName, name, email, mobileNumber, phone, avatar } = req.body;
+    const { email, phone, password } = req.body;
+    const adminEmail = (process.env.ADMIN_EMAIL || 'niharikagautam007@gmail.com').toLowerCase().trim();
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Niharika_2026';
 
-    const resolvedName = fullName || name;
-    const resolvedPhone = mobileNumber || phone || '';
+    const inputEmail = (email || phone || '').toLowerCase().trim();
+    const inputPassword = password || '';
 
-    if (!resolvedName || !email) {
-      return res.status(400).json({ success: false, error: 'fullName (or name) and email are required', message: 'fullName and email are required' });
+    if (!inputEmail || !inputPassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email and password are required',
+        message: 'Admin email and password are required'
+      });
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
-    let user = await User.findOne({ email: normalizedEmail });
-
-    if (user && user.isVerified) {
-      return res.status(400).json({ success: false, error: 'User with this email already exists. Please login instead.', message: 'User with this email already exists. Please login instead.' });
+    // Strict validation: Only the specified admin credentials are permitted
+    if (inputEmail !== adminEmail || inputPassword !== adminPassword) {
+      console.log(`[AUTH] Unauthorized login attempt with email: "${inputEmail}"`);
+      return res.status(403).json({
+        success: false,
+        error: 'Access Not Allowed',
+        message: 'Access Not Allowed: You do not have permission to access. Only authorized administrator can log in.'
+      });
     }
 
-    const otp = generateOTP();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-    const hashedOtp = await bcrypt.hash(otp, 10);
+    // Find or create admin user in MongoDB
+    let user = await User.findOne({ email: adminEmail });
+    const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
     if (!user) {
       user = new User({
-        fullName: resolvedName.trim(),
-        name: resolvedName.trim(),
-        email: normalizedEmail,
-        mobileNumber: resolvedPhone.trim(),
-        otp: hashedOtp,
-        otpExpires,
-        avatar: avatar || '',
-        isVerified: false,
+        email: adminEmail,
+        fullName: 'Niharika Gautam',
+        name: 'Niharika Gautam',
+        password: hashedPassword,
+        role: 'admin',
+        isVerified: true
       });
+      await user.save();
     } else {
-      user.fullName = resolvedName.trim();
-      user.name = resolvedName.trim();
-      if (resolvedPhone) {
-        user.mobileNumber = resolvedPhone.trim();
-      }
-      user.otp = hashedOtp;
-      user.otpExpires = otpExpires;
-      if (avatar) user.avatar = avatar;
+      user.role = 'admin';
+      user.password = hashedPassword;
+      user.isVerified = true;
+      user.otp = undefined;
+      user.otpExpires = undefined;
+      await user.save();
     }
 
-    await user.save();
+    const jwtSecret = process.env.JWT_SECRET || 'secret123';
+    const payload = { user: { id: user.id } };
+    const token = jwt.sign(payload, jwtSecret, { expiresIn: '30d' });
 
-    const emailSent = await sendOTPEmail(normalizedEmail, resolvedName, otp, 'Registration');
-
-    res.status(200).json({
+    console.log('[AUTH] Admin login successful (Direct, No OTP dispatched):', adminEmail);
+    return res.status(200).json({
       success: true,
-      message: emailSent ? 'OTP sent successfully to your email' : 'OTP generated successfully (check server logs in dev)',
-      email: normalizedEmail
-    });
-  } catch (error) {
-    console.error('Error in register:', error);
-    res.status(500).json({ success: false, error: 'Internal server error', message: 'Internal server error' });
-  }
-});
-
-// 2. Login: Existing user requests OTP via Email (for regular users)
-// Admin with password skips OTP and gets direct JWT
-router.post('/login', async (req, res) => {
-  try {
-    const { email, phone, password, role } = req.body;
-    const identifier = (email || phone || '').toLowerCase().trim();
-
-    if (!identifier) {
-      return res.status(400).json({ success: false, error: 'email or phone is required', message: 'email or phone is required' });
-    }
-
-    const user = await User.findOne({
-      $or: [
-        { email: identifier },
-        { phone: identifier },
-        { mobileNumber: identifier }
-      ]
-    });
-
-    if (!user) {
-      return res.status(404).json({ success: false, error: 'No account found with this email/phone. Please register first.', message: 'No account found with this email/phone. Please register first.' });
-    }
-
-    if (user.isBlocked) {
-      return res.status(403).json({ success: false, error: 'This account has been blocked. Please contact support.', message: 'This account has been blocked. Please contact support.' });
-    }
-
-    // Admin password login (skip OTP) - auto-detect admin with password
-    if (user.role === 'admin' && user.password) {
-      if (password) {
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (isPasswordValid) {
-          user.isVerified = true;
-          // Clear any leftover OTP fields on login
-          user.otp = undefined;
-          user.otpExpires = undefined;
-          await user.save();
-          const jwtSecret = process.env.JWT_SECRET || 'secret123';
-          const payload = { user: { id: user.id } };
-          const token = jwt.sign(payload, jwtSecret, { expiresIn: '30d' });
-          console.log('[AUTH] Admin login successful with password:', user.email);
-          return res.status(200).json({
-            success: true,
-            message: 'Admin login successful',
-            token,
-            user: {
-              id: user.id,
-              _id: user.id,
-              fullName: user.fullName || user.name,
-              name: user.name || user.fullName,
-              email: user.email,
-              mobileNumber: user.mobileNumber || user.phone || '',
-              phone: user.phone || user.mobileNumber || '',
-              avatar: user.avatar || '',
-              tier: user.tier || 'Royal Member',
-              rewardPoints: user.rewardPoints || 0,
-              role: user.role || 'user',
-              isVerified: user.isVerified
-            }
-          });
-        }
-        console.log('[AUTH] Admin password invalid for:', user.email);
-        return res.status(401).json({ success: false, error: 'Invalid password', message: 'Invalid password' });
+      message: 'Admin login successful',
+      token,
+      user: {
+        id: user.id,
+        _id: user.id,
+        fullName: user.fullName || user.name || 'Niharika Gautam',
+        name: user.name || user.fullName || 'Niharika Gautam',
+        email: user.email,
+        mobileNumber: user.mobileNumber || user.phone || '',
+        phone: user.phone || user.mobileNumber || '',
+        avatar: user.avatar || '',
+        tier: 'Administrator',
+        rewardPoints: 0,
+        role: 'admin',
+        isVerified: true
       }
-      // Admin without password - fall through to OTP
-      console.log('[AUTH] Admin without password, using OTP flow:', user.email);
-    }
-
-    // Regular OTP flow for non-admin or password-less login
-    const otp = generateOTP();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
-    const hashedOtp = await bcrypt.hash(otp, 10);
-
-    user.otp = hashedOtp;
-    user.otpExpires = otpExpires;
-    await user.save();
-
-    const userName = user.fullName || user.name || 'User';
-    const emailSent = await sendOTPEmail(user.email, userName, otp, 'Login');
-
-    res.status(200).json({
-      success: true,
-      message: emailSent ? 'Login OTP sent successfully to your email' : 'Login OTP generated successfully (check server logs in dev)',
-      email: user.email
     });
   } catch (error) {
     console.error('Error in login:', error);
